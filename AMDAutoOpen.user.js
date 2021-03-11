@@ -2,10 +2,10 @@
 // @name         [AMD] Auto Expand Driver Option(s)
 // @description  Automatically opens the first option.
 // @author       Magic of Lolis
-// @namespace    https://github.com/magicoflolis/Magic-PH/Userscripts
+// @namespace    https://github.com/magicoflolis/userscriptrepo
 // @version      0.1
-// @updateURL    https://raw.githubusercontent.com/magicoflolis/Magic-PH/master/Userscripts/AMDAutoOpen.user.js
-// @downloadURL  https://raw.githubusercontent.com/magicoflolis/Magic-PH/master/Userscripts/AMDAutoOpen.user.js
+// @updateURL    https://raw.githubusercontent.com/magicoflolis/userscriptrepo/master/AMDAutoOpen.user.js
+// @downloadURL  https://raw.githubusercontent.com/magicoflolis/userscriptrepo/master/AMDAutoOpen.user.js
 // @match        https://www.amd.com/*/support/*
 // @grant        none
 // ==/UserScript==
