@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Twitter external translator
+// @name         Twitter External Translator
 // @description  Adds 3rd party translators to Twitter.
 // @author       Magic of Lolis
 // @version      0.9
