@@ -3,7 +3,7 @@
 // @description  Adds 3rd party translators to Twitter.
 // @author       Magic of Lolis
 // @version      0.9
-// @namespace    https://github.com/magicoflolis/userscriptrepo
+// @namespace    https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator
 // @updateURL    https://raw.githubusercontent.com/magicoflolis/userscriptrepo/master/twittertranslator.user.js
 // @downloadURL  https://raw.githubusercontent.com/magicoflolis/userscriptrepo/master/twittertranslator.user.js
 // @require      https://code.jquery.com/jquery-3.6.0.slim.min.js
