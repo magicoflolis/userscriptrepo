@@ -5,11 +5,11 @@
 ***
 **Stable:**
 
-> Hosted on Greasy Fork, disable stable if installed!
-
-* [Link](https://greasyfork.org/scripts/421643)
+* Click Install on top
 
 **Beta:**
+
+> Hosted on GitHub, disable stable if installed!
 
 * [Direct link](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js)
 
@@ -56,7 +56,7 @@ Translate.com | ✔️
 let cfg = {
         /** @type {'en'|'zh'|'nl'|'fr'|'de'|'it'|'ja'|'pl'|'pt'|'ru'|'es'} */
         lang: `en`, // Preferred language
-        /** @type {'deepl'|'yandex'|'bing'|'google'|'mymemory'|'translate'} */
+        /** @type {'deepl'|'yandex'|'bing'|'google'|'translate'} */
         translator: 'bing', // Preferred translator, lowercase only!
         /** @type {'text'|'icon'|'text + icon'} */
         display: 'text + icon', // Preferred display choice.
