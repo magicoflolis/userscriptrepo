@@ -30,6 +30,7 @@
 // @author       Magic of Lolis
 // @version      0.11
 // @namespace    https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator
+// @homepageURL  https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @require      https://code.jquery.com/jquery-3.6.0.slim.min.js
 // @icon         https://abs.twimg.com/favicons/twitter.ico
 // @include      https://twitter.com/*
