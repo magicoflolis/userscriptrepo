@@ -1,42 +1,67 @@
 # Traductor externo de Twitter
 
-* Traducido con DeepL.
+* Traducido con DeepL [README.md](https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator)
 
-*Esto es un fork de [DeepL Traducción de Twitter](https://greasyfork.org/scripts/411976)*
+> Añade un botón "Traducir con ..." a los Tweets y Bios.
+
+*Esto fue un fork de [DeepL Traducción de Twitter](https://greasyfork.org/scripts/411976)*
 
 ***
 **Estable:**
 
-* Haga clic en Instalar en la parte superior
+* Haz clic en Instalar en la parte superior
 
 **Beta:**
 
-> Alojada en GitHub, ¡desactiva la estable si la instalas!
+> Alojado en GitHub, ¡desactivar estable!
 
 * [Enlace directo](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js)
 
 ***
 
-Añade un botón "Traducir con ..." a los tweets y bios.
-
-El antiguo script se duplicaba al desplazarse cuando se combinaba con [Mejora de la visualización de imágenes de Twitter](https://greasyfork.org/scripts/387918), ¡esto pretende arreglar eso! También he *reparado* el código para adaptarlo al Javascript moderno.
-
 ## **Características:**
 
-* Configurar como quieras (Recargar la página cuando se cambie la configuración)
-* Traducir Tweets y Bio del usuario.
+* Ahora funciona con [TweetDeck](https://tweetdeck.twitter.com/) *sólo tweets!*
 * ¡Múltiples traductores!
-* ¡Las traducciones ahora se pueden ajustar a tu idioma preferido!
+* Traduce los Tweets y la Biografía del Usuario.
+* Se puede configurar *requiere recarga.*
 
- Traductores | Apoyados
+```bash
+//#region Config
+/**
+ * Need to edit the config manually
+ */
+let cfg = {
+    /** Preferred language
+    * @type {'en'|'zh'|'nl'|'fr'|'de'|'it'|'ja'|'pl'|'pt'|'ru'|'es'} */
+    lang: ('en'),
+    /** Preferred translator, lowercase only!
+    * @type {'deepl'|'yandex'|'bing'|'google'|'mymemory'|'translate'} */
+    translator: ('deepl'),
+    /** Preferred display
+    * @type {'text'|'icon'|'text + icon'} */
+    display: ('text + icon'),
+};
+//#endregion
+```
+
+> La traducción incorporada de Twitters utiliza Google Translate, TweetDeck utiliza Bing Microsoft Translator.
+
+ Traductores | Soportados
 :-----------:|:---------:
-DeepL Traducir | ✔️
-Yandex Translate | ✔️
-Bing Microsoft Translator | ✔️
-Google Translate | ✔️
-Translate.com | ✔️
+DeepL Translate | ✔️
+Yandex Translate |️
+Bing Microsoft Translator |✔️
+Google Translate |️
+MyMemory |✔️
+Translate.com |✔️
 
-> La traducción incorporada de Twitters utiliza Google, he añadido Google Translate para redirigir a la página completa translate.google.com.
+## Bugs / Issues
+
+* Puede que no se cargue todo el tiempo *recargar la página*
+* El botón "Traducir con ..." puede aparecer raramente mientras está en el diálogo de Citar Tweet.
+* Yandex Translate puede aparecer por defecto en ruso.
+* [v0.72 - inferior] ¡¡¡Necesita ser reinstalado (eliminar el script) para obtener las actualizaciones!!! Esto se debe a cambiar el nombre y mover el script a mi GitHub.
 
 ## Hoja de ruta
 
@@ -44,26 +69,8 @@ Translate.com | ✔️
 * Añadir más traducciones externas
 * Hacer la configuración más fácil
 * Mostrar múltiples traductores a la vez
-* ¿Traducciones inline?
-
-## Bugs / Issues
-
-* El botón "Traducir con ..." puede aparecer raramente mientras se está en el diálogo de Citar Tweet.
-* Yandex Translate se pone por defecto en ruso.
-* [v0.72 - inferior] ¡¡¡Necesita ser reinstalado (quitar el script) para obtener las actualizaciones!!! Esto se debe a cambiar el nombre y mover el script a mi GitHub.
-* Los ajustes requieren una edición manual.
-
-```bash
-¡// No te preocupes está en la parte superior, difícil de perder!
-let cfg = {
-        /** @type {'en'|'zh'|'nl'|'fr'|'de'|'it'|'ja'|'pl'|'pt'|'ru'|'es'} */
-        lang: `en`, // Idioma preferido
-        /** @type {'deepl'|'yandex'|'bing'|'google'|'translate'} */
-        translator: 'bing', // Traductor preferido, ¡sólo minúsculas!
-        /** @type {'texto'|'icono'|'texto + icono'} */
-        display: 'text + icon', // Opción de visualización preferida.
-    };
-```
+* ¿Inline?
+* ¿TweetLonger?
 
 ### Contactos
 
