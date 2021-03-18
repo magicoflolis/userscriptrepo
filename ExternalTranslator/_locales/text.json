@@ -1,0 +1,123 @@
+{
+  "en": {
+    "sel": "English (en)",
+    "tw": "Translate with",
+    "lg": "Language",
+    "tr": "Translator",
+    "ds": "Display",
+    "ti": "Text + Icon",
+    "t": "Text",
+    "i": "Icon",
+    "s": "Save"
+  },
+  "zh": {
+    "sel": "中文 (zh)",
+    "tw": "翻译与",
+    "lg": "语种",
+    "tr": "译者",
+    "ds": "显示",
+    "ti": "文本+图标",
+    "t": "案文",
+    "i": "图标",
+    "s": "保存"
+  },
+  "nl": {
+    "sel": "Nederlands (nl)",
+    "tw": "Vertaal met",
+    "lg": "Taal",
+    "tr": "Vertaler",
+    "ds": "Weergave",
+    "ti": "Tekst + Pictogram",
+    "t": "Tekst",
+    "i": "Icoon",
+    "s": "Save"
+  },
+  "fr": {
+    "sel": "Français (fr)",
+    "tw": "Traduire avec",
+    "lg": "Langue",
+    "tr": "Traducteur",
+    "ds": "Afficher",
+    "ti": "Texte + Icône",
+    "t": "Texte",
+    "i": "Icône",
+    "s": "Sauvez"
+  },
+  "de": {
+    "sel": "Deutsch (de)",
+    "tw": "Übersetzen mit",
+    "lg": "Sprache",
+    "tr": "Übersetzer",
+    "ds": "Anzeige",
+    "ti": "Text + Symbol",
+    "t": "Text",
+    "i": "Icon",
+    "s": "Speichern"
+  },
+  "it": {
+    "sel": "Italiano (it)",
+    "tw": "Tradurre con",
+    "lg": "Lingua",
+    "tr": "Traduttore",
+    "ds": "Visualizza",
+    "ti": "Testo + icona",
+    "t": "Testo",
+    "i": "Icona",
+    "s": "Salva"
+  },
+  "ja": {
+    "sel": "日本語 (ja)",
+    "tw": "で翻訳する",
+    "lg": "言語",
+    "tr": "翻訳者",
+    "ds": "ディスプレイ",
+    "ti": "テキスト＋アイコン",
+    "t": "テキスト",
+    "i": "アイコン",
+    "s": "保存"
+  },
+  "pl": {
+    "sel": "Polski (pl)",
+    "tw": "Tłumaczenie za pomocą",
+    "lg": "Język",
+    "tr": "Tłumacz",
+    "ds": "Wyświetlacz",
+    "ti": "Tekst + Ikona",
+    "t": "Tekst",
+    "i": "Ikona",
+    "s": "Zapisz"
+  },
+  "pt": {
+    "sel": "Português (pt)",
+    "tw": "Traduzir com",
+    "lg": "Idioma",
+    "tr": "Tradutora",
+    "ds": "Mostrar",
+    "ti": "Texto + Ícone",
+    "t": "Texto",
+    "i": "Ícone",
+    "s": "Guardar"
+  },
+  "ru": {
+    "sel": "Russisch (ru)",
+    "tw": "Перевод с",
+    "lg": "Язык",
+    "tr": "Переводчик",
+    "ds": "Показать",
+    "ti": "Текст + иконка",
+    "t": "Текст",
+    "i": "иконка",
+    "s": "Сохранить"
+  },
+  "es": {
+    "sel": "Español (es)",
+    "tw": "Traducir con",
+    "lg": "Idioma",
+    "tr": "Traductor",
+    "ds": "Mostrar",
+    "ti": "Texto + Icono",
+    "t": "Texto",
+    "i": "Icono",
+    "s": "Guardar"
+  }
+}
