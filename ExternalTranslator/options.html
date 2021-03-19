@@ -3,137 +3,37 @@
 <head>
   <meta charset="utf-8">
   <title>Test</title>
-  <style>
-    body, html {
-      padding: 0;
-      margin: 0;
-    }
-
-    form {
-      font-size: 1.25em;
-    }
-
-    section:not(:first-child) {
-      border-top: 1px solid #b6b6b6;
-    }
-
-    section.checkbox > label,
-    section.checkboxlist > label,
-    section.select {
-      display: flex;
-      justify-content: space-between;
-      padding: .825em;
-    }
-
-    section.checkbox > label,
-    section.checkboxlist > label {
-      cursor: pointer;
-    }
-
-    section.checkboxlist {
-      padding-left: .825em;
-      padding-bottom: .5em;
-    }
-
-    section.checkboxlist > label {
-      padding-top: .5em;
-      padding-bottom: .5em;
-    }
-
-    section.checkboxlist p {
-      margin-bottom: .5em;
-    }
-
-    .switch {
-      position: relative;
-      width: 38px;
-      user-select: none;
-    }
-
-    .switch > input {
-      display: none;
-    }
-
-    .switch > label {
-      display: block; overflow: hidden; cursor: pointer;
-      height: 16px; padding: 0; line-height: 16px;
-      border: 0px solid #FFFFFF; border-radius: 20px;
-      background-color: #9AA0A6;
-    }
-
-    .switch > label:before {
-      content: "";
-      display: block; width: 20px; height: 20px; margin: -2px;
-      background: #DADCE0;
-      position: absolute;
-      top: 0;
-      right: 20px;
-      border-radius: 20px;
-    }
-
-    .switch > input:checked + label {
-      background-color: #5A6F93;
-    }
-
-    .switch > input:checked + label {
-      margin-left: 0;
-    }
-
-    .switch > input:checked + label:before {
-      right: 0px;
-      background-color: #8AB4F8;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      body {
-        background-color: #202023;
-        color: #e8eaed;
-      }
-
-      section:not(:first-child) {
-        border-top: 1px solid #4c4c4e;
-      }
-    }
-  </style>
 </head>
 <body>
-<form ${fstyle}>
-  <section class="select">
-    ${txt.es.lg}
-    <select name="languages">
-      <option value="en">English (en)</option>
-      <option value="zh">(zh)</option>
-      <option value="nl">(nl)</option>
-      <option value="fr">(fr)</option>
-      <option value="de">(de)</option>
-      <option value="it">(it)</option>
-      <option value="ja">(ja)</option>
-      <option value="pl">(pl)</option>
-      <option value="pt">(pt)</option>
-      <option value="ru">(ru)</option>
-      <option value="es">(es)</option>
-    </select>
-  </section>
-  <section class="select">
-    ${txt.es.tr}
-    <select name="translators">
-      <option value="deepl">DeepL</option>
-      <option value="yandex">Yandex</option>
-      <option value="bing">Bing</option>
-      <option value="google">Google</option>
-      <option value="mymemory">MyMemory</option>
-      <option value="translate">translate.com</option>
-    </select>
-  </section>
-  <section class="select">
-    ${txt.es.ds}
-    <select name="display">
-      <option value="text + icon">${txt.es.ti}</option>
-      <option value="icon">${txt.es.i}</option>
-      <option value="text">${txt.es.t}</option>
-    </select>
-  </section>
-  <script></script>
-</form>
+  <form>
+    <button class="css-4rbku5 css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2" type="button" onclick="i18next.changeLanguage('en')">English</button>
+    <button class="css-4rbku5 css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2" type="button" onclick="i18next.changeLanguage('zh')">Chinese</button>
+    <button class="css-4rbku5 css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2" type="button" onclick="i18next.changeLanguage('nl')">Dutch</button>
+    <button class="css-4rbku5 css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2" type="button" onclick="i18next.changeLanguage('fr')">French</button>
+    <button class="css-4rbku5 css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2" type="button" onclick="i18next.changeLanguage('de')">German</button>
+    <button class="css-4rbku5 css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2" type="button" onclick="i18next.changeLanguage('it')">Italian</button>
+    <button class="css-4rbku5 css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2" type="button" onclick="i18next.changeLanguage('ja')">Japanese</button>
+    <button class="css-4rbku5 css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2" type="button" onclick="i18next.changeLanguage('pl')">Polish</button>
+    <button class="css-4rbku5 css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2" type="button" onclick="i18next.changeLanguage('pt')">Portuguese</button>
+    <button class="css-4rbku5 css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2" type="button" onclick="i18next.changeLanguage('ru')">Russian</button>
+    <button class="css-4rbku5 css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2" type="button" onclick="i18next.changeLanguage('es')">Spanish</button>
+  </form>
+  <style>
+    form {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 100 !important;
+  }
+  button {
+    cursor: pointer;
+    width: 70%;
+    border-radius: 15px;
+    justify-content: center;
+    display: flex !important;
+    margin-top: 4px !important;
+    font-size: 20px !important;
+  </style>
 </body>
 </html>
