@@ -23,7 +23,7 @@
 // @name:ja      ツイッター外部翻訳者
 // @name:pl      Zewnętrzny tłumacz Twittera
 // @name:pt      Tradutor externo do Twitter
-// @name:pt-BR      Tradutor externo do Twitter
+// @name:pt-BR   Tradutor externo do Twitter
 // @name:ru-RU   Twitter Внешний переводчик
 // @name:ru      Twitter Внешний переводчик
 // @name:es      Traductor externo de Twitter
@@ -50,13 +50,13 @@
 // @description:it      Aggiunge traduttori di terze parti a Twitter
 // @description:pl      Dodaje tłumaczy innych firm do Twittera
 // @description:pt      Adiciona tradutores de terceiros ao Twitter
-// @description:pt-BR      Adiciona tradutores de terceiros ao Twitter
+// @description:pt-BR   Adiciona tradutores de terceiros ao Twitter
 // @description:ja      サードパーティの翻訳者をツイッターに追加
 // @description:ru-RU   Добавляет сторонних переводчиков в Twitter
 // @description:ru      Добавляет сторонних переводчиков в Twitter
 // @description:es      Añade traductores de terceros a Twitter
 // @author       Magic of Lolis <magicoflolis@gmail.com>
-// @version      0.12
+// @version      0.14
 // @namespace    https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @homepageURL  https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @supportURL   https://github.com/magicoflolis/userscriptrepo/issues/new
@@ -64,10 +64,13 @@
 // @icon         https://abs.twimg.com/favicons/twitter.ico
 // @include      https://twitter.com/*
 // @include      https://tweetdeck.twitter.com/*
-// @grant        none
+// @exclude      https://twitter.com/login
+// @exclude      https://twitter.com/signup
+// @exclude      https://twitter.com/account
+// @exclude      https://twitter.com/settings
+// @exclude      https://twitter.com/i/flow/signup
 // @run-at       document-start
 // ==/UserScript==
-
 "use strict";
 ((log = '[MoL]') => {
     //#region Config
@@ -303,13 +306,14 @@
         };
         return (!trTweet.length && translateTweet.length) ? tweetbtn() : trTweet.attr('style', 'display: flex !important; align-items: end !important;');
     }
+    let observer = new MutationObserver(() => {injectTranslationButton()});
     let callback = (_mutations, observer) => {
         observer.disconnect();
-        (document.location.hostname == 'tweetdeck.twitter.com') ? TweetDeck() : (document.location.hostname == 'twitter.com') ? injectTranslationButton() : console.log(`${log} Achievement: "How Did We Get Here?"`);
+        TweetDeck()
         observer.observe(target, init);
     };
     // Its a headache observing single tweet element, inconsistent load times.
     const target = document.querySelector("body"),
     init = { subtree: true, characterData: true, childList: true };
-    new MutationObserver(callback).observe(target, init)
+    (document.location.hostname == 'twitter.com') ? observer.observe($(".css-1dbjc4n")[0], {subtree:true,characterData:true,childList:true}) :  new MutationObserver(callback).observe(target, init);
 })();

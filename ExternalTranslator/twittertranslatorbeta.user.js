@@ -64,12 +64,16 @@
 // @updateURL    https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js
 // @downloadURL  https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js
 // @require      https://code.jquery.com/jquery-3.6.0.slim.min.js
-// @require      https://raw.githubusercontent.com/i18next/i18next/master/i18next.min.js
-// @require      https://raw.githubusercontent.com/i18next/i18next-http-backend/master/i18nextHttpBackend.min.js
-// @require      https://raw.githubusercontent.com/i18next/i18next-browser-languageDetector/master/i18nextBrowserLanguageDetector.min.js
+// @require      https://unpkg.com/i18next/dist/umd/i18next.min.js
+// @require      https://unpkg.com/i18next-http-backend/i18nextHttpBackend.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/i18next-browser-languagedetector/6.0.1/i18nextBrowserLanguageDetector.min.js
 // @icon         https://abs.twimg.com/favicons/twitter.ico
 // @include      https://twitter.com/*
-// @grant        none
+// @exclude      https://twitter.com/login
+// @exclude      https://twitter.com/signup
+// @exclude      https://twitter.com/account
+// @exclude      https://twitter.com/settings
+// @exclude      https://twitter.com/i/flow/signup
 // @run-at       document-start
 // ==/UserScript==
 
