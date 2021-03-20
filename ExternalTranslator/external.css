@@ -1,0 +1,46 @@
+.btNav {
+  position: fixed;
+  z-index: 1000 !important;
+  width: 8vw;
+  min-height: 50%;
+  max-height: 100vh;
+  top: 10%;
+  left: 0;
+}
+.debug {
+  display: table;
+  width: -moz-fit-content;
+  width: -webkit-fit-content;
+  width: fit-content;
+  height: -moz-fit-content;
+  height: -webkit-fit-content;
+  height: fit-content;
+  z-index: 1000;
+  position: fixed;
+}
+#info,
+#output {
+  color: white;
+  border: 1px solid black;
+}
+form {
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-rows: 1fr;
+  grid-gap: 1rem;
+  width: auto;
+  height: -moz-max-content;
+  height: -webkit-max-content;
+  height: max-content;
+  position: fixed;
+}
+button {
+  cursor: pointer;
+  height: -moz-max-content;
+  height: -webkit-max-content;
+  height: max-content;
+  border-radius: 15px;
+  justify-content: center;
+  display: grid !important;
+  font-size: inherit !important;
+}
