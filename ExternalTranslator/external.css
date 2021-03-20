@@ -13,8 +13,8 @@
   height: -moz-max-content;
   height: -webkit-max-content;
   height: max-content;
-  top: 0;
-  left: 0;
+  top: 0px !important;
+  left: 0px !important;
   z-index: 1000;
   position: fixed;
 }
