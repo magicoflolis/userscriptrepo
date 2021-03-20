@@ -9,12 +9,12 @@
 }
 .debug {
   display: table;
-  width: -moz-fit-content;
-  width: -webkit-fit-content;
-  width: fit-content;
-  height: -moz-fit-content;
-  height: -webkit-fit-content;
-  height: fit-content;
+  width: inherit;
+  height: -moz-max-content;
+  height: -webkit-max-content;
+  height: max-content;
+  top: 0;
+  left: 0;
   z-index: 1000;
   position: fixed;
 }
@@ -28,7 +28,7 @@ form {
   grid-auto-flow: row;
   grid-auto-rows: 1fr;
   grid-gap: 1rem;
-  width: auto;
+  width: inherit;
   height: -moz-max-content;
   height: -webkit-max-content;
   height: max-content;
@@ -36,6 +36,7 @@ form {
 }
 button {
   cursor: pointer;
+  width: inherit;
   height: -moz-max-content;
   height: -webkit-max-content;
   height: max-content;

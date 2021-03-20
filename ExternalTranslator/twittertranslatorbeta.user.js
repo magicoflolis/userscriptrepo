@@ -72,7 +72,7 @@
 // @exclude      https://twitter.com/login
 // @exclude      https://twitter.com/signup
 // @exclude      https://twitter.com/account
-// @exclude      https://twitter.com/settings
+// @exclude      https://twitter.com/settings/*
 // @exclude      https://twitter.com/i/flow/signup
 // @run-at       document-start
 // ==/UserScript==
