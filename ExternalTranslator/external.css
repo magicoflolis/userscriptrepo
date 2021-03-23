@@ -9,7 +9,9 @@
 }
 .debug {
   display: table;
-  width: inherit;
+  width: -moz-max-content;
+  width: -webkit-max-content;
+  width: max-content;
   height: -moz-max-content;
   height: -webkit-max-content;
   height: max-content;
