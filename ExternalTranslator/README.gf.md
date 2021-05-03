@@ -1,5 +1,7 @@
 # Twitter External Translator
 
+**Translated with DeepL [README.md](https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator)**
+
 > Adds a "Translate with ..." button to Tweets and User Bios.
 
 *This was a fork of [DeepL Twitter translation](https://greasyfork.org/scripts/411976)*
@@ -7,13 +9,13 @@
 ***
 **Stable:**
 
-> Hosted on Greasy Fork, disable beta!
+> Hosted here, disable beta!
 
-* [Link](https://greasyfork.org/scripts/421643)
+* Click [Install](#install-area) on top
 
 **Beta:**
 
-> Hosted here, disable stable!
+> Hosted on [GitHub](https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator), disable stable!
 
 * [Direct link](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js)
 
@@ -22,7 +24,7 @@
 ## **Features:**
 
 * Works with TweetDeck. <sup id="a1">[1](#f1)</sup>
-* Multiple translators! [↩](#Previews)
+* Multiple translators!
 * Translate Tweets and User Bio.
 * Can be configured. <sup id="a2">[2](#f2)</sup>
 
@@ -43,14 +45,6 @@ Translate.com | ✔️
 * Show multiple translators at once
 * Inline?
 * TweetLonger?
-
-## Previews
-
-![P1](https://raw.githubusercontent.com/magicoflolis/userscriptrepo/66170b767aa5116e43c55aa14843199bad7e9f60/assets/ExternalTranslator1.png)
-
-![P2](https://raw.githubusercontent.com/magicoflolis/userscriptrepo/66170b767aa5116e43c55aa14843199bad7e9f60/assets/ExternalTranslator2.png)
-
-![P3](https://raw.githubusercontent.com/magicoflolis/userscriptrepo/66170b767aa5116e43c55aa14843199bad7e9f60/assets/ExternalTranslator3.png)
 
 ## Bugs / Issues
 

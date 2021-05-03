@@ -56,7 +56,7 @@
 // @description:ru      Добавляет сторонних переводчиков в Twitter
 // @description:es      Añade traductores de terceros a Twitter
 // @author       Magic of Lolis <magicoflolis@gmail.com>
-// @version      0.15
+// @version      0.16
 // @namespace    https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @homepageURL  https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @supportURL   https://github.com/magicoflolis/userscriptrepo/issues/new
@@ -90,7 +90,7 @@ let cfg = {
     display: ('text + icon'),
     iconWidthA: '16', // Twitter
     iconWidthB: '14', // TweetDeck
-    debug: true,
+    debug: false,
     check() {
       return this
     }
@@ -406,7 +406,7 @@ function checkTXT() {
   return this.tw
 }
 async function injectTranslationButton() {
-    let content = '',magicBtn,btContainer,btLang,
+    let content = '',magicBtn,btContainer,btLang,site,
         translateTweet = $("div[lang]").eq(0).siblings().eq(0).children("span"), // "Translate Tweet" button
         translateBio = $('div[data-testid="UserDescription"]').eq(0).siblings().eq(0).children("span"), // "Translate Bio" button
         trTweet = $("div[lang]").eq(0).siblings().eq(1), // [Tweet] "Translate with ..." button
@@ -508,7 +508,7 @@ async function injectTranslationButton() {
     return check
 }
 async function TweetDeck() {
-  let content = '',magicBtn,btContainer,btLang,
+  let content = '',magicBtn,btContainer,btLang,site,
         translateTweet = $('a.js-translate-call-to-action'), // "Translate Tweet" button
         trTweet = translateTweet.eq(1), // [Tweet] "Translate with ..." button
         name = (cfg.translator == 'yandex') ? `Yandex ${icons.yandex}` : (cfg.translator == 'bing') ? `Bing ${icons.bing}` : (cfg.translator == 'google') ? `Google ${icons.google}` : (cfg.translator == 'mymemory') ? `MyMemory ${icons.mymemory}` : (cfg.translator == 'translate') ? `translate.com ${icons.translate}` : `DeepL ${icons.deepl}`,
