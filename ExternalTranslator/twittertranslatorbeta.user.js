@@ -58,7 +58,7 @@
 // @description:es      Añade traductores de terceros a Twitter
 // @author       Magic of Lolis <magicoflolis@gmail.com>
 // @icon         https://abs.twimg.com/favicons/twitter.ico
-// @version      5.3.21
+// @version      5.6.21
 // @namespace    https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @homepageURL  https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @supportURL   https://github.com/magicoflolis/userscriptrepo/issues/new
@@ -72,21 +72,33 @@
 // @exclude      https://twitter.com/account
 // @exclude      https://twitter.com/settings/*
 // @exclude      https://twitter.com/i/flow/signup
-// @grant        none
+// @grant        GM_getValue
+// @grant        GM.getValue
+// @grant        GM_setValue
+// @grant        GM.setValue
 // @inject-into  auto
 // @run-at       document-start
 // ==/UserScript==
 "use strict";
 //#region Config
-/**
- * You'll need to edit the config manually for now if you're using this
- * as a user script.
- */
+
+if (typeof (GM) === "undefined") {
+  GM = {};
+  GM.setValue = GM_setValue;
+  GM.getValue = GM_getValue;
+}
+let TETConfig = {},
+DBConfig = {},
+AllData = {},
+DefaultConfig = {
+   translator: 'deepl',
+   display: 'text + icon',
+   iconWidthA: '16',
+   iconWidthB: '14',
+   lang: $("html[lang]").attr("lang"),
+   debug: false
+};
 let cfg = {
-    /** Supported languages
-    * @type {'en'|'zh'|'nl'|'fr'|'de'|'it'|'ja'|'pl'|'pt'|'ru'|'es'}
-    * @type {'bg'|'cs'|'da'|'et'|'fi'|'el'|'hu'|'lv'|'lt'|'ro'|'sk'|'sl'|'sv'} */
-    lang: ('en'),
     /** Preferred translator, lowercase only!
     * @type {'deepl'|'yandex'|'bing'|'google'|'mymemory'|'translate'} */
     translator: ('deepl'),
@@ -95,7 +107,8 @@ let cfg = {
     display: ('text + icon'),
     iconWidthA: '16', // Twitter
     iconWidthB: '14', // TweetDeck
-    debug: false
+    lang: $("html[lang]").attr("lang"),
+    debug: true
 };
 //#endregion
 // Web icons are encoded in Data URI.
@@ -134,158 +147,158 @@ zh = {
   f: checkTXT
 },
 bg = {
-  sel: "Български (bg)",
-  tw: "Преведете с",
-  lg: "Език",
-  tr: "Преводач",
-  ds: "Показване на",
-  ti: "Текст + икона",
-  t: "Текст",
-  i: "Икона",
-  s: "Запазване",
+  sel: `Български (bg)`,
+  tw: `Преведете с`,
+  lg: `Език`,
+  tr: `Преводач`,
+  ds: `Показване на`,
+  ti: `Текст + икона`,
+  t: `Текст`,
+  i: `Икона`,
+  s: `Запазване`,
   f: checkTXT
 },
 cs = {
-  sel: "Česky (cs)",
-  tw: "Přeložit pomocí",
-  lg: "Jazyk",
-  tr: "Překladatel",
-  ds: "Zobrazit",
-  ti: "Text + ikona",
-  t: "Text",
-  i: "Ikona",
-  s: "Uložit",
+  sel: `Česky (cs)`,
+  tw: `Přeložit pomocí`,
+  lg: `Jazyk`,
+  tr: `Překladatel`,
+  ds: `Zobrazit`,
+  ti: `Text + ikona`,
+  t: `Text`,
+  i: `Ikona`,
+  s: `Uložit`,
   f: checkTXT
 },
 da = {
-  sel: "Dansk (da)",
-  tw: "Oversæt med",
-  lg: "Sprog",
-  tr: "Oversætter",
-  ds: "Vis",
-  ti: "Tekst + ikon",
-  t: "Tekst",
-  i: "Ikon",
-  s: "Gem",
+  sel: `Dansk (da)`,
+  tw: `Oversæt med`,
+  lg: `Sprog`,
+  tr: `Oversætter`,
+  ds: `Vis`,
+  ti: `Tekst + ikon`,
+  t: `Tekst`,
+  i: `Ikon`,
+  s: `Gem`,
   f: checkTXT
 },
 et = {
-  sel: "Eesti (et)",
-  tw: "Tõlge koos",
-  lg: "Keel",
-  tr: "Tõlkija",
-  ds: "Kuva",
-  ti: "Tekst + ikoon",
-  t: "Tekst",
-  i: "Ikoon",
-  s: "Salvesta",
+  sel: `Eesti (et)`,
+  tw: `Tõlge koos`,
+  lg: `Keel`,
+  tr: `Tõlkija`,
+  ds: `Kuva`,
+  ti: `Tekst + ikoon`,
+  t: `Tekst`,
+  i: `Ikoon`,
+  s: `Salvesta`,
   f: checkTXT
 },
 fi = {
-  sel: "Suomalainen (fi)",
-  tw: "Käännä kanssa",
-  lg: "Kieli",
-  tr: "Kääntäjä",
-  ds: "Näytä",
-  ti: "Teksti + kuvake",
-  t: "Teksti",
-  i: "Kuvake",
-  s: "Tallenna",
+  sel: `Suomalainen (fi)`,
+  tw: `Käännä kanssa`,
+  lg: `Kieli`,
+  tr: `Kääntäjä`,
+  ds: `Näytä`,
+  ti: `Teksti + kuvake`,
+  t: `Teksti`,
+  i: `Kuvake`,
+  s: `Tallenna`,
   f: checkTXT
 },
 el = {
-  sel: "Ελληνική (el)",
-  tw: "Μεταφράστε με",
-  lg: "Γλώσσα",
-  tr: "Μεταφραστής",
-  ds: "Εμφάνιση",
-  ti: "Κείμενο + εικονίδιο",
-  t: "Κείμενο",
-  i: "Εικονίδιο",
-  s: "Αποθήκευση",
+  sel: `Ελληνική (el)`,
+  tw: `Μεταφράστε με`,
+  lg: `Γλώσσα`,
+  tr: `Μεταφραστής`,
+  ds: `Εμφάνιση`,
+  ti: `Κείμενο + εικονίδιο`,
+  t: `Κείμενο`,
+  i: `Εικονίδιο`,
+  s: `Αποθήκευση`,
   f: checkTXT
 },
 hu = {
-  sel: "Magyar (hu)",
-  tw: "Fordítson a",
-  lg: "Nyelv",
-  tr: "Fordító",
-  ds: "Megjelenítés",
-  ti: "Szöveg + ikon",
-  t: "Szöveg",
-  i: "Ikon",
-  s: "Mentés",
+  sel: `Magyar (hu)`,
+  tw: `Fordítson a`,
+  lg: `Nyelv`,
+  tr: `Fordító`,
+  ds: `Megjelenítés`,
+  ti: `Szöveg + ikon`,
+  t: `Szöveg`,
+  i: `Ikon`,
+  s: `Mentés`,
   f: checkTXT
 },
 lv = {
-  sel: "Latviešu (lv)",
-  tw: "Tulkot ar",
-  lg: "Valoda",
-  tr: "Tulkotājs",
-  ds: "Displejs",
-  ti: "Teksts + ikona",
-  t: "Teksts",
-  i: "Ikona",
-  s: "Saglabāt",
+  sel: `Latviešu (lv)`,
+  tw: `Tulkot ar`,
+  lg: `Valoda`,
+  tr: `Tulkotājs`,
+  ds: `Displejs`,
+  ti: `Teksts + ikona`,
+  t: `Teksts`,
+  i: `Ikona`,
+  s: `Saglabāt`,
   f: checkTXT
 },
 lt = {
-  sel: "Lietuvių kalba (lt)",
-  tw: "Išversti su",
-  lg: "Kalba",
-  tr: "Vertėjas",
-  ds: "Rodyti",
-  ti: "Tekstas + piktograma",
-  t: "Tekstas",
-  i: "Ikona",
-  s: "Išsaugoti",
+  sel: `Lietuvių kalba (lt)`,
+  tw: `Išversti su`,
+  lg: `Kalba`,
+  tr: `Vertėjas`,
+  ds: `Rodyti`,
+  ti: `Tekstas + piktograma`,
+  t: `Tekstas`,
+  i: `Ikona`,
+  s: `Išsaugoti`,
   f: checkTXT
 },
 ro = {
-  sel: "Românesc (ro)",
-  tw: "Tradu cu",
-  lg: "Limba",
-  tr: "Traducător",
-  ds: "Afișați",
-  ti: "Text + Icoană",
-  t: "Text",
-  i: "Icoană",
-  s: "Salvați",
+  sel: `Românesc (ro)`,
+  tw: `Tradu cu`,
+  lg: `Limba`,
+  tr: `Traducător`,
+  ds: `Afișați`,
+  ti: `Text + Icoană`,
+  t: `Text`,
+  i: `Icoană`,
+  s: `Salvați`,
   f: checkTXT
 },
 sk = {
-  sel: "Slovenská (sk)",
-  tw: "Preložiť s",
-  lg: "Jazyk",
-  tr: "Prekladateľ",
-  ds: "Zobraziť",
-  ti: "Text + ikona",
-  t: "Text",
-  i: "Ikona",
-  s: "Uložiť",
+  sel: `Slovenská (sk)`,
+  tw: `Preložiť s`,
+  lg: `Jazyk`,
+  tr: `Prekladateľ`,
+  ds: `Zobraziť`,
+  ti: `Text + ikona`,
+  t: `Text`,
+  i: `Ikona`,
+  s: `Uložiť`,
   f: checkTXT
 },
 sl = {
-  sel: "Slovenski (sl)",
-  tw: "Prevedi z",
-  lg: "Jezik",
-  tr: "Prevajalec",
-  ds: "Prikaži",
-  ti: "Besedilo + ikona",
-  t: "Besedilo",
-  i: "Ikona",
-  s: "Shrani",
+  sel: `Slovenski (sl)`,
+  tw: `Prevedi z`,
+  lg: `Jezik`,
+  tr: `Prevajalec`,
+  ds: `Prikaži`,
+  ti: `Besedilo + ikona`,
+  t: `Besedilo`,
+  i: `Ikona`,
+  s: `Shrani`,
 },
 sv = {
-  sel: "Svenska (sv)",
-  tw: "Översätt med",
-  lg: "Språk",
-  tr: "Översättare",
-  ds: "Visa",
-  ti: "Text + ikon",
-  t: "Text",
-  i: "Ikon",
-  s: "Spara",
+  sel: `Svenska (sv)`,
+  tw: `Översätt med`,
+  lg: `Språk`,
+  tr: `Översättare`,
+  ds: `Visa`,
+  ti: `Text + ikon`,
+  t: `Text`,
+  i: `Ikon`,
+  s: `Spara`,
   f: checkTXT
 },
 nl = {
@@ -397,15 +410,27 @@ es = {
   f: checkTXT
 };
 //#endregion
+
 const log = (...args) => {
   (cfg.debug) ? console.log('[MoL]', ...args) : false;
 },
 isHTML = (str, doc = new DOMParser().parseFromString(str, "text/html")) => {
   return Array.from(doc.body.childNodes).some(node => node.nodeType === 1);
 };
-
+function qs(...elem) {
+  return document.querySelector(elem);
+};
+function create(...element) {
+  return document.createElement(element);
+};
 function checkTXT() {
   return this.tw
+};
+function TETSetValue(key, value) {
+  GM_setValue(key, value);
+  if(key === 'Config'){
+    localStorage.TETConfig = value;
+  }
 }
 async function injectTranslationButton() {
     let content = '',magicBtn,btContainer,btLang,site,
@@ -430,10 +455,8 @@ async function injectTranslationButton() {
         site = (cfg.translator == 'yandex') ? `https://translate.yandex.com/?lang=${btLang}-${cfg.lang}&text=${content}` : (cfg.translator == 'bing') ? `https://www.bing.com/translator/?text=${content}&from=${btLang}&to=${cfg.lang}` : (cfg.translator == 'google') ? `https://translate.google.com/?q=${content}&sl=${btLang}&tl=${cfg.lang}` : (cfg.translator == 'mymemory') ? `https://mymemory.translated.net/${cfg.lang}/${btLang}/${cfg.lang}/${content}` : (cfg.translator == 'translate') ? `https://www.translate.com/#${btLang}/${cfg.lang}/${content}` : `https://www.deepl.com/translator#${btLang}/${cfg.lang}/${content}`;
         magicBtn.hover(function() {
           $(this).addClass("r-1ny4l3l r-1ddef8g")
-            // $(this).css("text-decoration", "underline");
         }, function() {
           $(this).removeClass("r-1ny4l3l r-1ddef8g")
-            // $(this).css("text-decoration", "none");
         });
         magicBtn.on("click", () => {
             window.open(`${site}`,'_blank');
@@ -453,10 +476,8 @@ async function injectTranslationButton() {
         site = (cfg.translator == 'yandex') ? `https://translate.yandex.com/?lang=${btLang}-${cfg.lang}&text=${content}` : (cfg.translator == 'bing') ? `https://www.bing.com/translator/?text=${content}&from=${btLang}&to=${cfg.lang}` : (cfg.translator == 'google') ? `https://translate.google.com/?q=${content}&sl=${btLang}&tl=${cfg.lang}` : (cfg.translator == 'mymemory') ? `https://mymemory.translated.net/${cfg.lang}/${btLang}/${cfg.lang}/${content}` : (cfg.translator == 'translate') ? `https://www.translate.com/#${btLang}/${cfg.lang}/${content}` : `https://www.deepl.com/translator#${btLang}/${cfg.lang}/${content}`;
         magicBtn.hover(function() {
           $(this).addClass("r-1ny4l3l r-1ddef8g")
-            // $(this).css("text-decoration", "underline");
         }, function() {
           $(this).removeClass("r-1ny4l3l r-1ddef8g")
-            // $(this).css("text-decoration", "none");
         });
         magicBtn.on("click", () => {
             window.open(`${site}`,'_blank');
@@ -479,7 +500,6 @@ async function TweetDeck() {
     tweetbtn = () => {
       log("Injecting tweet button")
         checkDisplay
-        // new dis().check()
         btContainer = translateTweet.siblings().eq(2), // "Tweet"
         content = btContainer.text(), // Content of "Tweet"
         btLang = btContainer.attr("lang");
@@ -498,9 +518,98 @@ async function TweetDeck() {
     };
     return check
 }
-let observer = new MutationObserver(() => {injectTranslationButton()});
-let td = new MutationObserver(() => {TweetDeck()});
-// Its a headache observing single tweet element, inconsistent load times.
-const target = document.querySelector("body"),
-init = { subtree: true, characterData: true, childList: true };
-(location.host == 'twitter.com') ? observer.observe($(".css-1dbjc4n")[0], {subtree:true,characterData:true,childList:true}) : (location.host == 'tweetdeck.twitter.com') ? td.observe(target, init) : false;
+
+function injectMenu(...menu) {
+  let target = $("body"),
+  nav = create("div");
+  nav.className = "navbackground";
+  target.before(nav, menu);
+  // $('option[value="current"]').html(`(Auto) ${cfg.lang}`)
+  qs('select#languages').value = TETConfig.lang
+  qs('select#translator').value = TETConfig.translator
+  qs('select#display').value = TETConfig.display
+  nav.onclick = async () => {
+    $('.btNav > form').addClass("rm");
+    $('.btNav > button#tetMenuButton').removeClass("rm");
+    nav.style.width = "0%";
+    setTimeout(() => $('button#tetMenuButton > svg').addClass("rm"), 5000);
+  };
+  qs('button#tetMenuButton').onmousemove = async () => {
+    $('button#tetMenuButton > svg').removeClass("rm");
+    $('button#tetMenuButton').removeClass("mini");
+    setTimeout(() => $('button#tetMenuButton > svg').addClass("rm"), 5000);
+}
+  qs('button#tetMenuButton').onmouseleave = async () => {
+    $('button#tetMenuButton').addClass("mini");
+    $('button#tetMenuButton > svg').removeClass("rm");
+    setTimeout(() => $('button#tetMenuButton > svg').addClass("rm"), 5000);
+}
+  qs('button#tetMenuButton').onclick = async () => {
+    nav.style.width = "100%";
+    $('.btNav > form').removeClass("rm");
+    $('.btNav > button#tetMenuButton').addClass("rm")
+  }
+  qs('select#languages').onchange = () => {
+    TETConfig.lang = qs('select#languages').value;
+    log(DBConfig)
+  }
+  qs('select#translator').onchange = () => {
+    TETConfig.translator = qs('select#translator').value;
+    log(DBConfig)
+  }
+  qs('select#display').onchange = () => {
+    TETConfig.display = qs('select#display').value;
+    log(DBConfig)
+  }
+  qs('button#tetSave').onclick = async () => {
+    TETSetValue("Config", JSON.stringify(TETConfig))
+    // TETSetValue("Config", JSON.stringify(this.TETConfig));
+  setTimeout(() => window.location.reload(), 200)
+  }
+  qs('button#tetReset').onclick = async () => {
+    TETConfig = DefaultConfig;
+    TETSetValue("Config", JSON.stringify(TETConfig))
+    setTimeout(() => window.location.reload(), 200)
+  }
+  setTimeout(() => $('button#tetMenuButton > svg').addClass("rm"), 5000);
+}
+
+//#region Main
+async function main() {
+  // log(cfg)
+  // Its a headache observing single tweet element, inconsistent load times.
+  const target = qs("body"),
+  sidebar = '<div class="btNav">\n<button id="tetMenuButton" class="mini css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-18jsvk2 css-4rbku5" type="button">\n<svg viewBox="0 0 24 24" class="r-1fmj7o5 r-18jsvk2 r-4qtqp9 r-yyyyoo r-1q142lx r-1xvli5t r-1b7u577 r-dnmrzs r-bnwqim r-1plcrui r-lrvibr" width="15"><g><path d="M12 8.21c-2.09 0-3.79 1.7-3.79 3.79s1.7 3.79 3.79 3.79 3.79-1.7 3.79-3.79-1.7-3.79-3.79-3.79zm0 6.08c-1.262 0-2.29-1.026-2.29-2.29S10.74 9.71 12 9.71s2.29 1.026 2.29 2.29-1.028 2.29-2.29 2.29z"></path><path d="M12.36 22.375h-.722c-1.183 0-2.154-.888-2.262-2.064l-.014-.147c-.025-.287-.207-.533-.472-.644-.286-.12-.582-.065-.798.115l-.116.097c-.868.725-2.253.663-3.06-.14l-.51-.51c-.836-.84-.896-2.154-.14-3.06l.098-.118c.186-.222.23-.523.122-.787-.11-.272-.358-.454-.646-.48l-.15-.014c-1.18-.107-2.067-1.08-2.067-2.262v-.722c0-1.183.888-2.154 2.064-2.262l.156-.014c.285-.025.53-.207.642-.473.11-.27.065-.573-.12-.795l-.094-.116c-.757-.908-.698-2.223.137-3.06l.512-.512c.804-.804 2.188-.865 3.06-.14l.116.098c.218.184.528.23.79.122.27-.112.452-.358.477-.643l.014-.153c.107-1.18 1.08-2.066 2.262-2.066h.722c1.183 0 2.154.888 2.262 2.064l.014.156c.025.285.206.53.472.64.277.117.58.062.794-.117l.12-.102c.867-.723 2.254-.662 3.06.14l.51.512c.836.838.896 2.153.14 3.06l-.1.118c-.188.22-.234.522-.123.788.112.27.36.45.646.478l.152.014c1.18.107 2.067 1.08 2.067 2.262v.723c0 1.183-.888 2.154-2.064 2.262l-.155.014c-.284.024-.53.205-.64.47-.113.272-.067.574.117.795l.1.12c.756.905.696 2.22-.14 3.06l-.51.51c-.807.804-2.19.864-3.06.14l-.115-.096c-.217-.183-.53-.23-.79-.122-.273.114-.455.36-.48.646l-.014.15c-.107 1.173-1.08 2.06-2.262 2.06zm-3.773-4.42c.3 0 .593.06.87.175.79.328 1.324 1.054 1.4 1.896l.014.147c.037.4.367.7.77.7h.722c.4 0 .73-.3.768-.7l.014-.148c.076-.842.61-1.567 1.392-1.892.793-.33 1.696-.182 2.333.35l.113.094c.178.148.366.18.493.18.206 0 .4-.08.546-.227l.51-.51c.284-.284.305-.73.048-1.038l-.1-.12c-.542-.65-.677-1.54-.352-2.323.326-.79 1.052-1.32 1.894-1.397l.155-.014c.397-.037.7-.367.7-.77v-.722c0-.4-.303-.73-.702-.768l-.152-.014c-.846-.078-1.57-.61-1.895-1.393-.326-.788-.19-1.678.353-2.327l.1-.118c.257-.31.236-.756-.048-1.04l-.51-.51c-.146-.147-.34-.227-.546-.227-.127 0-.315.032-.492.18l-.12.1c-.634.528-1.55.67-2.322.354-.788-.327-1.32-1.052-1.397-1.896l-.014-.155c-.035-.397-.365-.7-.767-.7h-.723c-.4 0-.73.303-.768.702l-.014.152c-.076.843-.608 1.568-1.39 1.893-.787.326-1.693.183-2.33-.35l-.118-.096c-.18-.15-.368-.18-.495-.18-.206 0-.4.08-.546.226l-.512.51c-.282.284-.303.73-.046 1.038l.1.118c.54.653.677 1.544.352 2.325-.327.788-1.052 1.32-1.895 1.397l-.156.014c-.397.037-.7.367-.7.77v.722c0 .4.303.73.702.768l.15.014c.848.078 1.573.612 1.897 1.396.325.786.19 1.675-.353 2.325l-.096.115c-.26.31-.238.756.046 1.04l.51.51c.146.147.34.227.546.227.127 0 .315-.03.492-.18l.116-.096c.406-.336.923-.524 1.453-.524z"></path></g></svg>\n<span class="css-901oao css-16my406 r-bcqeeo r-qvutc0 r-1fmj7o5 r-18jsvk2">Menu</span>\n</button>\n<form class="rm">\n<label for="languages" class="r-1fmj7o5 r-18jsvk2">Languages</label>\n<select id="languages" name="languages">\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="en">English</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="zh">中文</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="bg">Български</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="cs">Česky</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="da">Dansk</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="et">Eesti</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="fi">Suomalainen</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="el">Ελληνική</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="hu">Magyar</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="lv">Latviešu</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="lt">Lietuvių kalba</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="ro">Românesc</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="sk">Slovenská</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="sl">Slovenski</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="sv">Svenska</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="nl">Nederlands</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="fr">Français</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="de">Deutsch</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="it">Italiano</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="ja">日本語</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="pl">Polski</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="pt">Português</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="ru">Russisch</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="es">Español</option>\n</select>\n<label for="translator" class="r-1fmj7o5 r-18jsvk2">Translators</label>\n<select id="translator" name="translator">\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="deepl">Deepl</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="yandex">Yandex Translator</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="bing">Bing Translate</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="google">Google Translate</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="mymemory">MyMemory</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="translate">Translate.com</option>\n</select>\n<label for="display" class="r-1fmj7o5 r-18jsvk2">Display</label>\n<select id="display" name="display">\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value=\'text + icon\'>Text + Icon</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="text">Text Only</option>\n<option class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" value="icon">Icon Only</option>\n</select>\n<button id="tetSave" class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" type="button">Save</button>\n<button id="tetReset" class="css-901oao r-poiln3 r-1qqlz1x r-urgr8i r-1vkxrha r-1dgebii r-18z3xeu r-b5skir r-1fmj7o5 r-18jsvk2 css-4rbku5" type="button">Reset</button>\n</form>\n<style>.rm{display:none!important}.mini{transition-property:width,height!important;transition-duration:250ms!important;transition-timing-function:ease-in-out!important;min-width:10%!important;min-height:10%!important;width:auto;height:auto;overflow:hidden;background:transparent}button.mini>span{content-visibility:hidden!important}button>span{transition-property:content-visibility!important;transition-duration:250ms!important;transition-timing-function:ease-in-out!important;transition-delay:500ms!important;content-visibility:visible!important}button:not(.mini)>svg{display:none!important}button:not(.mini),form,label,option,select{width:-moz-available;width:-webkit-fill-available;width:100%;width:fill-available}form{height:100%;position:absolute}button{cursor:pointer;height:5%;border-radius:15px;justify-content:center;display:flex!important;margin-top:5%!important;font-size:20px!important;font-weight:bold!important;padding:0!important}label{position:relative;display:inline-block;float:left}option{display:none;position:absolute;z-index:1}label:hover option{display:block}.btNav{position:fixed;width:8vw;height:50%;overflow:hidden;top:10%;left:0;z-index:1000!important}.navbackground{z-index:2;width:0;height:100%;position:fixed;top:0;left:0}</style>\n</div>',
+  init = {subtree:true,characterData:true,childList:true};
+  let observer = new MutationObserver(() => {injectTranslationButton()});
+  let td = new MutationObserver(() => {TweetDeck()});
+  (location.host == 'twitter.com') ? observer.observe($(".css-1dbjc4n")[0], init) : (location.host == 'tweetdeck.twitter.com') ? td.observe(target, init) : false;
+  injectMenu(sidebar);
+}
+
+Promise.all([GM.getValue("Config")]).then((data) => {
+  let res = data[0]
+  if (res != null) {
+    try {
+      TETConfig = JSON.parse(res);
+    } catch (e) {
+      TETConfig = res;
+    }
+  } else {
+    TETConfig = DefaultConfig;
+  }
+  const localData = localStorage.TETConfig;
+  (localData && localData.length > 0) ? TETConfig = JSON.parse(localData) : false;
+  for (var key in DefaultConfig) {
+    if (typeof (TETConfig[key]) === "undefined") {
+      TETConfig[key] = DefaultConfig[key];
+    }
+  }
+  AllData.TETConfig = TETConfig;
+  DBConfig = JSON.parse(JSON.stringify(TETConfig));
+  cfg = DBConfig;
+  main();
+}).catch(function (except) {
+  console.log(except);
+});
+//#endregion
