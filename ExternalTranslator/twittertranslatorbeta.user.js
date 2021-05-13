@@ -77,7 +77,6 @@
 // ==/UserScript==
 "use strict";
 //#region Config
-//textFinder = (typeof(qs(".r-1fmj7o5")) != 'undefined' && qs(".r-1fmj7o5") != null) ? DefaultConfig.colors.text = 'r-1fmj7o5' : (typeof(qs(".r-18jsvk2")) != 'undefined' && qs(".r-18jsvk2") != null) ? DefaultConfig.colors.text = 'r-18jsvk2' : false,
 if (typeof (GM) === "undefined") {
   GM = {};
   GM.setValue = GM_setValue;
@@ -89,7 +88,7 @@ DBConfig = {},
 AllData = {},
 DefaultConfig = {
   theme: 'default',
-  colors: 'unset',
+  colors: 'blue',
   display: 'text + icon',
   iconWidthA: '16',
   iconWidthB: '14',
@@ -114,28 +113,8 @@ sidebar = `<div id="tetTW" class="btNav">
 </button>
 <form class="rm">
 <div id="tetSelector" class="css-1dbjc4n tetBackground r-1kqtdi0 r-z2wwpe r-rs99b7 r-16y2uox">
-  <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Theme</span></div>
-  <select id="theme" name="theme" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-1wzrnnt r-1ny4l3l r-t60dpp r-xd6kpl r-1pn2ns4 r-ttdzmv">
-    <option class="tetBackground" value="default">Default</option>
-    <option class="tetBackground" value="dim">Dim</option>
-    <option class="tetBackground" value="black">Lights out</option>
-  </select>
-</div>
-<div id="tetSelector" class="css-1dbjc4n tetBackground r-1kqtdi0 r-z2wwpe r-rs99b7 r-16y2uox">
-  <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Color</span></div>
-  <select id="colorselect" name="colorselect" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-1wzrnnt r-1ny4l3l r-t60dpp r-xd6kpl r-1pn2ns4 r-ttdzmv">
-    <option class="tetBackground" value="unset">Unset</option>
-    <option class="tetBackground" value="blue">Blue</option>
-    <option class="tetBackground" value="yellow">Yellow</option>
-    <option class="tetBackground" value="red">Red</option>
-    <option class="tetBackground" value="purple">Purple</option>
-    <option class="tetBackground" value="orange">Orange</option>
-    <option class="tetBackground" value="green">Green</option>
-  </select>
-</div>
-<div id="tetSelector" class="css-1dbjc4n tetBackground r-1kqtdi0 r-z2wwpe r-rs99b7 r-16y2uox">
 <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Languages</span></div>
-<select id="languages" name="languages" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-1wzrnnt r-1ny4l3l r-t60dpp r-xd6kpl r-1pn2ns4 r-ttdzmv">
+<select id="languages" name="languages" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-1ny4l3l r-t60dpp r-1pn2ns4 r-ttdzmv">
   <option class="tetBackground" value="en">English</option>
   <option class="tetBackground" value="zh">中文</option>
   <option class="tetBackground" value="bg">Български</option>
@@ -164,7 +143,7 @@ sidebar = `<div id="tetTW" class="btNav">
 </div>
 <div id="tetSelector" class="css-1dbjc4n tetBackground r-1kqtdi0 r-z2wwpe r-rs99b7 r-16y2uox">
 <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Translators</span></div>
-<select id="translator" name="translator" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-1wzrnnt r-1ny4l3l r-t60dpp r-xd6kpl r-1pn2ns4 r-ttdzmv">
+<select id="translator" name="translator" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-1ny4l3l r-t60dpp r-1pn2ns4 r-ttdzmv">
     <option class="tetBackground" value="deepl">Deepl</option>
     <option class="tetBackground" value="yandex">Yandex Translator</option>
     <option class="tetBackground" value="bing">Bing Translate</option>
@@ -175,10 +154,29 @@ sidebar = `<div id="tetTW" class="btNav">
 </div>
 <div id="tetSelector" class="css-1dbjc4n tetBackground r-1kqtdi0 r-z2wwpe r-rs99b7 r-16y2uox">
 <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Display</span></div>
-<select id="display" name="display" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-1wzrnnt r-1ny4l3l r-t60dpp r-xd6kpl r-1pn2ns4 r-ttdzmv">
+<select id="display" name="display" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-1ny4l3l r-t60dpp r-1pn2ns4 r-ttdzmv">
     <option class="tetBackground" value='text + icon'>Text + Icon</option>
     <option class="tetBackground" value="text">Text Only</option>
     <option class="tetBackground" value="icon">Icon Only</option>
+</select>
+</div>
+<div id="tetSelector" class="css-1dbjc4n tetBackground r-1kqtdi0 r-z2wwpe r-rs99b7 r-16y2uox">
+<div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Theme</span></div>
+<select id="theme" name="theme" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-1ny4l3l r-t60dpp r-1pn2ns4 r-ttdzmv">
+  <option class="tetBackground" value="default">Default</option>
+  <option class="tetBackground" value="dim">Dim</option>
+  <option class="tetBackground" value="black">Lights out</option>
+</select>
+</div>
+<div id="tetSelector" class="css-1dbjc4n tetBackground r-1kqtdi0 r-z2wwpe r-rs99b7 r-16y2uox">
+<div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Color</span></div>
+<select id="colorselect" name="colorselect" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-1ny4l3l r-t60dpp r-1pn2ns4 r-ttdzmv">
+  <option class="tetBackground" value="blue">Blue</option>
+  <option class="tetBackground" value="yellow">Yellow</option>
+  <option class="tetBackground" value="red">Red</option>
+  <option class="tetBackground" value="purple">Purple</option>
+  <option class="tetBackground" value="orange">Orange</option>
+  <option class="tetBackground" value="green">Green</option>
 </select>
 </div>
 <button id="tetSave" class="css-901oao r-poiln3 tetDisplayColor tetTextColor css-4rbku5" type="button" >Save</button>
@@ -222,17 +220,23 @@ height: 5%;
 border-radius: 15px;
 justify-content: center;
 display: flex !important;
-margin-top: 5% !important;
+margin-top: 3% !important;
 font-size: 20px !important;
 font-weight: bold !important;
 padding: 0px !important
+}
+#tetName {
+  padding-left: 2px
+}
+#tetSelector {
+margin-top: 3% !important
 }
 #tetTW {
 position: fixed;
 width: 8vw;
 height: 50%;
 overflow: hidden;
-top: 55%;
+top: 65%;
 left: 0px;
 z-index: 1000 !important
 }
@@ -662,8 +666,8 @@ function injectMenu(...menu) {
   target.before(nav, menu);
   if(location.host == 'tweetdeck.twitter.com') {
     $('div.btNav').attr("id", "tetTD")
-    $("div#tetSelector").eq(0).addClass('rm')
-    $("div#tetSelector").eq(1).addClass('rm')
+    $("div#tetSelector").eq(3).addClass('rm')
+    $("div#tetSelector").eq(4).addClass('rm')
   }
   qs('select#theme').value = TETConfig.theme
   qs('select#colorselect').value = TETConfig.colors
@@ -771,7 +775,6 @@ Promise.all([GM.getValue("Config")]).then((data) => {
   }
   // AllData.TETConfig = TETConfig;
   DBConfig = JSON.parse(JSON.stringify(TETConfig));
-  // textFinder
   log(DBConfig)
   injectMenu(sidebar);
   TETInject
