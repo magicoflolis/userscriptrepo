@@ -58,13 +58,14 @@
 // @description:es      Añade traductores de terceros a Twitter
 // @author       Magic of Lolis <magicoflolis@gmail.com>
 // @icon         https://abs.twimg.com/favicons/twitter.ico
-// @version      5.14.21
+// @version      5.15.21
 // @namespace    https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @homepageURL  https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @supportURL   https://github.com/magicoflolis/userscriptrepo/issues/new
 // @updateURL    https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js
 // @downloadURL  https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js
 // @require      https://code.jquery.com/jquery-3.6.0.slim.min.js
+// @match        https://www.twitlonger.com/show/*
 // @match        https://twitter.com/*
 // @match        https://tweetdeck.twitter.com/*
 // @exclude      https://twitter.com/login
@@ -77,24 +78,123 @@
 // ==/UserScript==
 "use strict";
 //#region Config
-if (typeof (GM) === "undefined") {
-  GM = {};
-  GM.setValue = GM_setValue;
-  GM.getValue = GM_getValue;
-}
-
-const debug = true,
-log = (...args) => {
-  (debug) ? console.log('[MoL]', ...args) : false;
+(typeof (GM) === "undefined") ? (
+  GM = {},
+  GM.setValue = GM_setValue,
+  GM.getValue = GM_getValue
+) : false;
+let enableLogs = true
+const log = (msg) => {
+  return enableLogs ? console.log('[TET]', msg) : false;
 },
-TETInject = (location.host == 'twitter.com') ? new MutationObserver(() => {injectTranslationButton()}).observe(document.body, {subtree:true,characterData:true,childList:true}) : (location.host == 'tweetdeck.twitter.com') ? new MutationObserver(() => {TweetDeck()}).observe(document.body, {subtree:true,characterData:true,childList:true}) : false,
+qs = (element) => {
+  return document.querySelector(element);
+},
+create = (element) => {
+  return document.createElement(element);
+},
+TETSetValue = (key, value) => {
+  GM.setValue(key, value);
+  (key === 'Config') ? (localStorage.TETConfig = value) : false;
+},
+TETInject = (location.host == 'twitter.com') ? new MutationObserver(() => {Twitter()}).observe(document.body, {subtree:true,characterData:true,childList:true}) : (location.host == 'tweetdeck.twitter.com') ? new MutationObserver(() => {TweetDeck()}).observe(document.body, {subtree:true,characterData:true,childList:true}) : (location.host == 'www.twitlonger.com') ? new MutationObserver(() => {twitlonger()}).observe(document.body, {subtree:true,characterData:true,childList:true}) : false,
 isHTML = (str, doc = new DOMParser().parseFromString(str, "text/html")) => {
   return Array.from(doc.body.childNodes).some(node => node.nodeType === 1);
-};
+},
+tetCSS = `.rm, button:not(.mini) > #tetSVG, button.mini > span {
+  display: none !important
+  }
+  #tetSVG {
+  right: 35% !important
+  }
+  .mini {
+  min-height: 12% !important;
+  width: 8vw;
+  height: auto;
+  overflow: hidden;
+  background: transparent
+  }
+  button > span {
+  transition-property: content-visibility !important;
+  transition-duration: 250ms !important;
+  transition-timing-function: ease-in-out !important;
+  transition-delay: 500ms !important;
+  content-visibility: visible !important
+  }
+  button:not(.mini), #tetForm {
+  width: -moz-available;
+  width: -webkit-fill-available;
+  width: 100%;
+  width: fill-available
+  }
+  #tetForm {
+  height: 100%;
+  position: absolute
+  }
+  button#tetMenuButton, #tetSave, #tetReload, #tetReset {
+  cursor: pointer;
+  height: 5%;
+  border-radius: 15px;
+  justify-content: center;
+  display: flex !important;
+  margin-top: 3% !important;
+  font-size: 20px !important;
+  font-weight: bold !important;
+  padding: 0px !important
+  }
+  #tetName, #tetSelector > select {
+  padding-left: 2%
+  }
+  #tetSelector {
+  margin-top: 3% !important
+  }
+  #tetTW {
+  position: fixed;
+  width: 8vw;
+  height: 50%;
+  overflow: hidden;
+  top: 65%;
+  left: 0px;
+  z-index: 1000 !important
+  }
+  #tetTD {
+  position: fixed;
+  width: 8vw;
+  height: 50%;
+  overflow: hidden;
+  top: 0;
+  left: 90%;
+  z-index: 1000 !important
+  }
+  .navbackground {
+  z-index: 2;
+  width: 0;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0
+  }
+  .r-1q3imqu {
+    background-color: rgb(26, 145, 218);
+  }
+  .r-1kplyi6 {
+    background-color: rgb(230, 156, 28);
+  }
+  .r-1ucxkr8 {
+    background-color: rgb(202, 32, 85);
+  }
+  .r-njt2r9 {
+    background-color: rgb(134, 93, 202);
+  }
+  .r-1kplyi6 {
+    background-color: rgb(220, 84, 31);
+  }
+  .r-zx61xx {
+    background-color: rgb(21, 172, 89);
+  }`;
 
 let TETConfig = {},
-DBConfig = {},
-AllData = {},
+LoadedConfig = {},
 // Web icons are encoded in Data URI.
 // Can be decoded: https://www.site24x7.com/tools/datauri-to-image.html
 icons = {
@@ -130,7 +230,7 @@ en = {
   t: `Text`,
   i: `Icon`,
   s: `Save`,
-  f: checkTXT
+  fn: checkLng
 },
 zh = {
   sel: `中文 (zh)`,
@@ -156,7 +256,7 @@ zh = {
   t: `案文`,
   i: `图标`,
   s: `保存`,
-  f: checkTXT
+  fn: checkLng
 },
 bg = {
   sel: `Български (bg)`,
@@ -182,7 +282,7 @@ bg = {
   t: `Текст`,
   i: `Икона`,
   s: `Запазване`,
-  f: checkTXT
+  fn: checkLng
 },
 cs = {
   sel: `Česky (cs)`,
@@ -208,7 +308,7 @@ cs = {
   t: `Text`,
   i: `Ikona`,
   s: `Uložit`,
-  f: checkTXT
+  fn: checkLng
 },
 da = {
   sel: `Dansk (da)`,
@@ -234,7 +334,7 @@ da = {
   t: `Tekst`,
   i: `Ikon`,
   s: `Gem`,
-  f: checkTXT
+  fn: checkLng
 },
 et = {
   sel: `Eesti (et)`,
@@ -260,7 +360,7 @@ et = {
   t: `Tekst`,
   i: `Ikoon`,
   s: `Salvesta`,
-  f: checkTXT
+  fn: checkLng
 },
 fi = {
   sel: `Suomalainen (fi)`,
@@ -286,7 +386,7 @@ fi = {
   t: `Teksti`,
   i: `Kuvake`,
   s: `Tallenna`,
-  f: checkTXT
+  fn: checkLng
 },
 el = {
   sel: `Ελληνική (el)`,
@@ -312,7 +412,7 @@ el = {
   t: `Κείμενο`,
   i: `Εικονίδιο`,
   s: `Αποθήκευση`,
-  f: checkTXT
+  fn: checkLng
 },
 hu = {
   sel: `Magyar (hu)`,
@@ -338,7 +438,7 @@ hu = {
   t: `Szöveg`,
   i: `Ikon`,
   s: `Mentés`,
-  f: checkTXT
+  fn: checkLng
 },
 lv = {
   sel: `Latviešu (lv)`,
@@ -364,7 +464,7 @@ lv = {
   t: `Teksts`,
   i: `Ikona`,
   s: `Saglabāt`,
-  f: checkTXT
+  fn: checkLng
 },
 lt = {
   sel: `Lietuvių kalba (lt)`,
@@ -390,7 +490,7 @@ lt = {
   t: `Tekstas`,
   i: `Ikona`,
   s: `Išsaugoti`,
-  f: checkTXT
+  fn: checkLng
 },
 ro = {
   sel: `Românesc (ro)`,
@@ -416,7 +516,7 @@ ro = {
   t: `Text`,
   i: `Icoană`,
   s: `Salvați`,
-  f: checkTXT
+  fn: checkLng
 },
 sk = {
   sel: `Slovenská (sk)`,
@@ -442,7 +542,7 @@ sk = {
   t: `Text`,
   i: `Ikona`,
   s: `Uložiť`,
-  f: checkTXT
+  fn: checkLng
 },
 sl = {
   sel: `Slovenski (sl)`,
@@ -493,7 +593,7 @@ sv = {
   t: `Text`,
   i: `Ikon`,
   s: `Spara`,
-  f: checkTXT
+  fn: checkLng
 },
 nl = {
   sel: `Nederlands (nl)`,
@@ -519,7 +619,7 @@ nl = {
   t: `Tekst`,
   i: `Icoon`,
   s: `Save`,
-  f: checkTXT
+  fn: checkLng
 },
 fr = {
   sel: `Français (fr)`,
@@ -545,7 +645,7 @@ fr = {
   t: `Texte`,
   i: `Icône`,
   s: `Sauvez`,
-  f: checkTXT
+  fn: checkLng
 },
 de = {
   sel: `Deutsch (de)`,
@@ -571,7 +671,7 @@ de = {
   t: `Text`,
   i: `Icon`,
   s: `Speichern`,
-  f: checkTXT
+  fn: checkLng
 },
 it = {
   sel: `Italiano (it)`,
@@ -597,7 +697,7 @@ it = {
   t: `Testo`,
   i: `Icona`,
   s: `Salva`,
-  f: checkTXT
+  fn: checkLng
 },
 ja = {
   sel: `日本語 (ja)`,
@@ -623,7 +723,7 @@ ja = {
   t: `テキスト`,
   i: `アイコン`,
   s: `保存`,
-  f: checkTXT
+  fn: checkLng
 },
 pl = {
   sel: `Polski (pl)`,
@@ -649,7 +749,7 @@ pl = {
   t: `Tekst`,
   i: `Ikona`,
   s: `Zapisz`,
-  f: checkTXT
+  fn: checkLng
 },
 pt = {
   sel: `Português (pt)`,
@@ -675,7 +775,7 @@ pt = {
   t: `Texto`,
   i: `Ícone`,
   s: `Guardar`,
-  f: checkTXT
+  fn: checkLng
 },
 ru = {
   sel: `Russisch (ru)`,
@@ -701,7 +801,7 @@ ru = {
   t: `Текст`,
   i: `иконка`,
   s: `Сохранить`,
-  f: checkTXT
+  fn: checkLng
 },
 es = {
   sel: `Español (es)`,
@@ -727,30 +827,31 @@ es = {
   t: `Texto`,
   i: `Icono`,
   s: `Guardar`,
-  f: checkTXT
+  fn: checkLng
 },
 //#endregion
 DefaultConfig = {
-  theme: $('meta[name="theme-color"]').attr("content"),
+  theme: "#000000",
   colors: "r-urgr8i",
+  cHover: "r-1q3imqu",
   display: 'text + icon',
   iconWidthA: '16',
   iconWidthB: '14',
   lang: $("html[lang]").attr("lang"),
   translator: 'deepl',
   cDisplay: `DeepL ${icons.deepl}`,
-  cLang: en.f(),
+  cLang: en.fn().tw,
   cTheme: "r-kemksi",
   cText: "r-jwli3a",
   cColor: "r-p1n3y5 r-1bih22f",
-  cSub: "r-13gxpu9"
+  cSub: "r-13gxpu9",
 },
 sidebar = `<div id="tetTW" class="btNav">
 <button title="Menu" id="tetMenuButton" class="mini css-901oao r-poiln3 tetDisplayColor css-4rbku5" type="button" >
-  <svg viewBox="0 0 24 24" class="tetTextColor r-4qtqp9 r-yyyyoo r-1q142lx r-1xvli5t r-1b7u577 r-dnmrzs r-bnwqim r-1plcrui r-lrvibr" width="15"><g><path d="M12 8.21c-2.09 0-3.79 1.7-3.79 3.79s1.7 3.79 3.79 3.79 3.79-1.7 3.79-3.79-1.7-3.79-3.79-3.79zm0 6.08c-1.262 0-2.29-1.026-2.29-2.29S10.74 9.71 12 9.71s2.29 1.026 2.29 2.29-1.028 2.29-2.29 2.29z"></path><path d="M12.36 22.375h-.722c-1.183 0-2.154-.888-2.262-2.064l-.014-.147c-.025-.287-.207-.533-.472-.644-.286-.12-.582-.065-.798.115l-.116.097c-.868.725-2.253.663-3.06-.14l-.51-.51c-.836-.84-.896-2.154-.14-3.06l.098-.118c.186-.222.23-.523.122-.787-.11-.272-.358-.454-.646-.48l-.15-.014c-1.18-.107-2.067-1.08-2.067-2.262v-.722c0-1.183.888-2.154 2.064-2.262l.156-.014c.285-.025.53-.207.642-.473.11-.27.065-.573-.12-.795l-.094-.116c-.757-.908-.698-2.223.137-3.06l.512-.512c.804-.804 2.188-.865 3.06-.14l.116.098c.218.184.528.23.79.122.27-.112.452-.358.477-.643l.014-.153c.107-1.18 1.08-2.066 2.262-2.066h.722c1.183 0 2.154.888 2.262 2.064l.014.156c.025.285.206.53.472.64.277.117.58.062.794-.117l.12-.102c.867-.723 2.254-.662 3.06.14l.51.512c.836.838.896 2.153.14 3.06l-.1.118c-.188.22-.234.522-.123.788.112.27.36.45.646.478l.152.014c1.18.107 2.067 1.08 2.067 2.262v.723c0 1.183-.888 2.154-2.064 2.262l-.155.014c-.284.024-.53.205-.64.47-.113.272-.067.574.117.795l.1.12c.756.905.696 2.22-.14 3.06l-.51.51c-.807.804-2.19.864-3.06.14l-.115-.096c-.217-.183-.53-.23-.79-.122-.273.114-.455.36-.48.646l-.014.15c-.107 1.173-1.08 2.06-2.262 2.06zm-3.773-4.42c.3 0 .593.06.87.175.79.328 1.324 1.054 1.4 1.896l.014.147c.037.4.367.7.77.7h.722c.4 0 .73-.3.768-.7l.014-.148c.076-.842.61-1.567 1.392-1.892.793-.33 1.696-.182 2.333.35l.113.094c.178.148.366.18.493.18.206 0 .4-.08.546-.227l.51-.51c.284-.284.305-.73.048-1.038l-.1-.12c-.542-.65-.677-1.54-.352-2.323.326-.79 1.052-1.32 1.894-1.397l.155-.014c.397-.037.7-.367.7-.77v-.722c0-.4-.303-.73-.702-.768l-.152-.014c-.846-.078-1.57-.61-1.895-1.393-.326-.788-.19-1.678.353-2.327l.1-.118c.257-.31.236-.756-.048-1.04l-.51-.51c-.146-.147-.34-.227-.546-.227-.127 0-.315.032-.492.18l-.12.1c-.634.528-1.55.67-2.322.354-.788-.327-1.32-1.052-1.397-1.896l-.014-.155c-.035-.397-.365-.7-.767-.7h-.723c-.4 0-.73.303-.768.702l-.014.152c-.076.843-.608 1.568-1.39 1.893-.787.326-1.693.183-2.33-.35l-.118-.096c-.18-.15-.368-.18-.495-.18-.206 0-.4.08-.546.226l-.512.51c-.282.284-.303.73-.046 1.038l.1.118c.54.653.677 1.544.352 2.325-.327.788-1.052 1.32-1.895 1.397l-.156.014c-.397.037-.7.367-.7.77v.722c0 .4.303.73.702.768l.15.014c.848.078 1.573.612 1.897 1.396.325.786.19 1.675-.353 2.325l-.096.115c-.26.31-.238.756.046 1.04l.51.51c.146.147.34.227.546.227.127 0 .315-.03.492-.18l.116-.096c.406-.336.923-.524 1.453-.524z"></path></g></svg>
+  <svg viewBox="0 0 24 24" id="tetSVG" class="tetTextColor r-4qtqp9 r-yyyyoo r-1q142lx r-1xvli5t r-1b7u577 r-dnmrzs r-bnwqim r-1plcrui r-lrvibr" width="15"><g><path d="M12 8.21c-2.09 0-3.79 1.7-3.79 3.79s1.7 3.79 3.79 3.79 3.79-1.7 3.79-3.79-1.7-3.79-3.79-3.79zm0 6.08c-1.262 0-2.29-1.026-2.29-2.29S10.74 9.71 12 9.71s2.29 1.026 2.29 2.29-1.028 2.29-2.29 2.29z"></path><path d="M12.36 22.375h-.722c-1.183 0-2.154-.888-2.262-2.064l-.014-.147c-.025-.287-.207-.533-.472-.644-.286-.12-.582-.065-.798.115l-.116.097c-.868.725-2.253.663-3.06-.14l-.51-.51c-.836-.84-.896-2.154-.14-3.06l.098-.118c.186-.222.23-.523.122-.787-.11-.272-.358-.454-.646-.48l-.15-.014c-1.18-.107-2.067-1.08-2.067-2.262v-.722c0-1.183.888-2.154 2.064-2.262l.156-.014c.285-.025.53-.207.642-.473.11-.27.065-.573-.12-.795l-.094-.116c-.757-.908-.698-2.223.137-3.06l.512-.512c.804-.804 2.188-.865 3.06-.14l.116.098c.218.184.528.23.79.122.27-.112.452-.358.477-.643l.014-.153c.107-1.18 1.08-2.066 2.262-2.066h.722c1.183 0 2.154.888 2.262 2.064l.014.156c.025.285.206.53.472.64.277.117.58.062.794-.117l.12-.102c.867-.723 2.254-.662 3.06.14l.51.512c.836.838.896 2.153.14 3.06l-.1.118c-.188.22-.234.522-.123.788.112.27.36.45.646.478l.152.014c1.18.107 2.067 1.08 2.067 2.262v.723c0 1.183-.888 2.154-2.064 2.262l-.155.014c-.284.024-.53.205-.64.47-.113.272-.067.574.117.795l.1.12c.756.905.696 2.22-.14 3.06l-.51.51c-.807.804-2.19.864-3.06.14l-.115-.096c-.217-.183-.53-.23-.79-.122-.273.114-.455.36-.48.646l-.014.15c-.107 1.173-1.08 2.06-2.262 2.06zm-3.773-4.42c.3 0 .593.06.87.175.79.328 1.324 1.054 1.4 1.896l.014.147c.037.4.367.7.77.7h.722c.4 0 .73-.3.768-.7l.014-.148c.076-.842.61-1.567 1.392-1.892.793-.33 1.696-.182 2.333.35l.113.094c.178.148.366.18.493.18.206 0 .4-.08.546-.227l.51-.51c.284-.284.305-.73.048-1.038l-.1-.12c-.542-.65-.677-1.54-.352-2.323.326-.79 1.052-1.32 1.894-1.397l.155-.014c.397-.037.7-.367.7-.77v-.722c0-.4-.303-.73-.702-.768l-.152-.014c-.846-.078-1.57-.61-1.895-1.393-.326-.788-.19-1.678.353-2.327l.1-.118c.257-.31.236-.756-.048-1.04l-.51-.51c-.146-.147-.34-.227-.546-.227-.127 0-.315.032-.492.18l-.12.1c-.634.528-1.55.67-2.322.354-.788-.327-1.32-1.052-1.397-1.896l-.014-.155c-.035-.397-.365-.7-.767-.7h-.723c-.4 0-.73.303-.768.702l-.014.152c-.076.843-.608 1.568-1.39 1.893-.787.326-1.693.183-2.33-.35l-.118-.096c-.18-.15-.368-.18-.495-.18-.206 0-.4.08-.546.226l-.512.51c-.282.284-.303.73-.046 1.038l.1.118c.54.653.677 1.544.352 2.325-.327.788-1.052 1.32-1.895 1.397l-.156.014c-.397.037-.7.367-.7.77v.722c0 .4.303.73.702.768l.15.014c.848.078 1.573.612 1.897 1.396.325.786.19 1.675-.353 2.325l-.096.115c-.26.31-.238.756.046 1.04l.51.51c.146.147.34.227.546.227.127 0 .315-.03.492-.18l.116-.096c.406-.336.923-.524 1.453-.524z"></path></g></svg>
   <span class="css-901oao css-16my406 r-bcqeeo r-qvutc0 tetTextColor">Menu</span>
 </button>
-<form class="rm">
+<form id="tetForm" class="rm">
 <div id="tetSelector" class="css-1dbjc4n tetBackground r-1kqtdi0 r-z2wwpe r-rs99b7 r-16xksha">
 <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Languages</span></div>
 <select id="languages" name="languages" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-1ny4l3l r-t60dpp r-1pn2ns4 r-ttdzmv">
@@ -818,701 +919,108 @@ sidebar = `<div id="tetTW" class="btNav">
   <option class="tetBackground" value="r-b5skir">Green</option>
 </select>
 </div>
-<button id="tetSave" class="css-901oao r-poiln3 tetDisplayColor tetTextColor css-4rbku5" type="button" >Save</button>
-<button id="tetReload" class="css-901oao r-poiln3 tetDisplayColor tetTextColor css-4rbku5" type="button" >Reload</button>
-<button id="tetReset" class="css-901oao r-poiln3 tetDisplayColor tetTextColor css-4rbku5" type="button" >Defaults</button>
+<button id="tetSave" class="css-901oao r-poiln3 tetBtn tetDisplayColor tetTextColor css-4rbku5" type="button" >Save</button>
+<button id="tetReload" class="css-901oao r-poiln3 tetBtn tetDisplayColor tetTextColor css-4rbku5" type="button" >Reload</button>
+<button id="tetReset" class="css-901oao r-poiln3 tetBtn tetDisplayColor tetTextColor css-4rbku5" type="button" >Defaults</button>
 </form>
-<style>
-.rm, button:not(.mini) > svg, button.mini > span {
-display: none !important
-}
-button > svg {
-right: 35% !important
-}
-.mini {
-min-height: 12% !important;
-width: 8vw;
-height: auto;
-overflow: hidden;
-background: transparent
-}
-button > span {
-transition-property: content-visibility !important;
-transition-duration: 250ms !important;
-transition-timing-function: ease-in-out !important;
-transition-delay: 500ms !important;
-content-visibility: visible !important
-}
-button:not(.mini), form {
-width: -moz-available;
-width: -webkit-fill-available;
-width: 100%;
-width: fill-available
-}
-form {
-height: 100%;
-position: absolute
-}
-button#tetMenuButton, #tetSave, #tetReload, #tetReset {
-cursor: pointer;
-height: 5%;
-border-radius: 15px;
-justify-content: center;
-display: flex !important;
-margin-top: 3% !important;
-font-size: 20px !important;
-font-weight: bold !important;
-padding: 0px !important
-}
-#tetName, #tetSelector > select {
-padding-left: 2%
-}
-#tetSelector {
-margin-top: 3% !important
-}
-#tetTW {
-position: fixed;
-width: 8vw;
-height: 50%;
-overflow: hidden;
-top: 65%;
-left: 0px;
-z-index: 1000 !important
-}
-#tetTD {
-position: fixed;
-width: 8vw;
-height: 50%;
-overflow: hidden;
-top: 0;
-left: 90%;
-z-index: 1000 !important
-}
-.navbackground {
-z-index: 2;
-width: 0;
-height: 100%;
-position: fixed;
-top: 0;
-left: 0
-}
-</style>
 </div>`;
 //#endregion
-function qs(...elem) {
-  return document.querySelector(elem);
-};
-function create(...element) {
-  return document.createElement(element);
-};
-function checkTXT() {
-  return this.tw
-};
-function TETSetValue(key, value) {
-  GM.setValue(key, value);
-  if(key === 'Config'){
-    localStorage.TETConfig = value;
+function checkLng() {
+  return {
+    tw: this.tw,
+    lg: this.lg,
+    tr: this.tr,
+    ds: this.ds,
+    ti: this.ti,
+    rel: this.rel,
+    res: this.res,
+    menu: this.menu,
+    th: this.th,
+    df: this.df,
+    di: this.di,
+    lo: this.lo,
+    col: this.col,
+    cb: this.cb,
+    cy: this.cy,
+    cr: this.cr,
+    cp: this.cp,
+    co: this.co,
+    cg: this.cg,
+    t: this.t,
+    i: this.i,
+    s: this.s
   }
-}
+};
 function TETLanguageChange() {
-  let TETSel = qs('select#languages').value;
-  if(TETSel == 'en') {
-    TETConfig.cLang = en.f()
-    $('button#tetMenuButton > span').text(en.menu)
-    $('select#languages').siblings().children("span").text(en.lg)
-    $('select#translator').siblings().children("span").text(en.tr)
-    $('select#display').siblings().children("span").text(en.ds)
-    $('select#theme').siblings().children("span").text(en.th)
-    $('option[value="#FFFFFF"]').text(en.df)
-    $('option[value="#15202B"]').text(en.di)
-    $('option[value="#000000"]').text(en.lo)
-    $('select#colorselect').siblings().children("span").text(en.col)
-    $('option[value="r-urgr8i"]').text(en.cb)
-    $('option[value="r-1vkxrha"]').text(en.cy)
-    $('option[value="r-1dgebii"]').text(en.cr)
-    $('option[value="r-1qqlz1x"]').text(en.cp)
-    $('option[value="r-18z3xeu"]').text(en.co)
-    $('option[value="r-b5skir"]').text(en.cg)
-    $('option[value="text + icon"]').text(en.ti)
-    $('option[value="text"]').text(en.t)
-    $('option[value="icon"]').text(en.i)
-    $('button#tetSave').text(en.s)
-    $('button#tetReload').text(en.rel)
-    $('button#tetReset').text(en.res)
-  }
-  if(TETSel == 'bg') {
-    TETConfig.cLang = bg.f()
-    $('button#tetMenuButton > span').text(bg.menu)
-    $('select#languages').siblings().children("span").text(bg.lg)
-    $('select#translator').siblings().children("span").text(bg.tr)
-    $('select#display').siblings().children("span").text(bg.ds)
-    $('select#theme').siblings().children("span").text(bg.th)
-    $('option[value="#FFFFFF"]').text(bg.df)
-    $('option[value="#15202B"]').text(bg.di)
-    $('option[value="#000000"]').text(bg.lo)
-    $('select#colorselect').siblings().children("span").text(bg.col)
-    $('option[value="r-urgr8i"]').text(bg.cb)
-    $('option[value="r-1vkxrha"]').text(bg.cy)
-    $('option[value="r-1dgebii"]').text(bg.cr)
-    $('option[value="r-1qqlz1x"]').text(bg.cp)
-    $('option[value="r-18z3xeu"]').text(bg.co)
-    $('option[value="r-b5skir"]').text(bg.cg)
-    $('option[value="text + icon"]').text(bg.ti)
-    $('option[value="text"]').text(bg.t)
-    $('option[value="icon"]').text(bg.i)
-    $('button#tetSave').text(bg.s)
-    $('button#tetReload').text(bg.rel)
-    $('button#tetReset').text(bg.res)
-  }
-  if(TETSel == 'cs') {
-    TETConfig.cLang = cs.f()
-    $('button#tetMenuButton > span').text(cs.menu)
-    $('select#languages').siblings().children("span").text(cs.lg)
-    $('select#translator').siblings().children("span").text(cs.tr)
-    $('select#display').siblings().children("span").text(cs.ds)
-    $('select#theme').siblings().children("span").text(cs.th)
-    $('option[value="#FFFFFF"]').text(cs.df)
-    $('option[value="#15202B"]').text(cs.di)
-    $('option[value="#000000"]').text(cs.lo)
-    $('select#colorselect').siblings().children("span").text(cs.col)
-    $('option[value="r-urgr8i"]').text(cs.cb)
-    $('option[value="r-1vkxrha"]').text(cs.cy)
-    $('option[value="r-1dgebii"]').text(cs.cr)
-    $('option[value="r-1qqlz1x"]').text(cs.cp)
-    $('option[value="r-18z3xeu"]').text(cs.co)
-    $('option[value="r-b5skir"]').text(cs.cg)
-    $('option[value="text + icon"]').text(cs.ti)
-    $('option[value="text"]').text(cs.t)
-    $('option[value="icon"]').text(cs.i)
-    $('button#tetSave').text(cs.s)
-    $('button#tetReload').text(cs.rel)
-    $('button#tetReset').text(cs.res)
-  }
-  if(TETSel == 'da') {
-    TETConfig.cLang = da.f()
-    $('button#tetMenuButton > span').text(da.menu)
-    $('select#languages').siblings().children("span").text(da.lg)
-    $('select#translator').siblings().children("span").text(da.tr)
-    $('select#display').siblings().children("span").text(da.ds)
-    $('select#theme').siblings().children("span").text(da.th)
-    $('option[value="#FFFFFF"]').text(da.df)
-    $('option[value="#15202B"]').text(da.di)
-    $('option[value="#000000"]').text(da.lo)
-    $('select#colorselect').siblings().children("span").text(da.col)
-    $('option[value="r-urgr8i"]').text(da.cb)
-    $('option[value="r-1vkxrha"]').text(da.cy)
-    $('option[value="r-1dgebii"]').text(da.cr)
-    $('option[value="r-1qqlz1x"]').text(da.cp)
-    $('option[value="r-18z3xeu"]').text(da.co)
-    $('option[value="r-b5skir"]').text(da.cg)
-    $('option[value="text + icon"]').text(da.ti)
-    $('option[value="text"]').text(da.t)
-    $('option[value="icon"]').text(da.i)
-    $('button#tetSave').text(da.s)
-    $('button#tetReload').text(da.rel)
-    $('button#tetReset').text(da.res)
-  }
-  if(TETSel == 'et') {
-    TETConfig.cLang = et.f()
-    $('button#tetMenuButton > span').text(et.menu)
-    $('select#languages').siblings().children("span").text(et.lg)
-    $('select#translator').siblings().children("span").text(et.tr)
-    $('select#display').siblings().children("span").text(et.ds)
-    $('select#theme').siblings().children("span").text(et.th)
-    $('option[value="#FFFFFF"]').text(et.df)
-    $('option[value="#15202B"]').text(et.di)
-    $('option[value="#000000"]').text(et.lo)
-    $('select#colorselect').siblings().children("span").text(et.col)
-    $('option[value="r-urgr8i"]').text(et.cb)
-    $('option[value="r-1vkxrha"]').text(et.cy)
-    $('option[value="r-1dgebii"]').text(et.cr)
-    $('option[value="r-1qqlz1x"]').text(et.cp)
-    $('option[value="r-18z3xeu"]').text(et.co)
-    $('option[value="r-b5skir"]').text(et.cg)
-    $('option[value="text + icon"]').text(et.ti)
-    $('option[value="text"]').text(et.t)
-    $('option[value="icon"]').text(et.i)
-    $('button#tetSave').text(et.s)
-    $('button#tetReload').text(et.rel)
-    $('button#tetReset').text(et.res)
-  }
-  if(TETSel == 'fi') {
-    TETConfig.cLang = fi.f()
-    $('button#tetMenuButton > span').text(fi.menu)
-    $('select#languages').siblings().children("span").text(fi.lg)
-    $('select#translator').siblings().children("span").text(fi.tr)
-    $('select#display').siblings().children("span").text(fi.ds)
-    $('select#theme').siblings().children("span").text(fi.th)
-    $('option[value="#FFFFFF"]').text(fi.df)
-    $('option[value="#15202B"]').text(fi.di)
-    $('option[value="#000000"]').text(fi.lo)
-    $('select#colorselect').siblings().children("span").text(fi.col)
-    $('option[value="r-urgr8i"]').text(fi.cb)
-    $('option[value="r-1vkxrha"]').text(fi.cy)
-    $('option[value="r-1dgebii"]').text(fi.cr)
-    $('option[value="r-1qqlz1x"]').text(fi.cp)
-    $('option[value="r-18z3xeu"]').text(fi.co)
-    $('option[value="r-b5skir"]').text(fi.cg)
-    $('option[value="text + icon"]').text(fi.ti)
-    $('option[value="text"]').text(fi.t)
-    $('option[value="icon"]').text(fi.i)
-    $('button#tetSave').text(fi.s)
-    $('button#tetReload').text(fi.rel)
-    $('button#tetReset').text(fi.res)
-  }
-  if(TETSel == 'el') {
-    TETConfig.cLang = el.f()
-    $('button#tetMenuButton > span').text(el.menu)
-    $('select#languages').siblings().children("span").text(el.lg)
-    $('select#translator').siblings().children("span").text(el.tr)
-    $('select#display').siblings().children("span").text(el.ds)
-    $('select#theme').siblings().children("span").text(el.th)
-    $('option[value="#FFFFFF"]').text(el.df)
-    $('option[value="#15202B"]').text(el.di)
-    $('option[value="#000000"]').text(el.lo)
-    $('select#colorselect').siblings().children("span").text(el.col)
-    $('option[value="r-urgr8i"]').text(el.cb)
-    $('option[value="r-1vkxrha"]').text(el.cy)
-    $('option[value="r-1dgebii"]').text(el.cr)
-    $('option[value="r-1qqlz1x"]').text(el.cp)
-    $('option[value="r-18z3xeu"]').text(el.co)
-    $('option[value="r-b5skir"]').text(el.cg)
-    $('option[value="text + icon"]').text(el.ti)
-    $('option[value="text"]').text(el.t)
-    $('option[value="icon"]').text(el.i)
-    $('button#tetSave').text(el.s)
-    $('button#tetReload').text(el.rel)
-    $('button#tetReset').text(el.res)
-  }
-  if(TETSel == 'hu') {
-    TETConfig.cLang = hu.f()
-    $('button#tetMenuButton > span').text(hu.menu)
-    $('select#languages').siblings().children("span").text(hu.lg)
-    $('select#translator').siblings().children("span").text(hu.tr)
-    $('select#display').siblings().children("span").text(hu.ds)
-    $('select#theme').siblings().children("span").text(hu.th)
-    $('option[value="#FFFFFF"]').text(hu.df)
-    $('option[value="#15202B"]').text(hu.di)
-    $('option[value="#000000"]').text(hu.lo)
-    $('select#colorselect').siblings().children("span").text(hu.col)
-    $('option[value="r-urgr8i"]').text(hu.cb)
-    $('option[value="r-1vkxrha"]').text(hu.cy)
-    $('option[value="r-1dgebii"]').text(hu.cr)
-    $('option[value="r-1qqlz1x"]').text(hu.cp)
-    $('option[value="r-18z3xeu"]').text(hu.co)
-    $('option[value="r-b5skir"]').text(hu.cg)
-    $('option[value="text + icon"]').text(hu.ti)
-    $('option[value="text"]').text(hu.t)
-    $('option[value="icon"]').text(hu.i)
-    $('button#tetSave').text(hu.s)
-    $('button#tetReload').text(hu.rel)
-    $('button#tetReset').text(hu.res)
-  }
-  if(TETSel == 'lv') {
-    TETConfig.cLang = lv.f()
-    $('button#tetMenuButton > span').text(lv.menu)
-    $('select#languages').siblings().children("span").text(lv.lg)
-    $('select#translator').siblings().children("span").text(lv.tr)
-    $('select#display').siblings().children("span").text(lv.ds)
-    $('select#theme').siblings().children("span").text(lv.th)
-    $('option[value="#FFFFFF"]').text(lv.df)
-    $('option[value="#15202B"]').text(lv.di)
-    $('option[value="#000000"]').text(lv.lo)
-    $('select#colorselect').siblings().children("span").text(lv.col)
-    $('option[value="r-urgr8i"]').text(lv.cb)
-    $('option[value="r-1vkxrha"]').text(lv.cy)
-    $('option[value="r-1dgebii"]').text(lv.cr)
-    $('option[value="r-1qqlz1x"]').text(lv.cp)
-    $('option[value="r-18z3xeu"]').text(lv.co)
-    $('option[value="r-b5skir"]').text(lv.cg)
-    $('option[value="text + icon"]').text(lv.ti)
-    $('option[value="text"]').text(lv.t)
-    $('option[value="icon"]').text(lv.i)
-    $('button#tetSave').text(lv.s)
-    $('button#tetReload').text(lv.rel)
-    $('button#tetReset').text(lv.res)
-  }
-  if(TETSel == 'lt') {
-    TETConfig.cLang = lt.f()
-    $('button#tetMenuButton > span').text(lt.menu)
-    $('select#languages').siblings().children("span").text(lt.lg)
-    $('select#translator').siblings().children("span").text(lt.tr)
-    $('select#display').siblings().children("span").text(lt.ds)
-    $('select#theme').siblings().children("span").text(lt.th)
-    $('option[value="#FFFFFF"]').text(lt.df)
-    $('option[value="#15202B"]').text(lt.di)
-    $('option[value="#000000"]').text(lt.lo)
-    $('select#colorselect').siblings().children("span").text(lt.col)
-    $('option[value="r-urgr8i"]').text(lt.cb)
-    $('option[value="r-1vkxrha"]').text(lt.cy)
-    $('option[value="r-1dgebii"]').text(lt.cr)
-    $('option[value="r-1qqlz1x"]').text(lt.cp)
-    $('option[value="r-18z3xeu"]').text(lt.co)
-    $('option[value="r-b5skir"]').text(lt.cg)
-    $('option[value="text + icon"]').text(lt.ti)
-    $('option[value="text"]').text(lt.t)
-    $('option[value="icon"]').text(lt.i)
-    $('button#tetSave').text(lt.s)
-    $('button#tetReload').text(lt.rel)
-    $('button#tetReset').text(lt.res)
-  }
-  if(TETSel == 'ro') {
-    TETConfig.cLang = ro.f()
-    $('button#tetMenuButton > span').text(ro.menu)
-    $('select#languages').siblings().children("span").text(ro.lg)
-    $('select#translator').siblings().children("span").text(ro.tr)
-    $('select#display').siblings().children("span").text(ro.ds)
-    $('select#theme').siblings().children("span").text(ro.th)
-    $('option[value="#FFFFFF"]').text(ro.df)
-    $('option[value="#15202B"]').text(ro.di)
-    $('option[value="#000000"]').text(ro.lo)
-    $('select#colorselect').siblings().children("span").text(ro.col)
-    $('option[value="r-urgr8i"]').text(ro.cb)
-    $('option[value="r-1vkxrha"]').text(ro.cy)
-    $('option[value="r-1dgebii"]').text(ro.cr)
-    $('option[value="r-1qqlz1x"]').text(ro.cp)
-    $('option[value="r-18z3xeu"]').text(ro.co)
-    $('option[value="r-b5skir"]').text(ro.cg)
-    $('option[value="text + icon"]').text(ro.ti)
-    $('option[value="text"]').text(ro.t)
-    $('option[value="icon"]').text(ro.i)
-    $('button#tetSave').text(ro.s)
-    $('button#tetReload').text(ro.rel)
-    $('button#tetReset').text(ro.res)
-  }
-  if(TETSel == 'sk') {
-    TETConfig.cLang = sk.f()
-    $('button#tetMenuButton > span').text(sk.menu)
-    $('select#languages').siblings().children("span").text(sk.lg)
-    $('select#translator').siblings().children("span").text(sk.tr)
-    $('select#display').siblings().children("span").text(sk.ds)
-    $('select#theme').siblings().children("span").text(sk.th)
-    $('option[value="#FFFFFF"]').text(sk.df)
-    $('option[value="#15202B"]').text(sk.di)
-    $('option[value="#000000"]').text(sk.lo)
-    $('select#colorselect').siblings().children("span").text(sk.col)
-    $('option[value="r-urgr8i"]').text(sk.cb)
-    $('option[value="r-1vkxrha"]').text(sk.cy)
-    $('option[value="r-1dgebii"]').text(sk.cr)
-    $('option[value="r-1qqlz1x"]').text(sk.cp)
-    $('option[value="r-18z3xeu"]').text(sk.co)
-    $('option[value="r-b5skir"]').text(sk.cg)
-    $('option[value="text + icon"]').text(sk.ti)
-    $('option[value="text"]').text(sk.t)
-    $('option[value="icon"]').text(sk.i)
-    $('button#tetSave').text(sk.s)
-    $('button#tetReload').text(sk.rel)
-    $('button#tetReset').text(sk.res)
-  }
-  if(TETSel == 'sl') {
-    TETConfig.cLang = sl.f()
-    $('button#tetMenuButton > span').text(sl.menu)
-    $('select#languages').siblings().children("span").text(sl.lg)
-    $('select#translator').siblings().children("span").text(sl.tr)
-    $('select#display').siblings().children("span").text(sl.ds)
-    $('select#theme').siblings().children("span").text(sl.th)
-    $('option[value="#FFFFFF"]').text(sl.df)
-    $('option[value="#15202B"]').text(sl.di)
-    $('option[value="#000000"]').text(sl.lo)
-    $('select#colorselect').siblings().children("span").text(sl.col)
-    $('option[value="r-urgr8i"]').text(sl.cb)
-    $('option[value="r-1vkxrha"]').text(sl.cy)
-    $('option[value="r-1dgebii"]').text(sl.cr)
-    $('option[value="r-1qqlz1x"]').text(sl.cp)
-    $('option[value="r-18z3xeu"]').text(sl.co)
-    $('option[value="r-b5skir"]').text(sl.cg)
-    $('option[value="text + icon"]').text(sl.ti)
-    $('option[value="text"]').text(sl.t)
-    $('option[value="icon"]').text(sl.i)
-    $('button#tetSave').text(sl.s)
-    $('button#tetReload').text(sl.rel)
-    $('button#tetReset').text(sl.res)
-  }
-  if(TETSel == 'sv') {
-    TETConfig.cLang = sv.f()
-    $('button#tetMenuButton > span').text(sv.menu)
-    $('select#languages').siblings().children("span").text(sv.lg)
-    $('select#translator').siblings().children("span").text(sv.tr)
-    $('select#display').siblings().children("span").text(sv.ds)
-    $('select#theme').siblings().children("span").text(sv.th)
-    $('option[value="#FFFFFF"]').text(sv.df)
-    $('option[value="#15202B"]').text(sv.di)
-    $('option[value="#000000"]').text(sv.lo)
-    $('select#colorselect').siblings().children("span").text(sv.col)
-    $('option[value="r-urgr8i"]').text(sv.cb)
-    $('option[value="r-1vkxrha"]').text(sv.cy)
-    $('option[value="r-1dgebii"]').text(sv.cr)
-    $('option[value="r-1qqlz1x"]').text(sv.cp)
-    $('option[value="r-18z3xeu"]').text(sv.co)
-    $('option[value="r-b5skir"]').text(sv.cg)
-    $('option[value="text + icon"]').text(sv.ti)
-    $('option[value="text"]').text(sv.t)
-    $('option[value="icon"]').text(sv.i)
-    $('button#tetSave').text(sv.s)
-    $('button#tetReload').text(sv.rel)
-    $('button#tetReset').text(sv.res)
-  }
-  if(TETSel == 'zh') {
-    TETConfig.cLang = zh.f()
-    $('button#tetMenuButton > span').text(zh.menu)
-    $('select#languages').siblings().children("span").text(zh.lg)
-    $('select#translator').siblings().children("span").text(zh.tr)
-    $('select#display').siblings().children("span").text(zh.ds)
-    $('select#theme').siblings().children("span").text(zh.th)
-    $('option[value="#FFFFFF"]').text(zh.df)
-    $('option[value="#15202B"]').text(zh.di)
-    $('option[value="#000000"]').text(zh.lo)
-    $('select#colorselect').siblings().children("span").text(zh.col)
-    $('option[value="r-urgr8i"]').text(zh.cb)
-    $('option[value="r-1vkxrha"]').text(zh.cy)
-    $('option[value="r-1dgebii"]').text(zh.cr)
-    $('option[value="r-1qqlz1x"]').text(zh.cp)
-    $('option[value="r-18z3xeu"]').text(zh.co)
-    $('option[value="r-b5skir"]').text(zh.cg)
-    $('option[value="text + icon"]').text(zh.ti)
-    $('option[value="text"]').text(zh.t)
-    $('option[value="icon"]').text(zh.i)
-    $('button#tetSave').text(zh.s)
-    $('button#tetReload').text(zh.rel)
-    $('button#tetReset').text(zh.res)
-  }
-  if(TETSel == 'nl') {
-    TETConfig.cLang = nl.f()
-    $('button#tetMenuButton > span').text(nl.menu)
-    $('select#languages').siblings().children("span").text(nl.lg)
-    $('select#translator').siblings().children("span").text(nl.tr)
-    $('select#display').siblings().children("span").text(nl.ds)
-    $('select#theme').siblings().children("span").text(nl.th)
-    $('option[value="#FFFFFF"]').text(nl.df)
-    $('option[value="#15202B"]').text(nl.di)
-    $('option[value="#000000"]').text(nl.lo)
-    $('select#colorselect').siblings().children("span").text(nl.col)
-    $('option[value="r-urgr8i"]').text(nl.cb)
-    $('option[value="r-1vkxrha"]').text(nl.cy)
-    $('option[value="r-1dgebii"]').text(nl.cr)
-    $('option[value="r-1qqlz1x"]').text(nl.cp)
-    $('option[value="r-18z3xeu"]').text(nl.co)
-    $('option[value="r-b5skir"]').text(nl.cg)
-    $('option[value="text + icon"]').text(nl.ti)
-    $('option[value="text"]').text(nl.t)
-    $('option[value="icon"]').text(nl.i)
-    $('button#tetSave').text(nl.s)
-    $('button#tetReload').text(nl.rel)
-    $('button#tetReset').text(nl.res)
-  }
-  if(TETSel == 'fr') {
-    TETConfig.cLang = fr.f()
-    $('button#tetMenuButton > span').text(fr.menu)
-    $('select#languages').siblings().children("span").text(fr.lg)
-    $('select#translator').siblings().children("span").text(fr.tr)
-    $('select#display').siblings().children("span").text(fr.ds)
-    $('select#theme').siblings().children("span").text(fr.th)
-    $('option[value="#FFFFFF"]').text(fr.df)
-    $('option[value="#15202B"]').text(fr.di)
-    $('option[value="#000000"]').text(fr.lo)
-    $('select#colorselect').siblings().children("span").text(fr.col)
-    $('option[value="r-urgr8i"]').text(fr.cb)
-    $('option[value="r-1vkxrha"]').text(fr.cy)
-    $('option[value="r-1dgebii"]').text(fr.cr)
-    $('option[value="r-1qqlz1x"]').text(fr.cp)
-    $('option[value="r-18z3xeu"]').text(fr.co)
-    $('option[value="r-b5skir"]').text(fr.cg)
-    $('option[value="text + icon"]').text(fr.ti)
-    $('option[value="text"]').text(fr.t)
-    $('option[value="icon"]').text(fr.i)
-    $('button#tetSave').text(fr.s)
-    $('button#tetReload').text(fr.rel)
-    $('button#tetReset').text(fr.res)
-  }
-  if(TETSel == 'de') {
-    TETConfig.cLang = de.f()
-    $('button#tetMenuButton > span').text(de.menu)
-    $('select#languages').siblings().children("span").text(de.lg)
-    $('select#translator').siblings().children("span").text(de.tr)
-    $('select#display').siblings().children("span").text(de.ds)
-    $('select#theme').siblings().children("span").text(de.th)
-    $('option[value="#FFFFFF"]').text(de.df)
-    $('option[value="#15202B"]').text(de.di)
-    $('option[value="#000000"]').text(de.lo)
-    $('select#colorselect').siblings().children("span").text(de.col)
-    $('option[value="r-urgr8i"]').text(de.cb)
-    $('option[value="r-1vkxrha"]').text(de.cy)
-    $('option[value="r-1dgebii"]').text(de.cr)
-    $('option[value="r-1qqlz1x"]').text(de.cp)
-    $('option[value="r-18z3xeu"]').text(de.co)
-    $('option[value="r-b5skir"]').text(de.cg)
-    $('option[value="text + icon"]').text(de.ti)
-    $('option[value="text"]').text(de.t)
-    $('option[value="icon"]').text(de.i)
-    $('button#tetSave').text(de.s)
-    $('button#tetReload').text(de.rel)
-    $('button#tetReset').text(de.res)
-  }
-  if(TETSel == 'it') {
-    TETConfig.cLang = it.f()
-    $('button#tetMenuButton > span').text(it.menu)
-    $('select#languages').siblings().children("span").text(it.lg)
-    $('select#translator').siblings().children("span").text(it.tr)
-    $('select#display').siblings().children("span").text(it.ds)
-    $('select#theme').siblings().children("span").text(it.th)
-    $('option[value="#FFFFFF"]').text(it.df)
-    $('option[value="#15202B"]').text(it.di)
-    $('option[value="#000000"]').text(it.lo)
-    $('select#colorselect').siblings().children("span").text(it.col)
-    $('option[value="r-urgr8i"]').text(it.cb)
-    $('option[value="r-1vkxrha"]').text(it.cy)
-    $('option[value="r-1dgebii"]').text(it.cr)
-    $('option[value="r-1qqlz1x"]').text(it.cp)
-    $('option[value="r-18z3xeu"]').text(it.co)
-    $('option[value="r-b5skir"]').text(it.cg)
-    $('option[value="text + icon"]').text(it.ti)
-    $('option[value="text"]').text(it.t)
-    $('option[value="icon"]').text(it.i)
-    $('button#tetSave').text(it.s)
-    $('button#tetReload').text(it.rel)
-    $('button#tetReset').text(it.res)
-  }
-  if(TETSel == 'ja') {
-    TETConfig.cLang = ja.f()
-    $('button#tetMenuButton > span').text(ja.menu)
-    $('select#languages').siblings().children("span").text(ja.lg)
-    $('select#translator').siblings().children("span").text(ja.tr)
-    $('select#display').siblings().children("span").text(ja.ds)
-    $('select#theme').siblings().children("span").text(ja.th)
-    $('option[value="#FFFFFF"]').text(ja.df)
-    $('option[value="#15202B"]').text(ja.di)
-    $('option[value="#000000"]').text(ja.lo)
-    $('select#colorselect').siblings().children("span").text(ja.col)
-    $('option[value="r-urgr8i"]').text(ja.cb)
-    $('option[value="r-1vkxrha"]').text(ja.cy)
-    $('option[value="r-1dgebii"]').text(ja.cr)
-    $('option[value="r-1qqlz1x"]').text(ja.cp)
-    $('option[value="r-18z3xeu"]').text(ja.co)
-    $('option[value="r-b5skir"]').text(ja.cg)
-    $('option[value="text + icon"]').text(ja.ti)
-    $('option[value="text"]').text(ja.t)
-    $('option[value="icon"]').text(ja.i)
-    $('button#tetSave').text(ja.s)
-    $('button#tetReload').text(ja.rel)
-    $('button#tetReset').text(ja.res)
-  }
-  if(TETSel == 'pl') {
-    TETConfig.cLang = pl.f()
-    $('button#tetMenuButton > span').text(pl.menu)
-    $('select#languages').siblings().children("span").text(pl.lg)
-    $('select#translator').siblings().children("span").text(pl.tr)
-    $('select#display').siblings().children("span").text(pl.ds)
-    $('select#theme').siblings().children("span").text(pl.th)
-    $('option[value="#FFFFFF"]').text(pl.df)
-    $('option[value="#15202B"]').text(pl.di)
-    $('option[value="#000000"]').text(pl.lo)
-    $('select#colorselect').siblings().children("span").text(pl.col)
-    $('option[value="r-urgr8i"]').text(pl.cb)
-    $('option[value="r-1vkxrha"]').text(pl.cy)
-    $('option[value="r-1dgebii"]').text(pl.cr)
-    $('option[value="r-1qqlz1x"]').text(pl.cp)
-    $('option[value="r-18z3xeu"]').text(pl.co)
-    $('option[value="r-b5skir"]').text(pl.cg)
-    $('option[value="text + icon"]').text(pl.ti)
-    $('option[value="text"]').text(pl.t)
-    $('option[value="icon"]').text(pl.i)
-    $('button#tetSave').text(pl.s)
-    $('button#tetReload').text(pl.rel)
-    $('button#tetReset').text(pl.res)
-  }
-  if(TETSel == 'pt') {
-    TETConfig.cLang = pt.f()
-    $('button#tetMenuButton > span').text(pt.menu)
-    $('select#languages').siblings().children("span").text(pt.lg)
-    $('select#translator').siblings().children("span").text(pt.tr)
-    $('select#display').siblings().children("span").text(pt.ds)
-    $('select#theme').siblings().children("span").text(pt.th)
-    $('option[value="#FFFFFF"]').text(pt.df)
-    $('option[value="#15202B"]').text(pt.di)
-    $('option[value="#000000"]').text(pt.lo)
-    $('select#colorselect').siblings().children("span").text(pt.col)
-    $('option[value="r-urgr8i"]').text(pt.cb)
-    $('option[value="r-1vkxrha"]').text(pt.cy)
-    $('option[value="r-1dgebii"]').text(pt.cr)
-    $('option[value="r-1qqlz1x"]').text(pt.cp)
-    $('option[value="r-18z3xeu"]').text(pt.co)
-    $('option[value="r-b5skir"]').text(pt.cg)
-    $('option[value="text + icon"]').text(pt.ti)
-    $('option[value="text"]').text(pt.t)
-    $('option[value="icon"]').text(pt.i)
-    $('button#tetSave').text(pt.s)
-    $('button#tetReload').text(pt.rel)
-    $('button#tetReset').text(pt.res)
-  }
-  if(TETSel == 'ru') {
-    TETConfig.cLang = ru.f()
-    $('button#tetMenuButton > span').text(ru.menu)
-    $('select#languages').siblings().children("span").text(ru.lg)
-    $('select#translator').siblings().children("span").text(ru.tr)
-    $('select#display').siblings().children("span").text(ru.ds)
-    $('select#theme').siblings().children("span").text(ru.th)
-    $('option[value="#FFFFFF"]').text(ru.df)
-    $('option[value="#15202B"]').text(ru.di)
-    $('option[value="#000000"]').text(ru.lo)
-    $('select#colorselect').siblings().children("span").text(ru.col)
-    $('option[value="r-urgr8i"]').text(ru.cb)
-    $('option[value="r-1vkxrha"]').text(ru.cy)
-    $('option[value="r-1dgebii"]').text(ru.cr)
-    $('option[value="r-1qqlz1x"]').text(ru.cp)
-    $('option[value="r-18z3xeu"]').text(ru.co)
-    $('option[value="r-b5skir"]').text(ru.cg)
-    $('option[value="text + icon"]').text(ru.ti)
-    $('option[value="text"]').text(ru.t)
-    $('option[value="icon"]').text(ru.i)
-    $('button#tetSave').text(ru.s)
-    $('button#tetReload').text(ru.rel)
-    $('button#tetReset').text(ru.res)
-  }
-  if(TETSel == 'es') {
-    TETConfig.cLang = es.f()
-    $('button#tetMenuButton > span').text(es.menu)
-    $('select#languages').siblings().children("span").text(es.lg)
-    $('select#translator').siblings().children("span").text(es.tr)
-    $('select#display').siblings().children("span").text(es.ds)
-    $('select#theme').siblings().children("span").text(es.th)
-    $('option[value="#FFFFFF"]').text(es.df)
-    $('option[value="#15202B"]').text(es.di)
-    $('option[value="#000000"]').text(es.lo)
-    $('select#colorselect').siblings().children("span").text(es.col)
-    $('option[value="r-urgr8i"]').text(es.cb)
-    $('option[value="r-1vkxrha"]').text(es.cy)
-    $('option[value="r-1dgebii"]').text(es.cr)
-    $('option[value="r-1qqlz1x"]').text(es.cp)
-    $('option[value="r-18z3xeu"]').text(es.co)
-    $('option[value="r-b5skir"]').text(es.cg)
-    $('option[value="text + icon"]').text(es.ti)
-    $('option[value="text"]').text(es.t)
-    $('option[value="icon"]').text(es.i)
-    $('button#tetSave').text(es.s)
-    $('button#tetReload').text(es.rel)
-    $('button#tetReset').text(es.res)
-  }
+  let TETSel = qs('select#languages').value,
+  v = en.fn();
+  (TETSel == 'en') ? (v = en.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'bg') ? (v = bg.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'cs') ? (v = cs.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'da') ? (v = da.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'et') ? (v = et.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'fi') ? (v = fi.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'el') ? (v = el.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'hu') ? (v = hu.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'lv') ? (v = lv.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'lt') ? (v = lt.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'ro') ? (v = ro.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'sk') ? (v = sk.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'sl') ? (v = sl.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'sv') ? (v = sv.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'zh') ? (v = zh.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'nl') ? (v = nl.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'fr') ? (v = fr.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'de') ? (v = de.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'it') ? (v = it.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'ja') ? (v = ja.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'pl') ? (v = pl.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'pt') ? (v = pt.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'ru') ? (v = ru.fn(), TETConfig.cLang = v.tw) :
+  (TETSel == 'es') ? (v = es.fn(), TETConfig.cLang = v.tw) : (v = en.fn(), TETConfig.cLang = v.tw);
+  $('button#tetMenuButton').attr('title', v.menu)
+  $('button#tetMenuButton > span').text(v.menu)
+  $('select#languages').siblings().children("span").text(v.lg)
+  $('select#translator').siblings().children("span").text(v.tr)
+  $('select#display').siblings().children("span").text(v.ds)
+  $('select#theme').siblings().children("span").text(v.th)
+  $('option[value="#FFFFFF"]').text(v.df)
+  $('option[value="#15202B"]').text(v.di)
+  $('option[value="#000000"]').text(v.lo)
+  $('select#colorselect').siblings().children("span").text(v.col)
+  $('option[value="r-urgr8i"]').text(v.cb)
+  $('option[value="r-1vkxrha"]').text(v.cy)
+  $('option[value="r-1dgebii"]').text(v.cr)
+  $('option[value="r-1qqlz1x"]').text(v.cp)
+  $('option[value="r-18z3xeu"]').text(v.co)
+  $('option[value="r-b5skir"]').text(v.cg)
+  $('option[value="text + icon"]').text(v.ti)
+  $('option[value="text"]').text(v.t)
+  $('option[value="icon"]').text(v.i)
+  $('button#tetSave').text(v.s)
+  $('button#tetReload').text(v.rel)
+  $('button#tetReset').text(v.res)
   TETDisplayChange()
 }
-function TETDisplayChange() {
+function TETDisplayChange(mode = "nonrepeat") {
   let cSel = qs('select#translator').value,
     disA = (cSel == "bing") ? (TETConfig.cDisplay = `Bing`) : (cSel == "google") ? (TETConfig.cDisplay = `Google`) : (cSel == "mymemory") ? (TETConfig.cDisplay = `MyMemory`) : (cSel == "translate") ? (TETConfig.cDisplay = `Translate.com`) : (cSel == "yandex") ? (TETConfig.cDisplay = `Yandex`) : (TETConfig.cDisplay = `DeepL`),
     disB = (cSel == "bing") ? (TETConfig.cDisplay = icons.bing) : (cSel == "mymemory") ? (TETConfig.cDisplay = icons.mymemory) : (cSel == "translate") ? (TETConfig.cDisplay = icons.translate) : (cSel == "yandex") ? (TETConfig.cDisplay = icons.yandex) : (TETConfig.cDisplay = icons.deepl),
-    disC = (cSel == "bing") ? (TETConfig.cDisplay = `Bing ${icons.bing}`) : (cSel == "google") ? (TETConfig.cDisplay = `Google ${icons.google}`) : (cSel == "mymemory") ? (TETConfig.cDisplay = `MyMemory ${icons.mymemory}`) : (cSel == "translate") ? (TETConfig.cDisplay = `Translate.com ${icons.translate}`) : (cSel == "yandex") ? (TETConfig.cDisplay = `Yandex ${icons.yandex}`) : (TETConfig.cDisplay = `DeepL ${icons.deepl}`);
-    (qs('select#display').value == 'text') ? disA : (qs('select#display').value == 'icon') ? disB : disC;
-    $('.tet').html(`${TETConfig.cLang} ${TETConfig.cDisplay}`)
+    disC = (cSel == "bing") ? (TETConfig.cDisplay = `Bing ${icons.bing}`) : (cSel == "google") ? (TETConfig.cDisplay = `Google ${icons.google}`) : (cSel == "mymemory") ? (TETConfig.cDisplay = `MyMemory ${icons.mymemory}`) : (cSel == "translate") ? (TETConfig.cDisplay = `Translate.com ${icons.translate}`) : (cSel == "yandex") ? (TETConfig.cDisplay = `Yandex ${icons.yandex}`) : (TETConfig.cDisplay = `DeepL ${icons.deepl}`),
+    checkDisplay = (qs('select#display').value == 'text') ? disA : (qs('select#display').value == 'icon') ? disB : disC;
+    return (mode == "repeat") ? checkDisplay : (
+      $('.tet').html(`${TETConfig.cLang} ${TETConfig.cDisplay}`),
+      $('.tet').hover(
+        function() { $(this).toggleClass("r-1ny4l3l r-1ddef8g") },
+        function() { $(this).toggleClass("r-1ny4l3l r-1ddef8g") })
+    )
 }
-async function injectTranslationButton() {
+async function Twitter() {
   let content = '',magicBtn,btContainer,btLang,site,
     translateTweet = $("div[lang]").eq(0).siblings().eq(0).children("span"), // "Translate Tweet" button
     translateBio = $('div[data-testid="UserDescription"]').eq(0).siblings().eq(0).children("span"), // "Translate Bio" button
     trTweet = $("div[lang]").eq(0).siblings().eq(1), // [Tweet] "Translate with ..." button
     trBio = $('div[data-testid="UserDescription"]').eq(0).siblings().eq(1), // [Bio] "Translate with ..." button
-    cSel = qs('select#translator').value,
-    disA = (cSel == "bing") ? (TETConfig.cDisplay = `Bing`) : (cSel == "google") ? (TETConfig.cDisplay = `Google`) : (cSel == "mymemory") ? (TETConfig.cDisplay = `MyMemory`) : (cSel == "translate") ? (TETConfig.cDisplay = `Translate.com`) : (cSel == "yandex") ? (TETConfig.cDisplay = `Yandex`) : (TETConfig.cDisplay = `DeepL`),
-    disB = (cSel == "bing") ? (TETConfig.cDisplay = icons.bing) : (cSel == "mymemory") ? (TETConfig.cDisplay = icons.mymemory) : (cSel == "translate") ? (TETConfig.cDisplay = icons.translate) : (cSel == "yandex") ? (TETConfig.cDisplay = icons.yandex) : (TETConfig.cDisplay = icons.deepl),
-    disC = (cSel == "bing") ? (TETConfig.cDisplay = `Bing ${icons.bing}`) : (cSel == "google") ? (TETConfig.cDisplay = `Google ${icons.google}`) : (cSel == "mymemory") ? (TETConfig.cDisplay = `MyMemory ${icons.mymemory}`) : (cSel == "translate") ? (TETConfig.cDisplay = `Translate.com ${icons.translate}`) : (cSel == "yandex") ? (TETConfig.cDisplay = `Yandex ${icons.yandex}`) : (TETConfig.cDisplay = `DeepL ${icons.deepl}`),
-    checkDisplay = (qs('select#display').value == 'text') ? disA : (qs('select#display').value == 'icon') ? disB : disC,
   tweetbtn = () => {
     log("Injecting tweet button")
     btContainer = translateTweet.parent().siblings().eq(0), // "Tweet"
@@ -1522,15 +1030,10 @@ async function injectTranslationButton() {
         let tweet = $(item).html().trim();
         (tweet && tweet != '' && !isHTML(tweet)) ? content += ` ${tweet}` : false;
     });
-    (!btLang) ? btLang = "auto" : false;
+    (!btLang) ? (btLang = "auto") : false;
     magicBtn.addClass("tet")
-    magicBtn.html(`${TETConfig.cLang} ${TETConfig.cDisplay}`)
+    TETDisplayChange()
     site = (TETConfig.translator == 'yandex') ? `https://translate.yandex.com/?lang=${btLang}-${TETConfig.lang}&text=${content}` : (TETConfig.translator == 'bing') ? `https://www.bing.com/translator/?text=${content}&from=${btLang}&to=${TETConfig.lang}` : (TETConfig.translator == 'google') ? `https://translate.google.com/?q=${content}&sl=${btLang}&tl=${TETConfig.lang}` : (TETConfig.translator == 'mymemory') ? `https://mymemory.translated.net/${TETConfig.lang}/${btLang}/${TETConfig.lang}/${content}` : (TETConfig.translator == 'translate') ? `https://www.translate.com/#${btLang}/${TETConfig.lang}/${content}` : `https://www.deepl.com/translator#${btLang}/${TETConfig.lang}/${content}`;
-    magicBtn.hover(function() {
-      $(this).addClass("r-1ny4l3l r-1ddef8g")
-    }, function() {
-      $(this).removeClass("r-1ny4l3l r-1ddef8g")
-    });
     magicBtn.on("click", () => {
       window.open(`${site}`,'_blank');
     })
@@ -1544,72 +1047,97 @@ async function injectTranslationButton() {
       let bio = $(item).html().trim();
       (bio && bio != '' && !isHTML(bio)) ? content += ` ${bio}` : false;
     });
-    (!btLang) ? btLang = "auto" : false;
+    (!btLang) ? (btLang = "auto") : false;
     magicBtn.addClass("tet")
-    magicBtn.html(`${TETConfig.cLang} ${TETConfig.cDisplay}`)
+    TETDisplayChange()
     site = (TETConfig.translator == 'yandex') ? `https://translate.yandex.com/?lang=${btLang}-${TETConfig.lang}&text=${content}` : (TETConfig.translator == 'bing') ? `https://www.bing.com/translator/?text=${content}&from=${btLang}&to=${TETConfig.lang}` : (TETConfig.translator == 'google') ? `https://translate.google.com/?q=${content}&sl=${btLang}&tl=${TETConfig.lang}` : (TETConfig.translator == 'mymemory') ? `https://mymemory.translated.net/${TETConfig.lang}/${btLang}/${TETConfig.lang}/${content}` : (TETConfig.translator == 'translate') ? `https://www.translate.com/#${btLang}/${TETConfig.lang}/${content}` : `https://www.deepl.com/translator#${btLang}/${TETConfig.lang}/${content}`;
-    magicBtn.hover(function() {
-      $(this).addClass("r-1ny4l3l r-1ddef8g")
-    }, function() {
-      $(this).removeClass("r-1ny4l3l r-1ddef8g")
-    });
     magicBtn.on("click", () => {
       window.open(`${site}`,'_blank');
     })
   };
-  let check = (!trBio.length && translateBio.length) ? biobtn() : (!trTweet.length && translateTweet.length) ? tweetbtn() : checkDisplay;
   // Resizes icons
   ($('.exIcon').length) ? $('.exIcon').attr('width', TETConfig.iconWidthA) : false;
-  return check
+  return (!trBio.length && translateBio.length) ? biobtn() : (!trTweet.length && translateTweet.length) ? tweetbtn() : TETDisplayChange("repeat");
 }
 async function TweetDeck() {
   let content = '',magicBtn,btContainer,btLang,site,
     translateTweet = $('a.js-translate-call-to-action'), // "Translate Tweet" button
     trTweet = translateTweet.eq(1), // [Tweet] "Translate with ..." button
-    cSel = qs('select#translator').value,
-    disA = (cSel == "bing") ? (TETConfig.cDisplay = `Bing`) : (cSel == "google") ? (TETConfig.cDisplay = `Google`) : (cSel == "mymemory") ? (TETConfig.cDisplay = `MyMemory`) : (cSel == "translate") ? (TETConfig.cDisplay = `Translate.com`) : (cSel == "yandex") ? (TETConfig.cDisplay = `Yandex`) : (TETConfig.cDisplay = `DeepL`),
-    disB = (cSel == "bing") ? (TETConfig.cDisplay = icons.bing) : (cSel == "mymemory") ? (TETConfig.cDisplay = icons.mymemory) : (cSel == "translate") ? (TETConfig.cDisplay = icons.translate) : (cSel == "yandex") ? (TETConfig.cDisplay = icons.yandex) : (TETConfig.cDisplay = icons.deepl),
-    disC = (cSel == "bing") ? (TETConfig.cDisplay = `Bing ${icons.bing}`) : (cSel == "google") ? (TETConfig.cDisplay = `Google ${icons.google}`) : (cSel == "mymemory") ? (TETConfig.cDisplay = `MyMemory ${icons.mymemory}`) : (cSel == "translate") ? (TETConfig.cDisplay = `Translate.com ${icons.translate}`) : (cSel == "yandex") ? (TETConfig.cDisplay = `Yandex ${icons.yandex}`) : (TETConfig.cDisplay = `DeepL ${icons.deepl}`),
-    checkDisplay = (qs('select#display').value == 'text') ? disA : (qs('select#display').value == 'icon') ? disB : disC,
+    trBio = $("#tet"),
   tweetbtn = () => {
     log("Injecting tweet button")
-    checkDisplay
     btContainer = translateTweet.siblings().eq(2), // "Tweet"
     content = btContainer.text(), // Content of "Tweet"
     btLang = btContainer.attr("lang");
     magicBtn = translateTweet.before(translateTweet.clone()); // Create external translation button
-    (!btLang) ? btLang = "auto" : false;
+    (!btLang) ? (btLang = "auto") : false;
     magicBtn.addClass("tet")
-    magicBtn.html(`${TETConfig.cLang} ${TETConfig.cDisplay}`)
-    // magicBtn.html(`${TETConfig.cLang} ${TETConfig.cDisplay}`)
+    TETDisplayChange()
+    site = (TETConfig.translator == 'yandex') ? `https://translate.yandex.com/?lang=${btLang}-${TETConfig.lang}&text=${content}` : (TETConfig.translator == 'bing') ? `https://www.bing.com/translator/?text=${content}&from=${btLang}&to=${TETConfig.lang}` : (TETConfig.translator == 'google') ? `https://translate.google.com/?q=${content}&sl=${btLang}&tl=${TETConfig.lang}` : (TETConfig.translator == 'mymemory') ? `https://mymemory.translated.net/${TETConfig.lang}/${btLang}/${TETConfig.lang}/${content}` : (TETConfig.translator == 'translate') ? `https://www.translate.com/#${btLang}/${TETConfig.lang}/${content}` : `https://www.deepl.com/translator#${btLang}/${TETConfig.lang}/${content}`;
+    magicBtn.on("click", () => {
+      window.open(`${site}`,'_blank');
+    })
+  },
+  biobtn = () => {
+    log("Injecting bio button")
+    btContainer = $('p.prf-bio')
+    content = btContainer.text() // Content of "Tweet"
+    magicBtn = $('<a id="tet" class="tet txt-mute" href="#" rel="translateTweet" style="text-align:center;text-shadow: 0 1px 1px rgb(20 23 26 / 80%);color: #fff;display: block;"></a>').appendTo(btContainer.parent()) // Create external translation button
+    btLang = "auto"
+    TETDisplayChange()
+    site = (TETConfig.translator == 'yandex') ? `https://translate.yandex.com/?lang=${btLang}-${TETConfig.lang}&text=${content}` : (TETConfig.translator == 'bing') ? `https://www.bing.com/translator/?text=${content}&from=${btLang}&to=${TETConfig.lang}` : (TETConfig.translator == 'google') ? `https://translate.google.com/?q=${content}&sl=${btLang}&tl=${TETConfig.lang}` : (TETConfig.translator == 'mymemory') ? `https://mymemory.translated.net/${TETConfig.lang}/${btLang}/${TETConfig.lang}/${content}` : (TETConfig.translator == 'translate') ? `https://www.translate.com/#${btLang}/${TETConfig.lang}/${content}` : `https://www.deepl.com/translator#${btLang}/${TETConfig.lang}/${content}`;
+    magicBtn.on("click", () => {
+      window.open(`${site}`,'_blank');
+    })
+  },
+  check = () => {
+    (!trBio.length && $('div.prf-header').length) ? biobtn() : false;
+    (!trTweet.length && translateTweet.length) ? tweetbtn() : trTweet.attr('style', 'display: flex !important; align-items: end !important;')
+    TETDisplayChange("repeat")
+  };
+  //(!trBio.length && $('div.prf-header').length) ? biobtn() : (!trTweet.length && translateTweet.length) ? tweetbtn() : (trTweet.attr('style', 'display: flex !important; align-items: end !important;'),TETDisplayChange("repeat"))
+  // Resizes icons
+  ($('.exIcon').length) ? $('.exIcon').attr('width', TETConfig.iconWidthA) : false;
+  return check()
+}
+async function twitlonger() {
+  let content = $('p#posttext').text(),magicBtn,btLang,site,
+    trBio = $("#tet"),
+  tweetbtn = () => {
+    log("Injecting tweet button")
+    magicBtn = $('<a id="tet" class="tet txt-mute" href="#" rel="translateTweet" style="text-align:center;display: block;"></a>').appendTo($('p.actions.text-right')) // Create external translation button
+    btLang = "auto"
+    TETDisplayChange()
     site = (TETConfig.translator == 'yandex') ? `https://translate.yandex.com/?lang=${btLang}-${TETConfig.lang}&text=${content}` : (TETConfig.translator == 'bing') ? `https://www.bing.com/translator/?text=${content}&from=${btLang}&to=${TETConfig.lang}` : (TETConfig.translator == 'google') ? `https://translate.google.com/?q=${content}&sl=${btLang}&tl=${TETConfig.lang}` : (TETConfig.translator == 'mymemory') ? `https://mymemory.translated.net/${TETConfig.lang}/${btLang}/${TETConfig.lang}/${content}` : (TETConfig.translator == 'translate') ? `https://www.translate.com/#${btLang}/${TETConfig.lang}/${content}` : `https://www.deepl.com/translator#${btLang}/${TETConfig.lang}/${content}`;
     magicBtn.on("click", () => {
       window.open(`${site}`,'_blank');
     })
   };
-  let check = (!trTweet.length && translateTweet.length) ? tweetbtn() : trTweet.attr('style', 'display: flex !important; align-items: end !important;');
   // Resizes icons
   ($('.exIcon').length) ? $('.exIcon').attr('width', TETConfig.iconWidthA) : false;
-  return check
+  return (!trBio.length && $('p.actions.text-right').length) ? tweetbtn() : TETDisplayChange("repeat");
 }
 
 function injectMenu() {
   try {
   log("Injecting Menu")
-  let target = $("body"),
+  let body = $("body"),
   nav = create("div");
   nav.className = "navbackground";
-  target.before(nav, sidebar);
+  body.before(nav, sidebar);
   qs('select#theme').value = TETConfig.theme;
   qs('select#colorselect').value = TETConfig.colors;
   qs('select#languages').value = TETConfig.lang;
   qs('select#translator').value = TETConfig.translator;
   qs('select#display').value = TETConfig.display;
-  if(location.host == 'tweetdeck.twitter.com') {
-    $('div.btNav').attr("id", "tetTD")
-    $("div#tetSelector").eq(3).addClass('rm')
-    $("div#tetSelector").eq(4).addClass('rm')
-  }
+  (location.host == 'www.twitlonger.com') ? ($("div#tetSelector").eq(3).addClass('rm'),$("div#tetSelector").eq(4).addClass('rm') ) : false;
+  (location.host == 'tweetdeck.twitter.com') ? (
+    $('div.btNav').attr("id", "tetTD"),
+    $('button.tetBtn').each(function () {
+      $(this).addClass("Button--primary")
+    }),
+    $("div#tetSelector").eq(3).addClass('rm'),
+    $("div#tetSelector").eq(4).addClass('rm') ) : false;
   $(".tetBackground").each(function () {
     $(this).addClass(TETConfig.cTheme)
     $(this).removeClass("tetBackground")
@@ -1623,95 +1151,60 @@ function injectMenu() {
     $(this).removeClass("tetDisplayColor")
   })
   nav.onclick = async () => {
-    $('.btNav > form').addClass("rm");
+    $('.btNav > form').toggleClass("rm");
     $('button#tetMenuButton').attr("style", "");
-    $('button#tetMenuButton > svg').removeClass("rm");
+    $('svg#tetSVG').show();
     $('button#tetMenuButton').addClass("mini");
     nav.style.width = "0%";
-    setTimeout(() => $('button#tetMenuButton > svg').addClass("rm"), 5000);
+    setTimeout(() => $('svg#tetSVG').hide(), 5000);
   };
+  // $('button.tetBtn').hover(function() {
+  //   $(this).toggleClass(TETConfig.colors);
+  //   $(this).toggleClass(TETConfig.cHover);
+  // }, function() {
+  //   $(this).toggleClass(TETConfig.colors);
+  //   $(this).toggleClass(TETConfig.cHover);
+  // });
   $('button#tetMenuButton').hover(function() {
-    $(this).removeClass("mini");
+    $('svg#tetSVG').hide()
+    $(this).toggleClass("mini");
   }, function() {
-    $(this).addClass("mini");
-    $(this).children("svg").removeClass("rm");
-    setTimeout(() => $('button#tetMenuButton > svg').addClass("rm"), 5000);
+    $('svg#tetSVG').show()
+    $(this).toggleClass("mini");
+    setTimeout(() => $('svg#tetSVG').hide(), 5000);
   });
   qs('button#tetMenuButton').onclick = async () => {
     nav.style.width = "100%";
-    $('.btNav > form').removeClass("rm");
+    $('.btNav > form').toggleClass("rm");
     $('button#tetMenuButton').attr("style", "display: none !important;");
   }
   $('div#tetSelector').hover(function() {
-    $(this).removeClass("r-1kqtdi0")
-    $(this).addClass(TETConfig.cColor)
-    $(this).children("div#tetName").removeClass("r-9ilb82")
-    $(this).children("div#tetName").addClass(TETConfig.cSub)
+    $(this).toggleClass(`${TETConfig.cColor} r-1kqtdi0`)
+    $(this).children("div#tetName").toggleClass(`${TETConfig.cSub} r-9ilb82`)
   }, function() {
-    $(this).addClass("r-1kqtdi0")
-    $(this).removeClass(TETConfig.cColor)
-    $(this).children("div#tetName").removeClass(TETConfig.cSub)
-    $(this).children("div#tetName").addClass("r-9ilb82")
+    $(this).toggleClass(`${TETConfig.cColor} r-1kqtdi0`)
+    $(this).children("div#tetName").toggleClass(`${TETConfig.cSub} r-9ilb82`)
   });
   qs('select#theme').onchange = () => {
     let cSel = qs('select#theme').value;
-    if(cSel == "#FFFFFF") {
-      TETConfig.cTheme = "r-14lw9ot"
-      TETConfig.cText = "r-18jsvk2"
-    }
-    if(cSel == "#15202B") {
-      TETConfig.cTheme = "r-yfoy6g"
-      TETConfig.cText = "r-jwli3a"
-    }
-    if(cSel == "#000000") {
-      TETConfig.cTheme = "r-kemksi"
-      TETConfig.cText = "r-jwli3a"
-    }
-    if(cSel == null && cSel == undefined) {
-      TETConfig.theme = "#000000"
-      TETConfig.cTheme = "r-kemksi"
-      TETConfig.cText = "r-jwli3a"
-    } else {
-      TETConfig.theme = cSel;
-    }
+    (cSel == "#FFFFFF") ? (TETConfig.cTheme = "r-14lw9ot", TETConfig.cText = "r-18jsvk2") :
+    (cSel == "#15202B") ? (TETConfig.cTheme = "r-yfoy6g", TETConfig.cText = "r-jwli3a") :
+    (cSel == "#000000") ? (TETConfig.cTheme = "r-kemksi", TETConfig.cText = "r-jwli3a") : (TETConfig.theme = "#000000", TETConfig.cTheme = "r-kemksi", TETConfig.cText = "r-jwli3a");
+    TETConfig.theme = cSel
   }
   qs('select#colorselect').onchange = () => {
     let cSel = qs('select#colorselect').value;
-    if(cSel == "r-urgr8i" || cSel == null && cSel == undefined) { // Blue
-      TETConfig.colors = "r-urgr8i"
-      TETConfig.cColor = "r-p1n3y5 r-1bih22f"
-      TETConfig.cSub = "r-13gxpu9"
-    }
-    if(cSel == "r-1vkxrha") { // Yellow
-      TETConfig.colors = "r-1vkxrha"
-      TETConfig.cColor = "r-v6khid r-cdj8wb"
-      TETConfig.cSub = "r-61mi1v"
-    }
-    if(cSel == "r-1dgebii") { // Red
-      TETConfig.colors = "r-1dgebii"
-      TETConfig.cColor = "r-1iofnty r-jd07pc"
-      TETConfig.cSub = "r-daml9f"
-    }
-    if(cSel == "r-1qqlz1x") { // Purple
-      TETConfig.colors = "r-1qqlz1x"
-      TETConfig.cColor = "r-hy56xe r-11mmphe"
-      TETConfig.cSub = "r-xfsgu1"
-    }
-    if(cSel == "r-18z3xeu") { // Orange
-      TETConfig.colors = "r-18z3xeu"
-      TETConfig.cColor = "r-1xl5njo r-b8m25f"
-      TETConfig.cSub = "r-1qkqhnw"
-    }
-    if(cSel == "r-b5skir") { // Green
-      TETConfig.colors = "r-b5skir"
-      TETConfig.cColor = "r-5ctkeg r-1cqwhho"
-      TETConfig.cSub = "r-nw8l94"
-    }
+    (cSel == "r-urgr8i") ? (TETConfig.colors = "r-urgr8i",TETConfig.cHover = "r-1q3imqu",TETConfig.cColor = "r-p1n3y5 r-1bih22f",TETConfig.cSub = "r-13gxpu9") :
+    (cSel == "r-1vkxrha") ? (TETConfig.colors = "r-1vkxrha",TETConfig.cHover = "r-1kplyi6",TETConfig.cColor = "r-v6khid r-cdj8wb",TETConfig.cSub = "r-61mi1v") :
+    (cSel == "r-1dgebii") ? (TETConfig.colors = "r-1dgebii",TETConfig.cHover = "r-1ucxkr8",TETConfig.cColor = "r-1iofnty r-jd07pc",TETConfig.cSub = "r-daml9f") :
+    (cSel == "r-1qqlz1x") ? (TETConfig.colors = "r-1qqlz1x",TETConfig.cHover = "r-njt2r9",TETConfig.cColor = "r-hy56xe r-11mmphe",TETConfig.cSub = "r-xfsgu1") :
+    (cSel == "r-18z3xeu") ? (TETConfig.colors = "r-18z3xeu",TETConfig.cHover = "r-1kplyi6",TETConfig.cColor = "r-1xl5njo r-b8m25f",TETConfig.cSub = "r-1qkqhnw") :
+    (cSel == "r-b5skir") ? (TETConfig.colors = "r-b5skir",TETConfig.cHover = "r-zx61xx",TETConfig.cColor = "r-5ctkeg r-1cqwhho",TETConfig.cSub = "r-nw8l94") : (TETConfig.colors = "r-urgr8i",TETConfig.cHover = "r-1q3imqu",TETConfig.cColor = "r-p1n3y5 r-1bih22f",TETConfig.cSub = "r-13gxpu9");
     TETConfig.colors = cSel;
   }
   qs('select#languages').onchange = () => {
     TETLanguageChange();
-    TETConfig.lang = cSel;
+    TETConfig.lang = qs('select#languages').value;
   }
   qs('select#translator').onchange = () => {
     TETConfig.translator = qs('select#translator').value;
@@ -1733,9 +1226,10 @@ function injectMenu() {
     TETSetValue("Config", JSON.stringify(TETConfig))
     setTimeout(() => window.location.reload(), 200)
   }
-  setTimeout(() => $('button#tetMenuButton > svg').addClass("rm"), 5000);
+  setTimeout(() => $('svg#tetSVG').hide(), 5000);
 } catch (e) {
   TETConfig = DefaultConfig;
+  (!enableLogs) ? (enableLogs = true) : false;
   log(e)
 }
 }
@@ -1756,14 +1250,16 @@ Promise.all([GM.getValue("Config")]).then((data) => {
   for (let key in DefaultConfig) {
     (typeof (TETConfig[key])) ?? (TETConfig[key] = DefaultConfig[key]);
   }
-  // AllData.TETConfig = TETConfig;
-  DBConfig = JSON.parse(JSON.stringify(TETConfig));
-  log(DBConfig)
+  LoadedConfig = JSON.parse(JSON.stringify(TETConfig));
+  document.head.insertAdjacentHTML('beforeend', `<style>${tetCSS}</style>`);
+  log(LoadedConfig)
   injectMenu();
   (TETConfig.lang != "en" || TETConfig.lang != "en-US") ? TETLanguageChange() : false;
   TETInject
   log("Config Loaded")
 }).catch((e) => {
-  log(e);
+  (!enableLogs) ? (enableLogs = true) : false;
+  log(e)
+  TETConfig = DefaultConfig;
 });
 //#endregion

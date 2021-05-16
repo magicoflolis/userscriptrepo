@@ -1,87 +1,79 @@
 # Twitter External Translator
 
-**Translated with DeepL [README.md](https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator)**
-
 > Adds a "Translate with ..." button to Tweets and User Bios.
 
 *This was a fork of [DeepL Twitter translation](https://greasyfork.org/scripts/411976)*
 
+## **What's New**
+
+> Please check the [Bugs / Issues](#bugs--issues) or [contact](#contacts) me for any issues!
+
+* [ Menu ] Added Config Menu!
+* [ Menu ] Multiple language support!
+* [ Menu ] Support for matching Twitter colors
+* [ Menu ] Support for matching Twitter theme
+* [ Site ] Added support for [TwitLonger](https://www.twitlonger.com)
+* [ Site ] Can now translate User Bio in [TweetDeck](https://tweetdeck.twitter.com)
+* [ README ] If this update is causing you problems, switch to [Legacy]((https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js)) or [Beta](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js). Feel free to [contact](#contacts) me for additional help, thank you!
+
 ***
+
+> Only have one enabled!
+
 **Stable:**
 
-> Hosted here, disable beta!
+> Hosted here.
 
 * Click [Install](#install-area) on top
 
 **Beta:**
 
-> Hosted on [GitHub](https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator), disable stable!
+> Hosted on [GitHub](https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator).
 
 * [Direct link](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js)
+
+**Legacy:**
+
+> Hosted on [GitHub](https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator).
+
+* [Direct link](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js)
 
 ***
 
 ## **Features:**
 
-* Works with TweetDeck. <sup id="a1">[1](#f1)</sup>
-* Multiple translators!
-* Translate Tweets and User Bio.
-* Can be configured. <sup id="a2">[2](#f2)</sup>
+* [ Site ] Translate Tweets and User Bio.
+* [ Translator ] Multiple translators!
 
  Translators | Supported
 :-----------:|:---------:
 DeepL Translate | ✔️
-Yandex Translate <sup id="a3">[3](#f3)</sup> | ✔️
-Bing Microsoft Translator <sup id="a4">[4](#f4) | ✔️
-Google Translate <sup id="a4">[4](#f4) | ✔️
+Yandex Translate | ✔️
+Bing Microsoft Translator| ✔️
+Google Translate | ✔️
 MyMemory | ✔️
 Translate.com | ✔️
 
-## Roadmap
-
-* Fix any bugs along the way
-* Add more external translations
-* Make config easier
-* Show multiple translators at once
-* Inline?
-* TweetLonger?
-
 ## Bugs / Issues
 
-* "Translate with ..." button can rarely appear while in Quote Tweet dialog.
+* [ Menu ] Cannot be moved or disabled. ( WIP / Use [Legacy](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js) or [~~Beta~~](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js) if bothered by this. )
+* [ Menu ] Colors cannot be "hot swapped." ( Must match your preferred Twitter color )
+* [ Menu ] Themes cannot be "hot swapped." ( Must match your preferred Twitter theme )
+* [ Translator ] [DeepL](https://www.deepl.com/translator) does not always work. ( Swap translators if this occurs )
 
 **Footnotes:**
 
-<b id="f1">1:</b> Only appears in one column, User Bios not supported. [↩](#a1)
-
-<b id="f2">2:</b> Reload webpage. [↩](#a2)
-
-```javascript
-/**
- * You'll need to edit the config manually for now if you're using this
- * as a user script.
- */
-let cfg = {
-    /** Supported languages
-    * @type {'en'|'zh'|'nl'|'fr'|'de'|'it'|'ja'|'pl'|'pt'|'ru'|'es'}
-    * @type {'bg'|'cs'|'da'|'et'|'fi'|'el'|'hu'|'lv'|'lt'|'ro'|'sk'|'sl'|'sv'} */
-    lang: ('en'),
-    /** Preferred translator, lowercase only!
-    * @type {'deepl'|'yandex'|'bing'|'google'|'mymemory'|'translate'} */
-    translator: ('deepl'),
-    /** Preferred display
-    * @type {'text'|'icon'|'text + icon'} */
-    display: ('text + icon'),
-    iconWidthA: '16', // Twitter
-    iconWidthB: '14', // TweetDeck
-    debug: false
-};
-```
-
-<b id="f3">3:</b> Yandex Translate may default to Russian. [↩](#a3)
+* [ TweetDeck ] Only appears in one column.
+* [ Translator ] Yandex Translate may default to Russian.
 ![YandexHelp](https://raw.githubusercontent.com/magicoflolis/userscriptrepo/66170b767aa5116e43c55aa14843199bad7e9f60/assets/ExternalTranslator4.gif)
+* [ Translator ] Twitters built-in translation uses Google Translate, TweetDeck uses Bing Microsoft Translator.
 
-<b id="f4">4:</b> Twitters built-in translation uses Google Translate, TweetDeck uses Bing Microsoft Translator. [↩](#a4)
+## Roadmap
+
+* Fix any bugs along the way.
+* Add more external translations.
+* Show multiple translators at once.
+* Inline?
 
 ### Contacts
 
