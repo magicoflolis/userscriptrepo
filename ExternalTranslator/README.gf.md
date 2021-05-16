@@ -16,6 +16,8 @@
 * [ Site ] Can now translate User Bio in [TweetDeck](https://tweetdeck.twitter.com)
 * [ README ] If this update is causing you problems, switch to [Legacy]((https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js)) or [Beta](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js). Feel free to [contact](#contacts) me for additional help, thank you!
 
+![Menu Preview](https://raw.githubusercontent.com/magicoflolis/userscriptrepo/master/assets/ExternalTranslator5.gif)
+
 ***
 
 > Only have one enabled!
@@ -65,7 +67,7 @@ Translate.com | ✔️
 
 * [ TweetDeck ] Only appears in one column.
 * [ Translator ] Yandex Translate may default to Russian.
-![YandexHelp](https://raw.githubusercontent.com/magicoflolis/userscriptrepo/66170b767aa5116e43c55aa14843199bad7e9f60/assets/ExternalTranslator4.gif)
+![YandexHelp](https://raw.githubusercontent.com/magicoflolis/userscriptrepo/master/assets/ExternalTranslator4.gif)
 * [ Translator ] Twitters built-in translation uses Google Translate, TweetDeck uses Bing Microsoft Translator.
 
 ## Roadmap
