@@ -4,20 +4,6 @@
 
 *This was a fork of [DeepL Twitter translation](https://greasyfork.org/scripts/411976)*
 
-## **What's New**
-
-> Please check the [Bugs / Issues](#bugs--issues) or [contact](#contacts) me for any issues!
-
-* [ Menu ] Added Config Menu!
-* [ Menu ] Multiple language support!
-* [ Menu ] Support for matching Twitter colors
-* [ Menu ] Support for matching Twitter theme
-* [ Site ] Added support for [TwitLonger](https://www.twitlonger.com)
-* [ Site ] Can now translate User Bio in [TweetDeck](https://tweetdeck.twitter.com)
-* [ README ] If this update is causing you problems, switch to [Legacy]((https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js)) or [Beta](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js). Feel free to [contact](#contacts) me for additional help, thank you!
-
-![Menu Preview](https://raw.githubusercontent.com/magicoflolis/userscriptrepo/master/assets/ExternalTranslator5.gif)
-
 ***
 
 > Only have one enabled!
@@ -44,8 +30,18 @@
 
 ## **Features:**
 
-* [ Site ] Translate Tweets and User Bio.
-* [ Translator ] Multiple translators!
+> Please check the [Bugs / Issues](#bugs--issues) or [contact](#contacts) me for any issues!
+
+* [ Menu ] Added Config Menu!
+* [ Menu ] Multiple language support!
+* [ Menu ] Support for matching Twitter colors
+* [ Menu ] Support for matching Twitter theme
+* [ Site ] Added support for [TwitLonger](https://www.twitlonger.com)
+* [ Site ] Added full support for [TweetDeck](https://tweetdeck.twitter.com)
+* [ Site ] Added support for every [Nitter](https://github.com/zedeus/nitter/wiki/Instances#official-instances)
+* [ README ] If this update is causing you problems, switch to [Legacy](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js) or [Beta](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js). Feel free to [contact](#contacts) me for additional help, thank you!
+
+![Menu Preview](https://raw.githubusercontent.com/magicoflolis/userscriptrepo/master/assets/ExternalTranslator5.gif)
 
  Translators | Supported
 :-----------:|:---------:
@@ -58,6 +54,7 @@ Translate.com | ✔️
 
 ## Bugs / Issues
 
+* [ Menu ] Theme may not always work on first load.
 * [ Menu ] Cannot be moved or disabled. ( WIP / Use [Legacy](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js) or [~~Beta~~](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js) if bothered by this. )
 * [ Menu ] Colors cannot be "hot swapped." ( Must match your preferred Twitter color )
 * [ Menu ] Themes cannot be "hot swapped." ( Must match your preferred Twitter theme )
