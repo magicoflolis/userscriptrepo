@@ -37,11 +37,11 @@
 * [ Menu ] Support for matching Twitter colors
 * [ Menu ] Support for matching Twitter theme
 * [ Site ] Added support for [TwitLonger](https://www.twitlonger.com)
-* [ Site ] Added full support for [TweetDeck](https://tweetdeck.twitter.com)
+* [ Site ] Added support for [TweetDeck](https://tweetdeck.twitter.com)
 * [ Site ] Added support for every [Nitter](https://github.com/zedeus/nitter/wiki/Instances#official-instances)
 * [ README ] If this update is causing you problems, switch to [Legacy](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js) or [Beta](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js). Feel free to [contact](#contacts) me for additional help, thank you!
 
-![Menu Preview](https://raw.githubusercontent.com/magicoflolis/userscriptrepo/master/assets/ExternalTranslator5.gif)
+![Menu Preview](https://raw.githubusercontent.com/magicoflolis/userscriptrepo/master/assets/ExternalTranslator5.png)
 
  Translators | Supported
 :-----------:|:---------:
@@ -56,7 +56,7 @@ Translate.com | ✔️
 
 * [ Menu ] Theme may not always work on first load.
 * [ Menu ] Cannot be moved or disabled. ( WIP / Use [Legacy](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js) or [~~Beta~~](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js) if bothered by this. )
-* [ Menu ] Colors cannot be "hot swapped." ( Must match your preferred Twitter color )
+* [ Menu ] Must match your preferred Twitter color.
 * [ Menu ] Themes cannot be "hot swapped." ( Must match your preferred Twitter theme )
 * [ Translator ] [DeepL](https://www.deepl.com/translator) does not always work. ( Swap translators if this occurs )
 
