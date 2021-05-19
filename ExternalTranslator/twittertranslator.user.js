@@ -57,7 +57,7 @@
 // @description:es      Añade traductores de terceros a Twitter
 // @author       Magic of Lolis <magicoflolis@gmail.com>
 // @icon         https://abs.twimg.com/favicons/twitter.ico
-// @version      0.21
+// @version      0.25
 // @namespace    https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @homepageURL  https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @supportURL   https://github.com/magicoflolis/userscriptrepo/issues/new
@@ -67,6 +67,7 @@
 // @match        https://www.twitlonger.com/show/*
 // @match        https://nitter.*/*
 // @match        https://nitter.*.*/*
+// @match        https://nitter.domain.glass/*
 // @match        https://nitter-home.kavin.rocks/*
 // @match        https://birdsite.xanny.family/*
 // @match        https://twitr.gq/*
@@ -79,6 +80,7 @@
 // @grant        GM.getValue
 // @grant        GM_setValue
 // @grant        GM.setValue
+// @grant        GM_info
 // ==/UserScript==
 "use strict";
 //#region Config
@@ -87,7 +89,7 @@
   GM.setValue = GM_setValue,
   GM.getValue = GM_getValue
 ) : false;
-let enableLogs = false
+let enableLogs = false;
 const log = (msg) => {
   return enableLogs ? console.log('[TET]', msg) : false;
 },
@@ -109,8 +111,6 @@ TETInject = (LH == 'twitter.com') ? new MutationObserver(() => {Twitter()}).obse
 isHTML = (str, doc = new DOMParser().parseFromString(str, "text/html")) => {
   return Array.from(doc.body.childNodes).some(node => node.nodeType === 1);
 },
-// Web icons are encoded in Data URI.
-// Can be decoded: https://www.site24x7.com/tools/datauri-to-image.html
 icons = {
   bing: `<img class="exIcon" width="16" src="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFzSURBVDhPrZDLSwJRGEfnXwiiRURkLnpQlNlUo4usQGgjkdXGhVtXPYiglUS1jTYRLtsVRRC1CMI0qEAokFQssBeRhY8ZTRwzK385w5VupKTQgbO4Z777wR2GRuMUvRpHcoYcy0d7kEJekspDs/eKvNxuKk5y6XDbb6AluXS49dxFSpJLp2ctA1qpdR0Cnc6PO3ngL7pt76CVGuvIQnX0jqaTFGrPYk55sBjsUhq0UlM7P5dbjtNQuhKocoeh9Dy45eFCqOdE0JLMNJ6KqDnnUe0JosN/X/zfqKYToCVZptIdMtfv3EB3dQ1j4LKX5J+0WnjQksxwy0F92+wjFOYb1E34QqaAt/CCBtMzaKWm34i+9K5EwFrDaLY8odZ4W/wJuoVwRGG4gyQ3GeQN9iQGNwX0rfLg5gW0j0fRaX2wk/HfjPiyFWP+LEYvPjDsykBesCVgwCZAuxiHaiquJKPFGfJl2e8FYm5BDP02YZ98/m8Y5gsM/AoQ7XCKzQAAAABJRU5ErkJggg=="/>`,
   deepl: `<img class="exIcon" width="16" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAACNwAAAjcB9wZEwgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAGZSURBVDiNjZKxaxRBFMZ/b2ZHbWITUxkRC4PnBUW0k1gkoFlMYmIR8R+w0UZBFAvtLAMS0ipC0guCd0GOa23EJGTPkBRCSCNHKiEgMzvPwmjCuiv3lft97zff7BuhQraWTouJLwE0mmf518a7spwUPxwZvlmLms8B4wWrLZhHPvuwUg44N9afGPcc4T5gK4pFgSUv/jHrre8HgKHJE4nzHWBgn/sZdBuYqQB1Q+5rbLR2DUBy1J89GIbEmNmQNW8DqxWAgcS5IQBT5vqYP3H1Gw9AHyosAKECVA4QuKfIPMhHVKygV4OVU8ByT4BDsiI6rWpusdbYUdgpBpLSMeGTRLYx2o5q9kT0ja2P3xU401ODQJz1neYdVRkT9C1gyob/Ngg/3VbifJf9TVg1L2Q43UC1eo3eb8KfB7O7uRf7T782Yo8hXBG4DFwvaRgFFoP4GTqt7u/bFuTOp5dU9BUw8u/BOhqy5fZ//4HvNL6ErHlNkSmFb4e9YM1WMV+5xjxrvM+P99VBngI/qnK96UI66OrpEhcnThatXx/tiqJJdDA6AAAAAElFTkSuQmCC" />`,
@@ -129,7 +129,116 @@ icons = {
     }
   }
 },
-tetCSS = `:root {
+twCSS = `.css-1dbjc4n{-ms-flex-align:stretch;-ms-flex-direction:column;-ms-flex-negative:0;-ms-flex-preferred-size:auto;-webkit-align-items:stretch;-webkit-box-align:stretch;-webkit-box-direction:normal;-webkit-box-orient:vertical;-webkit-flex-basis:auto;-webkit-flex-direction:column;-webkit-flex-shrink:0;align-items:stretch;border:0 solid black;box-sizing:border-box;display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex;flex-basis:auto;flex-direction:column;flex-shrink:0;margin-bottom:0px;margin-left:0px;margin-right:0px;margin-top:0px;min-height:0px;min-width:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;padding-top:0px;position:relative;z-index:0;}
+.r-qvutc0 {
+    overflow-wrap: break-word;
+}
+.r-1wbh5a2 {
+  flex-shrink: 1;
+}
+.r-z2wwpe {
+    border-radius: 4px;
+}
+.r-rs99b7 {
+    border-width: 1px;
+}
+.r-1867qdf {
+  border-radius: 16px;
+}
+.r-1moyyf3 {
+    border-bottom-right-radius: 16px;
+}
+.r-1pp923h {
+    border-bottom-left-radius: 16px;
+}
+.r-1udh08x {
+  overflow: hidden;
+}
+.r-1awozwy {
+  -moz-box-align: center;
+  align-items: center;
+}
+.r-1777fci {
+  -moz-box-pack: center;
+  justify-content: center;
+}
+.r-1pi2tsx {
+  height: 100%;
+}
+.r-18u37iz {
+  -moz-box-direction: normal;
+  -moz-box-orient: horizontal;
+  flex-direction: row;
+}
+.r-ipm5af {
+  top: 0px;
+}
+.r-6gpygo {
+    margin-bottom: 12px !important;
+}
+.r-1ye8kvj {
+    max-width: 600px;
+}
+.r-16y2uox {
+    -moz-box-flex: 1;
+    flex-grow: 1;
+}
+.r-13qz1uu {
+    width: 100%;
+}
+.r-1jgb5lz {
+    margin-left: auto;
+    margin-right: auto;
+}
+.r-1dye5f7 {
+    padding-left: 32px;
+    padding-right: 32px;
+}
+
+.r-9ilb82 {
+    color: rgb(110, 118, 125);
+}
+.r-16dba41 {
+    font-weight: 400;
+}
+.r-1vr29t4 {
+    font-weight: 800;
+}
+.r-jwli3a {
+    color: rgb(255, 255, 255);
+}
+.r-a023e6 {
+    font-size: 15px;
+}
+.r-1qd0xha {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.r-rjixqe {
+    line-height: 20px;
+}
+.r-1cwl3u0 {
+    line-height: 16px;
+}
+.r-bcqeeo {
+    min-width: 0px;
+}
+.r-q4m81j {
+    text-align: center;
+}
+.r-zchlnj {
+    right: 0px;
+}
+.r-1d2f490 {
+    left: 0px;
+}
+.r-1p0dtai {
+    bottom: 0px;
+}
+.r-13awgt0{-ms-flex:1 1 0%;-webkit-flex:1;flex:1;}
+.r-1b2b6em{line-height:2em;}
+.r-q4m81j{text-align:center;}`,
+tetCSS = `/*#region Colors*/
+:root {
   --bg_hover: #1A1A1A;
   --bg_elements: #121212;
   --accent_border: #FF6C6091;
@@ -159,174 +268,234 @@ tetCSS = `:root {
   --tetGreenH: rgb(21, 172, 89);
   --tetGreenB: rgb(23 191 99) 0px 0px 0px 1px;
 }
+
 .tetNitterHover {
   background-color: var(--bg_hover);
 }
+
 .tetNitter {
   background-color: transparent;
 }
+
 .tetNText {
   text-decoration: underline;
 }
+
 /* blue */
 .r-urgr8i {
   background-color: var(--tetBlue);
 }
+
 .r-p1n3y5 {
   border-color: var(--tetBlue);
 }
+
 .r-13gxpu9 {
   color: var(--tetBlue);
 }
+
 .r-1q3imqu {
   background-color: var(--tetBlueH) !important;
 }
+
 .r-1bih22f {
   box-shadow: var(--tetBlueB);
 }
+
 /* yellow */
 .r-1vkxrha {
   background-color: var(--tetYellow);
 }
+
 .r-v6khid {
   border-color: var(--tetYellow);
 }
+
 .r-61mi1v {
   color: var(--tetYellow);
 }
+
 .r-1kplyi6 {
   background-color: var(--tetYellowH) !important;
 }
+
 .r-cdj8wb {
   box-shadow: var(--tetYellowB);
 }
+
 /* red */
 .r-1dgebii {
   background-color: var(--tetRed);
 }
+
 .r-1iofnty {
   border-color: var(--tetRed);
 }
+
 .r-daml9f {
   color: var(--tetRed);
 }
+
 .r-1ucxkr8 {
   background-color: var(--tetRedH) !important;
 }
+
 .r-jd07pc {
   box-shadow: var(--tetRed) 0px 0px 0px 1px;
 }
+
 /* purple */
 .r-1qqlz1x {
   background-color: var(--tetPurple);
 }
+
 .r-njt2r9 {
   background-color: var(--tetPurpleH) !important;
 }
+
 .r-hy56xe {
-border-color: var(--tetPurple);
+  border-color: var(--tetPurple);
 }
+
 .r-11mmphe {
-box-shadow: var(--tetPurpleB);
+  box-shadow: var(--tetPurpleB);
 }
-.r-xfsgu1{
-color: var(--tetPurple);
+
+.r-xfsgu1 {
+  color: var(--tetPurple);
 }
+
 /* orange */
 .r-18z3xeu {
   background-color: var(--tetOrange);
 }
+
 .r-1kplyi6 {
   background-color: var(--tetOrangeH) !important;
 }
+
 .r-1xl5njo {
-border-color: var(--tetOrange);
+  border-color: var(--tetOrange);
 }
+
 .r-b8m25f {
-box-shadow: var(--tetOrangeB);
+  box-shadow: var(--tetOrangeB);
 }
+
 .r-1qkqhnw {
-color: var(--tetOrange);
+  color: var(--tetOrange);
 }
+
 /* green */
 .r-b5skir {
   background-color: var(--tetGreen);
 }
+
 .r-zx61xx {
   background-color: var(--tetGreenH) !important;
 }
+
 .r-5ctkeg {
-border-color: var(--tetGreen);
+  border-color: var(--tetGreen);
 }
+
 .r-1cqwhho {
-box-shadow: var(--tetGreenB);
+  box-shadow: var(--tetGreenB);
 }
+
 .r-nw8l94 {
-color: var(--tetGreen);
+  color: var(--tetGreen);
 }
+
 .r-yfoy6g {
   background-color: rgb(21, 32, 43);
 }
+
 .r-14lw9ot {
   background-color: rgb(255, 255, 255);
 }
+
 .r-kemksi {
   background-color: rgb(0, 0, 0);
+}
+.r-18jsvk2 {
+  color: rgb(15, 20, 25);
 }
 .Button--primary {
   background-color: #1da1f2;
   border: 1px solid #1da1f2;
   color: #fff;
 }
+
+/*#endregion*/
+/*#region Twitter Styles*/
 .r-kzbkwu {
-  padding-bottom: 12px;
+  padding-bottom: 12px !important;
 }
+
 .r-i023vh {
-  padding-right: 16px;
+  padding-right: 16px !important;
 }
+
 .r-1qhn6m8 {
-  padding-left: 16px;
+  padding-left: 16px !important;
 }
+
 .r-11rk87y {
-  padding-bottom: 32px;
+  padding-bottom: 32px !important;
 }
+
 .r-1v1z2uz {
-  margin-top: 32px;
+  margin-top: 32px !important;
 }
+
 .r-1n7yuxj {
-  margin-left: 32px;
-  margin-right: 32px;
+  margin-left: 32px !important;
+  margin-right: 32px !important;
 }
+
 .r-vrz42v {
   line-height: 28px;
 }
+
 .r-1blvdjr {
   font-size: 23px;
 }
-.r-1pjcn9w {
-  max-width: 80vw;
+
+.r-htvplk {
+  min-width: 600px !important;
 }
 .r-rsyp9y {
   max-height: 90vh;
 }
-.r-htvplk {
-  min-width: 600px;
+.r-1pjcn9w {
+  max-width: 80vw;
 }
-.rm, button:not(.mini) > #tetSVG, button.mini > span {
-display: none !important
+/*#endregion*/
+
+/*#region TET*/
+.rm,
+button:not(.mini)>#tetSVG,
+button.mini>span {
+  display: none !important
 }
+
 .tetFreeze {
-  overflow: hidden !important; 
-  overscroll-behavior-y: none !important; 
+  overflow: hidden !important;
+  overscroll-behavior-y: none !important;
 }
-#tetMenuButton, #tetSave, #tetReload, #tetReset {
-border-radius: 15px;
-justify-content: center;
-display: flex !important;
-font-size: 20px !important;
-font-weight: bold !important;
-padding: 0px !important
+#tetMenuButton,
+#tetSave,
+#tetReload,
+#tetReset {
+  border-radius: 15px;
+  justify-content: center;
+  display: flex !important;
+  font-size: 20px !important;
+  font-weight: bold !important;
+  padding: 0px !important
 }
+
 #tetMenuButton {
   z-index: 10;
   width: 8vw;
@@ -334,15 +503,28 @@ padding: 0px !important
   top: 65%;
   left: 0px;
 }
-#tetMenuButton, #tetSave, #tetReload, #tetReset, #tet, .tet {
-cursor: pointer !important
+
+#tetMenuButton,
+#tetSave,
+#tetReload,
+#tetReset,
+#tet,
+.tet {
+  cursor: pointer !important
 }
-#tetName, #tetSelector > select {
-padding-left: 2%
+
+#tetName,
+#tetSelector>select {
+  padding-left: 2%
 }
-#tetSelector, #tetSave, #tetReload, #tetReset {
-margin-top: 2%
+
+#tetSelector,
+#tetSave,
+#tetReload,
+#tetReset {
+  margin-top: 2%
 }
+
 #tetDemo {
   margin-bottom: 4px;
   margin-top: 4px;
@@ -353,34 +535,46 @@ margin-top: 2%
   min-width: 0px;
   display: flex !important;
 }
-.btNav, .navbackground {
-position: fixed;
-width: 100vw;
-height: 100vh;
+
+.btNav,
+.navbackground {
+  position: fixed !important;
+  width: 100vw;
+  height: 100vh;
 }
+
 #tetSVG {
-right: 35% !important
+  right: 35% !important
+}
+#tetMenuButton.tetTD {
+  left: 90% !important;
+  top: 0% !important;
 }
 .navbackground {
-top: 0;
-left: 0
+  top: 0;
+  left: 0
 }
+
 .mini {
-min-height: 12% !important;
-width: 8vw;
-height: auto;
-overflow: hidden;
-background: transparent
+  min-height: 12% !important;
+  width: 8vw;
+  height: auto;
+  overflow: hidden;
+  background: transparent
 }
+
 .r-hover {
-text-decoration-line: underline !important;
-outline-style: none !important
+  text-decoration-line: underline !important;
+  outline-style: none !important
 }
+
 .r-hoverTD {
   background-color: #005fd1;
   border-color: #005fd1;
   color: #fff
-}`;
+}
+
+/*#endregion*/`;
   //document.addEventListener('DOMContentLoaded', Nitter())
   //new MutationObserver(() => {Nitter()}).observe(document.body, {subtree:true,childList:true})
 let TETConfig = {},
@@ -1025,23 +1219,36 @@ DefaultConfig = {
   cColor: "r-p1n3y5 r-1bih22f",
   cSub: "r-13gxpu9",
 },
-sidebar = `<button title="Menu" id="tetMenuButton" class="mini tetDisplayColor css-901oao r-poiln3 css-4rbku5" type="button" >
-<svg viewBox="0 0 24 24" id="tetSVG" class="tetTextColor r-4qtqp9 r-yyyyoo r-1q142lx r-1xvli5t r-1b7u577 r-dnmrzs r-bnwqim r-1plcrui r-lrvibr" width="15"><g><path d="M12 8.21c-2.09 0-3.79 1.7-3.79 3.79s1.7 3.79 3.79 3.79 3.79-1.7 3.79-3.79-1.7-3.79-3.79-3.79zm0 6.08c-1.262 0-2.29-1.026-2.29-2.29S10.74 9.71 12 9.71s2.29 1.026 2.29 2.29-1.028 2.29-2.29 2.29z"></path><path d="M12.36 22.375h-.722c-1.183 0-2.154-.888-2.262-2.064l-.014-.147c-.025-.287-.207-.533-.472-.644-.286-.12-.582-.065-.798.115l-.116.097c-.868.725-2.253.663-3.06-.14l-.51-.51c-.836-.84-.896-2.154-.14-3.06l.098-.118c.186-.222.23-.523.122-.787-.11-.272-.358-.454-.646-.48l-.15-.014c-1.18-.107-2.067-1.08-2.067-2.262v-.722c0-1.183.888-2.154 2.064-2.262l.156-.014c.285-.025.53-.207.642-.473.11-.27.065-.573-.12-.795l-.094-.116c-.757-.908-.698-2.223.137-3.06l.512-.512c.804-.804 2.188-.865 3.06-.14l.116.098c.218.184.528.23.79.122.27-.112.452-.358.477-.643l.014-.153c.107-1.18 1.08-2.066 2.262-2.066h.722c1.183 0 2.154.888 2.262 2.064l.014.156c.025.285.206.53.472.64.277.117.58.062.794-.117l.12-.102c.867-.723 2.254-.662 3.06.14l.51.512c.836.838.896 2.153.14 3.06l-.1.118c-.188.22-.234.522-.123.788.112.27.36.45.646.478l.152.014c1.18.107 2.067 1.08 2.067 2.262v.723c0 1.183-.888 2.154-2.064 2.262l-.155.014c-.284.024-.53.205-.64.47-.113.272-.067.574.117.795l.1.12c.756.905.696 2.22-.14 3.06l-.51.51c-.807.804-2.19.864-3.06.14l-.115-.096c-.217-.183-.53-.23-.79-.122-.273.114-.455.36-.48.646l-.014.15c-.107 1.173-1.08 2.06-2.262 2.06zm-3.773-4.42c.3 0 .593.06.87.175.79.328 1.324 1.054 1.4 1.896l.014.147c.037.4.367.7.77.7h.722c.4 0 .73-.3.768-.7l.014-.148c.076-.842.61-1.567 1.392-1.892.793-.33 1.696-.182 2.333.35l.113.094c.178.148.366.18.493.18.206 0 .4-.08.546-.227l.51-.51c.284-.284.305-.73.048-1.038l-.1-.12c-.542-.65-.677-1.54-.352-2.323.326-.79 1.052-1.32 1.894-1.397l.155-.014c.397-.037.7-.367.7-.77v-.722c0-.4-.303-.73-.702-.768l-.152-.014c-.846-.078-1.57-.61-1.895-1.393-.326-.788-.19-1.678.353-2.327l.1-.118c.257-.31.236-.756-.048-1.04l-.51-.51c-.146-.147-.34-.227-.546-.227-.127 0-.315.032-.492.18l-.12.1c-.634.528-1.55.67-2.322.354-.788-.327-1.32-1.052-1.397-1.896l-.014-.155c-.035-.397-.365-.7-.767-.7h-.723c-.4 0-.73.303-.768.702l-.014.152c-.076.843-.608 1.568-1.39 1.893-.787.326-1.693.183-2.33-.35l-.118-.096c-.18-.15-.368-.18-.495-.18-.206 0-.4.08-.546.226l-.512.51c-.282.284-.303.73-.046 1.038l.1.118c.54.653.677 1.544.352 2.325-.327.788-1.052 1.32-1.895 1.397l-.156.014c-.397.037-.7.367-.7.77v.722c0 .4.303.73.702.768l.15.014c.848.078 1.573.612 1.897 1.396.325.786.19 1.675-.353 2.325l-.096.115c-.26.31-.238.756.046 1.04l.51.51c.146.147.34.227.546.227.127 0 .315-.03.492-.18l.116-.096c.406-.336.923-.524 1.453-.524z"></path></g></svg>
+tetInfo = {
+  author: GM_info.script.author,
+  homepage: GM_info.script.homepage,
+  name: GM_info.script.name,
+  version: GM_info.script.version,
+  fn: checkInfo
+},
+sidebar = `<button title="Menu" id="tetMenuButton" class="mini tetDisplayColor css-901oao r-poiln3 css-4rbku5" type="button">
+<svg viewBox="0 0 24 24" id="tetSVG" class="tetTextColor r-4qtqp9 r-yyyyoo r-1q142lx r-1xvli5t r-1b7u577 r-dnmrzs r-bnwqim r-1plcrui r-lrvibr" width="15">
+  <g>
+    <path d="M12 8.21c-2.09 0-3.79 1.7-3.79 3.79s1.7 3.79 3.79 3.79 3.79-1.7 3.79-3.79-1.7-3.79-3.79-3.79zm0 6.08c-1.262 0-2.29-1.026-2.29-2.29S10.74 9.71 12 9.71s2.29 1.026 2.29 2.29-1.028 2.29-2.29 2.29z"></path>
+    <path d="M12.36 22.375h-.722c-1.183 0-2.154-.888-2.262-2.064l-.014-.147c-.025-.287-.207-.533-.472-.644-.286-.12-.582-.065-.798.115l-.116.097c-.868.725-2.253.663-3.06-.14l-.51-.51c-.836-.84-.896-2.154-.14-3.06l.098-.118c.186-.222.23-.523.122-.787-.11-.272-.358-.454-.646-.48l-.15-.014c-1.18-.107-2.067-1.08-2.067-2.262v-.722c0-1.183.888-2.154 2.064-2.262l.156-.014c.285-.025.53-.207.642-.473.11-.27.065-.573-.12-.795l-.094-.116c-.757-.908-.698-2.223.137-3.06l.512-.512c.804-.804 2.188-.865 3.06-.14l.116.098c.218.184.528.23.79.122.27-.112.452-.358.477-.643l.014-.153c.107-1.18 1.08-2.066 2.262-2.066h.722c1.183 0 2.154.888 2.262 2.064l.014.156c.025.285.206.53.472.64.277.117.58.062.794-.117l.12-.102c.867-.723 2.254-.662 3.06.14l.51.512c.836.838.896 2.153.14 3.06l-.1.118c-.188.22-.234.522-.123.788.112.27.36.45.646.478l.152.014c1.18.107 2.067 1.08 2.067 2.262v.723c0 1.183-.888 2.154-2.064 2.262l-.155.014c-.284.024-.53.205-.64.47-.113.272-.067.574.117.795l.1.12c.756.905.696 2.22-.14 3.06l-.51.51c-.807.804-2.19.864-3.06.14l-.115-.096c-.217-.183-.53-.23-.79-.122-.273.114-.455.36-.48.646l-.014.15c-.107 1.173-1.08 2.06-2.262 2.06zm-3.773-4.42c.3 0 .593.06.87.175.79.328 1.324 1.054 1.4 1.896l.014.147c.037.4.367.7.77.7h.722c.4 0 .73-.3.768-.7l.014-.148c.076-.842.61-1.567 1.392-1.892.793-.33 1.696-.182 2.333.35l.113.094c.178.148.366.18.493.18.206 0 .4-.08.546-.227l.51-.51c.284-.284.305-.73.048-1.038l-.1-.12c-.542-.65-.677-1.54-.352-2.323.326-.79 1.052-1.32 1.894-1.397l.155-.014c.397-.037.7-.367.7-.77v-.722c0-.4-.303-.73-.702-.768l-.152-.014c-.846-.078-1.57-.61-1.895-1.393-.326-.788-.19-1.678.353-2.327l.1-.118c.257-.31.236-.756-.048-1.04l-.51-.51c-.146-.147-.34-.227-.546-.227-.127 0-.315.032-.492.18l-.12.1c-.634.528-1.55.67-2.322.354-.788-.327-1.32-1.052-1.397-1.896l-.014-.155c-.035-.397-.365-.7-.767-.7h-.723c-.4 0-.73.303-.768.702l-.014.152c-.076.843-.608 1.568-1.39 1.893-.787.326-1.693.183-2.33-.35l-.118-.096c-.18-.15-.368-.18-.495-.18-.206 0-.4.08-.546.226l-.512.51c-.282.284-.303.73-.046 1.038l.1.118c.54.653.677 1.544.352 2.325-.327.788-1.052 1.32-1.895 1.397l-.156.014c-.397.037-.7.367-.7.77v.722c0 .4.303.73.702.768l.15.014c.848.078 1.573.612 1.897 1.396.325.786.19 1.675-.353 2.325l-.096.115c-.26.31-.238.756.046 1.04l.51.51c.146.147.34.227.546.227.127 0 .315-.03.492-.18l.116-.096c.406-.336.923-.524 1.453-.524z"></path>
+  </g>
+</svg>
 <span class="css-901oao css-16my406 r-bcqeeo r-qvutc0 r-jwli3a">Menu</span>
 </button>
 <div role="dialog" tabindex="0" id="tetTW" class="btNav css-1dbjc4n r-1awozwy r-18u37iz r-1pi2tsx r-1777fci r-1xcajam r-ipm5af r-g6jmlv">
 <div class="navbackground rm"></div>
 <div aria-modal="true" aria-labelledby="modal-header" role="dialog" id="tetForm" class="rm css-1dbjc4n r-1867qdf r-1wbh5a2 r-rsyp9y r-1pjcn9w r-htvplk r-1udh08x">
-<div class="tetBackground css-1dbjc4n r-1867qdf r-16y2uox r-1wbh5a2">
-<div class="css-1dbjc4n r-6gpygo r-1v1z2uz"><div dir="auto" class="tetTextColor css-901oao r-1fmj7o5 r-1qd0xha r-1blvdjr r-1vr29t4 r-vrz42v r-bcqeeo r-q4m81j r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">External Translator Config</span></div>
-</div>
-<div class="css-1dbjc4n r-16y2uox r-1wbh5a2 r-1jgb5lz r-1ye8kvj r-13qz1uu">
-  <div class="css-1dbjc4n r-1pp923h r-1moyyf3 r-16y2uox r-1wbh5a2 r-1dqxon3">
-    <div class="css-1dbjc4n r-11rk87y r-1dye5f7">
-      <div dir="auto" class="tetTextColorcss-901oao r-9ilb82 r-1qd0xha r-a023e6 r-16dba41 r-rjixqe r-117bsoe r-bcqeeo r-q4m81j r-qvutc0">
-          <span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">(WIP) Please click Reset on update</span>
-        </div>
-      <div class="css-1dbjc4n r-1ifxtd0 r-1n7yuxj">
+  <div class="tetBackground css-1dbjc4n r-1867qdf r-16y2uox r-1wbh5a2">
+    <div class="css-1dbjc4n r-6gpygo r-1v1z2uz">
+      <div dir="auto" class="tetTextColor css-901oao r-1fmj7o5 r-1qd0xha r-1blvdjr r-1vr29t4 r-vrz42v r-bcqeeo r-q4m81j r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">${tetInfo.name} Config</span></div>
+    </div>
+    <div class="css-1dbjc4n r-16y2uox r-1wbh5a2 r-1jgb5lz r-1ye8kvj r-13qz1uu">
+      <div class="css-1dbjc4n r-1pp923h r-1moyyf3 r-16y2uox r-1wbh5a2 r-1dqxon3">
+        <div class="css-1dbjc4n r-11rk87y r-1dye5f7">
+          <div dir="auto" class="tetTextColor css-901oao r-9ilb82 r-1qd0xha r-a023e6 r-16dba41 r-rjixqe r-117bsoe r-bcqeeo r-q4m81j r-qvutc0">
+            <span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">v${tetInfo.version}</span>
+          </div>
+          <div class="css-1dbjc4n r-1ifxtd0 r-1n7yuxj">
             <div aria-hidden="true" class="css-1dbjc4n r-1kqtdi0 r-1867qdf r-1phboty r-rs99b7 r-1ny4l3l">
               <div class="css-1dbjc4n">
                 <article role="article" tabindex="0" class="css-1dbjc4n r-18u37iz r-1ny4l3l r-1udh08x r-1qhn6m8 r-i023vh">
@@ -1077,7 +1284,7 @@ sidebar = `<button title="Menu" id="tetMenuButton" class="mini tetDisplayColor c
                                     <div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs r-1ny4l3l">
                                       <div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs r-1ny4l3l">
                                         <div class="css-1dbjc4n r-1awozwy r-18u37iz r-dnmrzs">
-                                          <div dir="auto" class="css-901oao css-bfa6kz r-1fmj7o5 r-1qd0xha r-a023e6 r-b88u0q r-rjixqe r-bcqeeo r-1udh08x r-3s2u2q r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Twitter External Translator</span></span></div>
+                                          <div dir="auto" class="tetTextColor css-901oao css-bfa6kz r-1fmj7o5 r-1qd0xha r-a023e6 r-b88u0q r-rjixqe r-bcqeeo r-1udh08x r-3s2u2q r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">${tetInfo.name}</span></span></div>
                                         </div>
                                         <div class="css-1dbjc4n r-18u37iz r-1wbh5a2 r-13hce6t">
                                           <div dir="ltr" class="css-901oao css-bfa6kz r-9ilb82 r-18u37iz r-1qd0xha r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">@Demo</span></div>
@@ -1091,8 +1298,8 @@ sidebar = `<button title="Menu" id="tetMenuButton" class="mini tetDisplayColor c
                             </div>
                             <div class="css-1dbjc4n">
                               <div class="css-1dbjc4n">
-                                <div dir="auto" class="css-901oao r-1fmj7o5 r-1qd0xha r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-bnwqim r-qvutc0" lang="ar"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Pretend I'm a foreign language.</span></div>
-                                <div dir="auto" aria-expanded="false" role="button" tabindex="0" id="tetDemo" class="tet css-901oao r-1qd0xha"></div>
+                                <div dir="auto" class="tetTextColor css-901oao r-1fmj7o5 r-1qd0xha r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-bnwqim r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Pretend I'm a foreign language.</span></div>
+                                <div dir="auto" aria-expanded="false" role="button" tabindex="0" id="tetDemo" class="css-901oao r-1qd0xha"></div>
                               </div>
                               <div class="css-1dbjc4n"></div>
                             </div>
@@ -1104,101 +1311,100 @@ sidebar = `<button title="Menu" id="tetMenuButton" class="mini tetDisplayColor c
                 </article>
               </div>
             </div>
+          </div>
+          <div id="tetSelector" class="tetBackground css-1dbjc4n r-1kqtdi0 r-z2wwpe r-rs99b7 r-16xksha">
+            <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Languages</span></div>
+            <select id="languages" name="languages" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
+              <option class="tetBackground" value="en">English</option>
+              <option class="tetBackground" value="es">Español</option>
+              <option class="tetBackground" value="zh">中文</option>
+              <option class="tetBackground" value="bg">Български</option>
+              <option class="tetBackground" value="cs">Česky</option>
+              <option class="tetBackground" value="da">Dansk</option>
+              <option class="tetBackground" value="de">Deutsch</option>
+              <option class="tetBackground" value="el">Ελληνική</option>
+              <option class="tetBackground" value="et">Eesti</option>
+              <option class="tetBackground" value="fi">Suomalainen</option>
+              <option class="tetBackground" value="fr">Français</option>
+              <option class="tetBackground" value="hu">Magyar</option>
+              <option class="tetBackground" value="it">Italiano</option>
+              <option class="tetBackground" value="ja">日本語</option>
+              <option class="tetBackground" value="lv">Latviešu</option>
+              <option class="tetBackground" value="lt">Lietuvių kalba</option>
+              <option class="tetBackground" value="nl">Nederlands</option>
+              <option class="tetBackground" value="pl">Polski</option>
+              <option class="tetBackground" value="pt">Português</option>
+              <option class="tetBackground" value="ro">Românesc</option>
+              <option class="tetBackground" value="ru">Russisch</option>
+              <option class="tetBackground" value="sk">Slovenská</option>
+              <option class="tetBackground" value="sl">Slovenski</option>
+              <option class="tetBackground" value="sv">Svenska</option>
+            </select>
+          </div>
+          <div id="tetSelector" class="tetBackground css-1dbjc4n r-1kqtdi0 r-z2wwpe r-rs99b7 r-16xksha">
+            <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Translators</span></div>
+            <select id="translator" name="translator" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
+              <option class="tetBackground" value="bing">Bing Translate</option>
+              <option class="tetBackground" value="deepl">Deepl</option>
+              <option class="tetBackground" value="google">Google Translate</option>
+              <option class="tetBackground" value="mymemory">MyMemory</option>
+              <option class="tetBackground" value="translate">Translate.com</option>
+              <option class="tetBackground" value="yandex">Yandex Translator</option>
+            </select>
+          </div>
+          <div id="tetSelector" class="tetBackground css-1dbjc4n r-1kqtdi0 r-z2wwpe r-rs99b7 r-16xksha">
+            <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Display</span></div>
+            <select id="display" name="display" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
+              <option class="tetBackground" value="text + icon">Text + Icon</option>
+              <option class="tetBackground" value="text">Text Only</option>
+              <option class="tetBackground" value="icon">Icon Only</option>
+            </select>
+          </div>
+          <div id="tetSelector" class="tetBackground css-1dbjc4n r-1kqtdi0 r-z2wwpe r-rs99b7 r-16xksha">
+            <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Color</span></div>
+            <select id="colorselect" name="colorselect" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
+              <optgroup class="tetBackground" label="Twitter">
+                <option class="tetBackground" value="r-urgr8i">Blue</option>
+                <option class="tetBackground" value="r-1vkxrha">Yellow</option>
+                <option class="tetBackground" value="r-1dgebii">Red</option>
+                <option class="tetBackground" value="r-1qqlz1x">Purple</option>
+                <option class="tetBackground" value="r-18z3xeu">Orange</option>
+                <option class="tetBackground" value="r-b5skir">Green</option>
+              </optgroup>
+              <optgroup class="tetBackground" label="TweetDeck">
+                <option class="tetBackground" value="tweetdeck">Default</option>
+              </optgroup>
+              <optgroup class="tetBackground" label="Nitter">
+                <option class="tetBackground" value="nitter">Default</option>
+              </optgroup>
+            </select>
+          </div>
+          <div id="tetSelector" class="tetBackground css-1dbjc4n r-1kqtdi0 r-z2wwpe r-rs99b7 r-16xksha">
+            <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Theme</span></div>
+            <select id="theme" name="theme" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
+              <optgroup class="tetBackground" label="Twitter">
+                <option class="tetBackground" value="#FFFFFF">Default</option>
+                <option class="tetBackground" value="#15202B">Dim</option>
+                <option class="tetBackground" value="#000000">Lights out</option>
+              </optgroup>
+              <optgroup class="tetBackground" label="TweetDeck">
+                <option class="tetBackground" value="tweetdeck">Default</option>
+              </optgroup>
+              <optgroup class="tetBackground" label="Nitter">
+                <option class="tetBackground" value="nitter">Default</option>
+              </optgroup>
+            </select>
+          </div>
+          <button id="tetSave" class="tetDisplayColor css-901oao r-poiln3 r-jwli3a css-4rbku5 tetBtn" type="button">Save</button>
+          <button id="tetReload" class="tetDisplayColor css-901oao r-poiln3 r-jwli3a css-4rbku5 tetBtn" type="button">Reload</button>
+          <button id="tetReset" class="tetDisplayColor css-901oao r-poiln3 r-jwli3a css-4rbku5 tetBtn" type="button">Defaults</button>
+        </div>
       </div>
-      <div id="tetSelector" class="tetBackground css-1dbjc4n r-1kqtdi0 r-z2wwpe r-rs99b7 r-16xksha">
-        <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Languages</span></div>
-        <select id="languages" name="languages" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
-          <option class="tetBackground" value="en">English</option>
-          <option class="tetBackground" value="es">Español</option>
-          <option class="tetBackground" value="zh">中文</option>
-          <option class="tetBackground" value="bg">Български</option>
-          <option class="tetBackground" value="cs">Česky</option>
-          <option class="tetBackground" value="da">Dansk</option>
-          <option class="tetBackground" value="de">Deutsch</option>
-          <option class="tetBackground" value="el">Ελληνική</option>
-          <option class="tetBackground" value="et">Eesti</option>
-          <option class="tetBackground" value="fi">Suomalainen</option>
-          <option class="tetBackground" value="fr">Français</option>
-          <option class="tetBackground" value="hu">Magyar</option>
-          <option class="tetBackground" value="it">Italiano</option>
-          <option class="tetBackground" value="ja">日本語</option>
-          <option class="tetBackground" value="lv">Latviešu</option>
-          <option class="tetBackground" value="lt">Lietuvių kalba</option>
-          <option class="tetBackground" value="nl">Nederlands</option>
-          <option class="tetBackground" value="pl">Polski</option>
-          <option class="tetBackground" value="pt">Português</option>
-          <option class="tetBackground" value="ro">Românesc</option>
-          <option class="tetBackground" value="ru">Russisch</option>
-          <option class="tetBackground" value="sk">Slovenská</option>
-          <option class="tetBackground" value="sl">Slovenski</option>
-          <option class="tetBackground" value="sv">Svenska</option>
-        </select>
-        </div>
-        <div id="tetSelector" class="tetBackground css-1dbjc4n r-1kqtdi0 r-z2wwpe r-rs99b7 r-16xksha">
-        <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Translators</span></div>
-        <select id="translator" name="translator" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
-          <option class="tetBackground" value="bing">Bing Translate</option>
-          <option class="tetBackground" value="deepl">Deepl</option>
-          <option class="tetBackground" value="google">Google Translate</option>
-          <option class="tetBackground" value="mymemory">MyMemory</option>
-          <option class="tetBackground" value="translate">Translate.com</option>
-          <option class="tetBackground" value="yandex">Yandex Translator</option>
-        </select>
-        </div>
-        <div id="tetSelector" class="tetBackground css-1dbjc4n r-1kqtdi0 r-z2wwpe r-rs99b7 r-16xksha">
-        <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Display</span></div>
-        <select id="display" name="display" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
-            <option class="tetBackground" value="text + icon">Text + Icon</option>
-            <option class="tetBackground" value="text">Text Only</option>
-            <option class="tetBackground" value="icon">Icon Only</option>
-        </select>
-        </div>
-        <div id="tetSelector" class="tetBackground css-1dbjc4n r-1kqtdi0 r-z2wwpe r-rs99b7 r-16xksha">
-        <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Theme</span></div>
-        <select id="theme" name="theme" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
-        <optgroup class="tetBackground" label="Twitter">
-          <option class="tetBackground" value="#FFFFFF">Default</option>
-          <option class="tetBackground" value="#15202B">Dim</option>
-          <option class="tetBackground" value="#000000">Lights out</option>
-        </optgroup>
-        <optgroup class="tetBackground" label="TweetDeck">
-          <option class="tetBackground" value="tweetdeck">Default</option>
-        </optgroup>
-        <optgroup class="tetBackground" label="Nitter">
-          <option class="tetBackground" value="nitter">Default</option>
-        </optgroup>
-        </select>
-        </div>
-        <div id="tetSelector" class="tetBackground css-1dbjc4n r-1kqtdi0 r-z2wwpe r-rs99b7 r-16xksha">
-        <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Color</span></div>
-        <select id="colorselect" name="colorselect" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
-        <optgroup class="tetBackground" label="Twitter">
-          <option class="tetBackground" value="r-urgr8i">Blue</option>
-          <option class="tetBackground" value="r-1vkxrha">Yellow</option>
-          <option class="tetBackground" value="r-1dgebii">Red</option>
-          <option class="tetBackground" value="r-1qqlz1x">Purple</option>
-          <option class="tetBackground" value="r-18z3xeu">Orange</option>
-          <option class="tetBackground" value="r-b5skir">Green</option>
-        </optgroup>
-        <optgroup class="tetBackground" label="TweetDeck">
-          <option class="tetBackground" value="tweetdeck">Default</option>
-        </optgroup>
-        <optgroup class="tetBackground" label="Nitter">
-          <option class="tetBackground" value="nitter">Default</option>
-        </optgroup>
-        </select>
-        </div>
-      <button id="tetSave" class="tetDisplayColor css-901oao r-poiln3 r-jwli3a css-4rbku5 tetBtn" type="button" >Save</button>
-      <button id="tetReload" class="tetDisplayColor css-901oao r-poiln3 r-jwli3a css-4rbku5 tetBtn" type="button" >Reload</button>
-      <button id="tetReset" class="tetDisplayColor css-901oao r-poiln3 r-jwli3a css-4rbku5 tetBtn" type="button" >Defaults</button>
     </div>
   </div>
 </div>
-</div>
-</div>
 </div>`;
 //#endregion
-
 //#region Site n Menu Fn
 function checkLng() {
   return {
@@ -1226,8 +1432,17 @@ function checkLng() {
     s: this.s
   }
 };
+function checkInfo() {
+  return {
+    author: this.author,
+    homepage: this.homepage,
+    name: this.name,
+    version: this.version
+  }
+}
 function TETLanguageChange() {
   let TETSel = qs('select#languages').value,
+  tetV = tetInfo.fn(),
   v = en.fn();
   (TETSel == 'en') ? (v = en.fn()) :
   (TETSel == 'bg') ? (v = bg.fn()) :
@@ -1293,6 +1508,7 @@ function TETDisplayChange(mode = "nonrepeat") {
   disC = (cSel == "bing") ? (TETConfig.cDisplay = `Bing ${v.bing}`) : (cSel == "google") ? (TETConfig.cDisplay = `Google ${v.google}`) : (cSel == "mymemory") ? (TETConfig.cDisplay = `MyMemory ${v.mymemory}`) : (cSel == "translate") ? (TETConfig.cDisplay = `Translate.com ${v.translate}`) : (cSel == "yandex") ? (TETConfig.cDisplay = `Yandex ${v.yandex}`) : (TETConfig.cDisplay = `DeepL ${v.deepl}`),
   checkDisplay = (dSel == 'text') ? disA : (dSel == 'icon') ? disB : disC;
   return (mode == "repeat") ? checkDisplay : (
+    $('#tetDemo').html(`${TETConfig.cLang} ${TETConfig.cDisplay}`),
     $('.tet').html(`${TETConfig.cLang} ${TETConfig.cDisplay}`),
     $('.tet').hover(
       function() { $(this).toggleClass("r-hover") },
@@ -1334,14 +1550,15 @@ async function Twitter() {
       (bio && bio != '' && !isHTML(bio)) ? content += ` ${bio}` : false;
     });
     (!btLang) ? (btLang = "auto") : false;
-    magicBtn.addClass("tet")
+    magicBtn.addClass("tet");
+    // magicBtn.attr("id", "tet");
     TETDisplayChange()
     site = (TETConfig.translator == 'yandex') ? `https://translate.yandex.com/?lang=${btLang}-${TETConfig.lang}&text=${content}` : (TETConfig.translator == 'bing') ? `https://www.bing.com/translator/?text=${content}&from=${btLang}&to=${TETConfig.lang}` : (TETConfig.translator == 'google') ? `https://translate.google.com/?q=${content}&sl=${btLang}&tl=${TETConfig.lang}` : (TETConfig.translator == 'mymemory') ? `https://mymemory.translated.net/${TETConfig.lang}/${btLang}/${TETConfig.lang}/${content}` : (TETConfig.translator == 'translate') ? `https://www.translate.com/#${btLang}/${TETConfig.lang}/${content}` : `https://www.deepl.com/translator#${btLang}/${TETConfig.lang}/${content}`;
     magicBtn.on("click", () => {
       window.open(`${site}`,'_blank');
     })
   };
-  (/profile/.test(window.location.href) || /keyboard_shortcuts/.test(window.location.href) || /display/.test(window.location.href) || /video/.test(window.location.href) || /photo/.test(window.location.href) || /compose/.test(window.location.href)) ? $('div.btNav').addClass('rm') : $('div.btNav').removeClass('rm');
+  (/profile/.test(window.location.href) || /keyboard_shortcuts/.test(window.location.href) || /display/.test(window.location.href) || /video/.test(window.location.href) || /photo/.test(window.location.href) || /compose/.test(window.location.href)) ? $('#tetMenuButton').attr('style', 'display: none !important') : $('#tetMenuButton').attr('style', '');
   return (!trBio.length && translateBio.length) ? biobtn() : (!trTweet.length && translateTweet.length) ? tweetbtn() : TETDisplayChange("repeat");
 }
 async function TweetDeck() {
@@ -1437,33 +1654,34 @@ function Menu() {
   dColor = $(".tetDisplayColor"),
   tColor = $(".tetTextColor"),
   tBG = $(".tetBackground");
+  qs('select#languages').value = TETConfig.lang;
   qs('select#colorselect').value = TETConfig.colors;
   qs('select#theme').value = TETConfig.theme;
-  qs('select#languages').value = TETConfig.lang;
   qs('select#translator').value = TETConfig.translator;
   qs('select#display').value = TETConfig.display;
-  (/nitter/.test(window.location.href) || LH == 'twitr.gq' || LH == 'birdsite.xanny.family') ? (
-    $('#tetMenuButton').attr('style', 'display: none !important'),
-    $('div.btNav').hide() ) : false;
-  (LH == 'tweetdeck.twitter.com') ? (
-    $('#tetMenuButton').attr('style', 'display: none !important'),
-    $('div.btNav').hide() ) : false;
   // (/nitter/.test(window.location.href) || LH == 'twitr.gq' || LH == 'birdsite.xanny.family') ? (
-  //   $('div.btNav').attr("id", "tetNT"),
-  //   qs('select#theme').value = "nitter",
-  //   qs('select#colorselect').value = "nitter",
-  //   TETConfig.cHover = "tetNitterHover",
-  //   TETConfig.cColor = "tetNitter",
-  //   TETConfig.cSub = "tetNText" ) : false;
+  //   $('#tetMenuButton').attr('style', 'display: none !important'),
+  //   $('div.btNav').hide() ) : false;
   // (LH == 'tweetdeck.twitter.com') ? (
-  //   $('button.tetBtn').each(function () { $(this).addClass("Button--primary") }),
-  //   $('div.btNav').attr("id", "tetTD"),
-  //   qs('select#theme').value = "tweetdeck",
-  //   qs('select#colorselect').value = "tweetdeck" ) : false;
+  //   $('#tetMenuButton').attr('style', 'display: none !important'),
+  //   $('div.btNav').hide() ) : false;
+  (/nitter/.test(window.location.href) || LH == 'twitr.gq' || LH == 'birdsite.xanny.family') ? (
+    document.head.insertAdjacentHTML('beforeend', `<style>${twCSS}</style>`),
+    $('div.btNav').attr("id", "tetNT"),
+    qs('select#theme').value = "nitter",
+    qs('select#colorselect').value = "nitter",
+    TETConfig.cHover = "tetNitterHover",
+    TETConfig.cColor = "tetNitter",
+    TETConfig.cSub = "tetNText" ) : false;
+  (LH == 'tweetdeck.twitter.com') ? (
+    document.head.insertAdjacentHTML('beforeend', `<style>${twCSS}</style>`),
+    $('button.tetBtn').each(function () { $(this).addClass("Button--primary") }),
+    $('#tetMenuButton').toggleClass("tetTD"),
+    qs('select#theme').value = "tweetdeck",
+    qs('select#colorselect').value = "tweetdeck" ) : false;
   nav.attr("style",`background-color:${TETConfig.cBG}`);
   tBG.each(function () {
     $(this).addClass(TETConfig.cTheme)
-    // $(this).removeClass("tetBackground")
   })
   tColor.each(function () {
     $(this).addClass(TETConfig.cText)
@@ -1513,17 +1731,20 @@ function Menu() {
   });
   qs('select#theme').onchange = () => {
     let cSel = qs('select#theme').value;
+    tBG.toggleClass(TETConfig.cTheme)
+    tColor.toggleClass(TETConfig.cText)
     TETConfig.cText = "r-jwli3a";
     TETConfig.cBG = "rgba(91, 112, 131, 0.4)";
-    // tBG.toggleClass(TETConfig.cTheme)
     (cSel == "#FFFFFF") ? (TETConfig.cBG = "rgba(0, 0, 0, 0.4)",TETConfig.cTheme = "r-14lw9ot", TETConfig.cText = "r-18jsvk2") :
     (cSel == "#15202B") ? (TETConfig.cTheme = "r-yfoy6g") : (TETConfig.cTheme = "r-kemksi");
-    // tBG.toggleClass(TETConfig.cTheme)
     TETConfig.theme = cSel
+    tBG.toggleClass(TETConfig.cTheme)
+    tColor.toggleClass(TETConfig.cText)
   }
   qs('select#colorselect').onchange = () => {
     let cSel = qs('select#colorselect').value;
     dColor.toggleClass(TETConfig.colors);
+    $('#tetDemo').toggleClass(TETConfig.cSub);
     (cSel == "r-urgr8i") ? (TETConfig.colors = cSel,TETConfig.cHover = "r-1q3imqu",TETConfig.cColor = "r-p1n3y5 r-1bih22f",TETConfig.cSub = "r-13gxpu9") :
     (cSel == "nitter") ? (TETConfig.colors = cSel,TETConfig.cHover = "tetNitterHover",TETConfig.cColor = "tetNitter",TETConfig.cSub = "tetNText") :
     (cSel == "r-1vkxrha") ? (TETConfig.colors = cSel,TETConfig.cHover = "r-1kplyi6",TETConfig.cColor = "r-v6khid r-cdj8wb",TETConfig.cSub = "r-61mi1v") :
@@ -1531,8 +1752,8 @@ function Menu() {
     (cSel == "r-1qqlz1x") ? (TETConfig.colors = cSel,TETConfig.cHover = "r-njt2r9",TETConfig.cColor = "r-hy56xe r-11mmphe",TETConfig.cSub = "r-xfsgu1") :
     (cSel == "r-18z3xeu") ? (TETConfig.colors = cSel,TETConfig.cHover = "r-1kplyi6",TETConfig.cColor = "r-1xl5njo r-b8m25f",TETConfig.cSub = "r-1qkqhnw") :
     (cSel == "r-b5skir") ? (TETConfig.colors = cSel,TETConfig.cHover = "r-zx61xx",TETConfig.cColor = "r-5ctkeg r-1cqwhho",TETConfig.cSub = "r-nw8l94") : (TETConfig.colors = cSel,TETConfig.cHover = "r-1q3imqu",TETConfig.cColor = "r-p1n3y5 r-1bih22f",TETConfig.cSub = "r-13gxpu9");
+    $('#tetDemo').toggleClass(TETConfig.cSub);
     dColor.toggleClass(TETConfig.colors);
-    // TETConfig.colors = cSel;
   }
   qs('select#languages').onchange = () => {
     TETLanguageChange();
@@ -1577,6 +1798,7 @@ Promise.all([GM.getValue("Config")]).then((data) => {
       TETConfig = res;
     }
   } else {
+    log("First time init.");
     TETConfig = DefaultConfig;
   }
   const localData = localStorage.TETConfig;
@@ -1586,8 +1808,7 @@ Promise.all([GM.getValue("Config")]).then((data) => {
   }
   LoadedConfig = JSON.parse(JSON.stringify(TETConfig));
   document.head.insertAdjacentHTML('beforeend', `<style>${tetCSS}</style>`);
-  log(LoadedConfig)
-  log("Injecting Menu")
+  log("Injecting Menu");
   let body = $("body");
   body.prepend(sidebar);
   Menu();

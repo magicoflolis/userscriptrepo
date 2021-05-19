@@ -1,7 +1,6 @@
 *.bak
+/.vscode/
 /notes/
 /ExternalTranslator/devbuild/
 /node_modules/
 */node_modules/
-/.vscode/
-*/.vscode/

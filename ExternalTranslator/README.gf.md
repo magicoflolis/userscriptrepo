@@ -4,6 +4,8 @@
 
 *This was a fork of [DeepL Twitter translation](https://greasyfork.org/scripts/411976)*
 
+![Menu Preview](https://raw.githubusercontent.com/magicoflolis/userscriptrepo/master/assets/ExternalTranslator.gif)
+
 ***
 
 > Only have one enabled!
@@ -13,12 +15,6 @@
 > Hosted here.
 
 * Click [Install](#install-area) on top
-
-**Beta:**
-
-> Hosted on [GitHub](https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator).
-
-* [Direct link](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js)
 
 **Legacy:**
 
@@ -39,9 +35,7 @@
 * [ Site ] Added support for [TwitLonger](https://www.twitlonger.com)
 * [ Site ] Added support for [TweetDeck](https://tweetdeck.twitter.com)
 * [ Site ] Added support for every [Nitter](https://github.com/zedeus/nitter/wiki/Instances#official-instances)
-* [ README ] If this update is causing you problems, switch to [Legacy](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js) or [Beta](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js). Feel free to [contact](#contacts) me for additional help, thank you!
-
-![Menu Preview](https://raw.githubusercontent.com/magicoflolis/userscriptrepo/master/assets/ExternalTranslator5.png)
+* [ README ] If this update is causing you problems, switch to [Legacy](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js). Feel free to [contact](#contacts) me for additional help, thank you!
 
  Translators | Supported
 :-----------:|:---------:
@@ -54,18 +48,15 @@ Translate.com | ✔️
 
 ## Bugs / Issues
 
-* [ Menu ] Theme may not always work on first load.
-* [ Menu ] Cannot be moved or disabled. ( WIP / Use [Legacy](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js) or [~~Beta~~](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js) if bothered by this. )
-* [ Menu ] Must match your preferred Twitter color.
-* [ Menu ] Themes cannot be "hot swapped." ( Must match your preferred Twitter theme )
+* [ Menu ] Cannot be moved or disabled. ( WIP / Use [Legacy](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js) if bothered by this. )
 * [ Translator ] [DeepL](https://www.deepl.com/translator) does not always work. ( Swap translators if this occurs )
 
 **Footnotes:**
 
+* [ Translator ] Twitters built-in translation uses Google Translate, TweetDeck uses Bing Microsoft Translator.
 * [ TweetDeck ] Only appears in one column.
 * [ Translator ] Yandex Translate may default to Russian.
 ![YandexHelp](https://raw.githubusercontent.com/magicoflolis/userscriptrepo/master/assets/ExternalTranslator4.gif)
-* [ Translator ] Twitters built-in translation uses Google Translate, TweetDeck uses Bing Microsoft Translator.
 
 ## Roadmap
 

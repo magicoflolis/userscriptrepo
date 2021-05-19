@@ -4,7 +4,6 @@
 
 *This was a fork of [DeepL Twitter translation](https://greasyfork.org/scripts/411976)*
 
-
 ***
 
 > Only have one enabled!

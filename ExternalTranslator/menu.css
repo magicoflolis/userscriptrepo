@@ -1,0 +1,338 @@
+/*#region Colors*/
+:root {
+  --bg_hover: #1A1A1A;
+  --bg_elements: #121212;
+  --accent_border: #FF6C6091;
+  --fg_color: #F8F8F2;
+  --tetBlue: rgb(29, 161, 242);
+  --tetBlueO: rgb(29, 161, 242, 0.1);
+  --tetBlueH: rgb(26, 145, 218);
+  --tetBlueB: rgb(29 161 242) 0px 0px 0px 1px;
+  --tetYellow: rgb(255, 173, 31);
+  --tetYellowO: rgb(255, 173, 31, 0.1);
+  --tetYellowH: rgb(230, 156, 28);
+  --tetYellowB: rgb(255 173 31) 0px 0px 0px 1px;
+  --tetRed: rgb(224, 36, 94);
+  --tetRedO: rgb(224, 36, 94, 0.1);
+  --tetRedH: rgb(202, 32, 85);
+  --tetRedB: rgb(224 36 94) 0px 0px 0px 1px;
+  --tetPurple: rgb(121, 75, 196);
+  --tetPurpleO: rgb(121, 75, 196, 0.1);
+  --tetPurpleH: rgb(134, 93, 202);
+  --tetPurpleB: rgb(121 75 196) 0px 0px 0px 1px;
+  --tetOrange: rgb(244, 93, 34);
+  --tetOrangeO: rgb(244, 93, 34, 0.1);
+  --tetOrangeH: rgb(220, 84, 31);
+  --tetOrangeB: rgb(244 93 34) 0px 0px 0px 1px;
+  --tetGreen: rgb(23, 191, 99);
+  --tetGreenO: rgb(23, 191, 99, 0.1);
+  --tetGreenH: rgb(21, 172, 89);
+  --tetGreenB: rgb(23 191 99) 0px 0px 0px 1px;
+}
+
+.tetNitterHover {
+  background-color: var(--bg_hover);
+}
+
+.tetNitter {
+  background-color: transparent;
+}
+
+.tetNText {
+  text-decoration: underline;
+}
+
+/* blue */
+.r-urgr8i {
+  background-color: var(--tetBlue);
+}
+
+.r-p1n3y5 {
+  border-color: var(--tetBlue);
+}
+
+.r-13gxpu9 {
+  color: var(--tetBlue);
+}
+
+.r-1q3imqu {
+  background-color: var(--tetBlueH) !important;
+}
+
+.r-1bih22f {
+  box-shadow: var(--tetBlueB);
+}
+
+/* yellow */
+.r-1vkxrha {
+  background-color: var(--tetYellow);
+}
+
+.r-v6khid {
+  border-color: var(--tetYellow);
+}
+
+.r-61mi1v {
+  color: var(--tetYellow);
+}
+
+.r-1kplyi6 {
+  background-color: var(--tetYellowH) !important;
+}
+
+.r-cdj8wb {
+  box-shadow: var(--tetYellowB);
+}
+
+/* red */
+.r-1dgebii {
+  background-color: var(--tetRed);
+}
+
+.r-1iofnty {
+  border-color: var(--tetRed);
+}
+
+.r-daml9f {
+  color: var(--tetRed);
+}
+
+.r-1ucxkr8 {
+  background-color: var(--tetRedH) !important;
+}
+
+.r-jd07pc {
+  box-shadow: var(--tetRed) 0px 0px 0px 1px;
+}
+
+/* purple */
+.r-1qqlz1x {
+  background-color: var(--tetPurple);
+}
+
+.r-njt2r9 {
+  background-color: var(--tetPurpleH) !important;
+}
+
+.r-hy56xe {
+  border-color: var(--tetPurple);
+}
+
+.r-11mmphe {
+  box-shadow: var(--tetPurpleB);
+}
+
+.r-xfsgu1 {
+  color: var(--tetPurple);
+}
+
+/* orange */
+.r-18z3xeu {
+  background-color: var(--tetOrange);
+}
+
+.r-1kplyi6 {
+  background-color: var(--tetOrangeH) !important;
+}
+
+.r-1xl5njo {
+  border-color: var(--tetOrange);
+}
+
+.r-b8m25f {
+  box-shadow: var(--tetOrangeB);
+}
+
+.r-1qkqhnw {
+  color: var(--tetOrange);
+}
+
+/* green */
+.r-b5skir {
+  background-color: var(--tetGreen);
+}
+
+.r-zx61xx {
+  background-color: var(--tetGreenH) !important;
+}
+
+.r-5ctkeg {
+  border-color: var(--tetGreen);
+}
+
+.r-1cqwhho {
+  box-shadow: var(--tetGreenB);
+}
+
+.r-nw8l94 {
+  color: var(--tetGreen);
+}
+
+.r-yfoy6g {
+  background-color: rgb(21, 32, 43);
+}
+
+.r-14lw9ot {
+  background-color: rgb(255, 255, 255);
+}
+
+.r-kemksi {
+  background-color: rgb(0, 0, 0);
+}
+.r-18jsvk2 {
+  color: rgb(15, 20, 25);
+}
+.Button--primary {
+  background-color: #1da1f2;
+  border: 1px solid #1da1f2;
+  color: #fff;
+}
+
+/*#endregion*/
+/*#region Twitter Styles*/
+.r-kzbkwu {
+  padding-bottom: 12px !important;
+}
+
+.r-i023vh {
+  padding-right: 16px !important;
+}
+
+.r-1qhn6m8 {
+  padding-left: 16px !important;
+}
+
+.r-11rk87y {
+  padding-bottom: 32px !important;
+}
+
+.r-1v1z2uz {
+  margin-top: 32px !important;
+}
+
+.r-1n7yuxj {
+  margin-left: 32px !important;
+  margin-right: 32px !important;
+}
+
+.r-vrz42v {
+  line-height: 28px;
+}
+
+.r-1blvdjr {
+  font-size: 23px;
+}
+
+.r-htvplk {
+  min-width: 600px !important;
+}
+.r-rsyp9y {
+  max-height: 90vh;
+}
+.r-1pjcn9w {
+  max-width: 80vw;
+}
+/*#endregion*/
+
+/*#region TET*/
+.rm,
+button:not(.mini)>#tetSVG,
+button.mini>span {
+  display: none !important
+}
+
+.tetFreeze {
+  overflow: hidden !important;
+  overscroll-behavior-y: none !important;
+}
+#tetMenuButton,
+#tetSave,
+#tetReload,
+#tetReset {
+  border-radius: 15px;
+  justify-content: center;
+  display: flex !important;
+  font-size: 20px !important;
+  font-weight: bold !important;
+  padding: 0px !important
+}
+
+#tetMenuButton {
+  z-index: 10;
+  width: 8vw;
+  position: fixed;
+  top: 65%;
+  left: 0px;
+}
+
+#tetMenuButton,
+#tetSave,
+#tetReload,
+#tetReset,
+#tet,
+.tet {
+  cursor: pointer !important
+}
+
+#tetName,
+#tetSelector>select {
+  padding-left: 2%
+}
+
+#tetSelector,
+#tetSave,
+#tetReload,
+#tetReset {
+  margin-top: 2%
+}
+
+#tetDemo {
+  margin-bottom: 4px;
+  margin-top: 4px;
+  line-height: 16px;
+  font-size: 13px;
+  flex-wrap: wrap;
+  font-weight: 400;
+  min-width: 0px;
+  display: flex !important;
+}
+
+.btNav,
+.navbackground {
+  position: fixed !important;
+  width: 100vw;
+  height: 100vh;
+}
+
+#tetSVG {
+  right: 35% !important
+}
+#tetMenuButton.tetTD {
+  left: 90% !important;
+  top: 0% !important;
+}
+.navbackground {
+  top: 0;
+  left: 0
+}
+
+.mini {
+  min-height: 12% !important;
+  width: 8vw;
+  height: auto;
+  overflow: hidden;
+  background: transparent
+}
+
+.r-hover {
+  text-decoration-line: underline !important;
+  outline-style: none !important
+}
+
+.r-hoverTD {
+  background-color: #005fd1;
+  border-color: #005fd1;
+  color: #fff
+}
+
+/*#endregion*/
