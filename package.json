@@ -1,0 +1,36 @@
+{
+    "name": "userscriptrepo",
+    "version": "0.0.1",
+    "description": "Repo for my userscripts.",
+    "scripts": {
+        "build": "webpack --config=build/webpack.gf.config.js && node build/userscript.js",
+        "build:dev": "webpack --config=build/webpack.config.dev.js && node build/userscript.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/magicoflolis/userscriptrepo.git"
+    },
+    "keywords": [
+        "userjs",
+        "greasemonkey",
+        "violentmonkey",
+        "tampermonkey"
+    ],
+    "author": "Magic of Lolis <magicoflolis@gmail.com>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/magicoflolis/userscriptrepo/issues"
+    },
+    "homepage": "https://github.com/magicoflolis/userscriptrepo#readme",
+    "devDependencies": {
+        "@babel/core": "^7.14.3",
+        "@babel/preset-env": "^7.14.2",
+        "babel-core": "^6.26.3",
+        "babel-loader": "^8.2.2",
+        "copy-webpack-plugin": "^8.1.1",
+        "css-loader": "^5.2.4",
+        "style-loader": "^2.0.0",
+        "webpack": "^5.37.1",
+        "webpack-cli": "^4.7.0"
+    }
+}
