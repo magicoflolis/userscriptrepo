@@ -1,6 +1,6 @@
 # Twitter External Translator
 
-> Adds a "Translate with ..." button to Tweets and User Bios.
+> Adds external & internal translators.
 
 *This was a fork of [DeepL Twitter translation](https://greasyfork.org/scripts/411976)*
 
@@ -37,6 +37,14 @@
 * [ Site ] Added support for every [Nitter](https://github.com/zedeus/nitter/wiki/Instances#official-instances)
 * [ README ] If this update is causing you problems, switch to [Legacy](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js). Feel free to [contact](#contacts) me for additional help, thank you!
 
+## Changelog
+
+> MyMemory API [usage limits](https://mymemory.translated.net/doc/usagelimits.php)
+
+* [ Translator ] Added support for Inline Translators! (Some are disabled)
+* [ Script ] Added more excludes.
+* [ TweetDeck ] Re-enabled menu
+
  Translators | Supported
 :-----------:|:---------:
 DeepL Translate | ✔️
@@ -48,8 +56,11 @@ Translate.com | ✔️
 
 ## Bugs / Issues
 
+* TwitLonger is currently broken.
+* Inline Translators don't work on TweetDeck.
+* MyMemory API does not work in Bios.
 * [ Menu ] Cannot be moved or disabled. ( WIP / Use [Legacy](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js) if bothered by this. )
-* [ Translator ] [DeepL](https://www.deepl.com/translator) does not always work. ( Swap translators if this occurs )
+* [ Translator ] [DeepL](https://www.deepl.com/translator) may not work in Bios or TweetDeck. ( Swap translators if needed )
 
 **Footnotes:**
 
@@ -61,9 +72,7 @@ Translate.com | ✔️
 ## Roadmap
 
 * Fix any bugs along the way.
-* Add more external translations.
 * Show multiple translators at once.
-* Inline?
 
 ### Contacts
 
