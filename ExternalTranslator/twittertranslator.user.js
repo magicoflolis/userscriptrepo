@@ -57,7 +57,7 @@
 // @description:es      Añade traductores de terceros a Twitter
 // @author       Magic of Lolis <magicoflolis@gmail.com>
 // @icon         https://abs.twimg.com/favicons/twitter.ico
-// @version      0.26
+// @version      0.27
 // @namespace    https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @homepageURL  https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @supportURL   https://github.com/magicoflolis/userscriptrepo/issues/new
@@ -65,6 +65,7 @@
 // @match        https://twitter.com/*
 // @match        https://tweetdeck.twitter.com/*
 // @match        https://www.twitlonger.com/show/*
+// @match        https://nitter.net/*
 // @match        https://nitter.*/*
 // @match        https://nitter.*.*/*
 // @match        https://nitter.domain.glass/*
@@ -143,7 +144,7 @@ icons = {
   }
 },
 twCSS = `.css-1dbjc4n{-ms-flex-align:stretch;-ms-flex-direction:column;-ms-flex-negative:0;-ms-flex-preferred-size:auto;-webkit-align-items:stretch;-webkit-box-align:stretch;-webkit-box-direction:normal;-webkit-box-orient:vertical;-webkit-flex-basis:auto;-webkit-flex-direction:column;-webkit-flex-shrink:0;align-items:stretch;border:0 solid #000;box-sizing:border-box;display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex;flex-basis:auto;flex-direction:column;flex-shrink:0;margin:0px 0px 0px 0px;padding:0px 0px 0px 0px;min-height:0px;min-width:0px;position:relative;z-index:0}select{height:auto !important}.r-qvutc0{overflow-wrap:break-word}.r-1adg3ll{display:block}.r-u8s1d{position:absolute}.r-1wbh5a2{flex-shrink:1}.r-1ny4l3l{outline-style:none}.r-sdzlij{border-radius:9999px}.r-z2wwpe{border-radius:4px !important}.r-rs99b7{border-width:1px}.r-1moyyf3{border-bottom-right-radius:16px}.r-1pp923h{border-bottom-left-radius:16px}.r-1mi75qu{box-shadow:rgba(0,0,0,.02) 0px 0px 2px inset}.r-1mlwlqe{flex-basis:auto}.r-1udh08x{overflow:hidden}.r-1awozwy{-webkit-box-align:center;-moz-box-align:center;align-items:center}.r-1hwvwag{flex-basis:48px}.r-18kxxzh{-webkit-box-flex:0;flex-grow:0}.r-1777fci{-webkit-box-pack:center;-moz-box-pack:center;justify-content:center}.r-1pi2tsx{height:100%}.r-18u37iz{-webkit-box-direction:normal;-webkit-box-orient:horizontal;-moz-box-direction:normal;-moz-box-orient:horizontal;flex-direction:row}.r-ipm5af{top:0px}.r-1ifxtd0{margin-bottom:16px}.r-6gpygo{margin-bottom:12px !important}.r-1jgb5lz{margin-left:auto;margin-right:auto}.r-1ye8kvj{max-width:600px}.r-16y2uox{-webkit-box-flex:1;-moz-box-flex:1;flex-grow:1}.r-ttdzmv{padding-top:12px !important}.r-1iusvr4{flex-basis:0px}.r-13qz1uu{width:100%}.r-1dye5f7{padding-left:32px;padding-right:32px}.r-9ilb82{color:#6e767d}.r-16dba41{font-weight:400}.r-1vr29t4{font-weight:800}.r-a023e6{font-size:15px}.r-1qd0xha{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}.r-rjixqe{line-height:20px}.r-1cwl3u0{line-height:16px}.r-bcqeeo{min-width:0px}.r-q4m81j{text-align:center}.r-zchlnj{right:0px}.r-1d2f490{left:0px}.r-1p0dtai{bottom:0px}.r-13awgt0{-ms-flex:1 1 0%;-webkit-flex:1;flex:1}.r-1b2b6em{line-height:2em}.r-q4m81j{text-align:center}/*# sourceMappingURL=foreign.css.map */`,
-tetCSS = `.tetNitterHover{background-color:#1a1a1a}.tetNitter{background-color:transparent}.tetNText{text-decoration:underline}.r-urgr8i{background-color:#1da1f2}.r-p1n3y5{border-color:#1da1f2}.r-13gxpu9{color:#1da1f2}.r-1q3imqu{background-color:#1a91da}.r-1bih22f{box-shadow:#1da1f2 0px 0px 0px 1px}.r-1vkxrha{background-color:#ffad1f}.r-v6khid{border-color:#ffad1f}.r-61mi1v{color:#ffad1f}.r-1kplyi6{background-color:#e69c1c}.r-cdj8wb{box-shadow:#ffad1f 0px 0px 0px 1px}.r-1dgebii{background-color:#e0245e}.r-1iofnty{border-color:#e0245e}.r-daml9f{color:#e0245e}.r-1ucxkr8{background-color:#ca2055}.r-jd07pc{box-shadow:#e0245e 0px 0px 0px 1px}.r-1qqlz1x{background-color:#794bc4}.r-njt2r9{background-color:#865dca}.r-hy56xe{border-color:#794bc4}.r-11mmphe{box-shadow:#794bc4 0px 0px 0px 1px}.r-xfsgu1{color:#794bc4}.r-18z3xeu{background-color:#f45d22}.r-1kplyi6{background-color:#dc541f}.r-1xl5njo{border-color:#f45d22}.r-b8m25f{box-shadow:#f45d22 0px 0px 0px 1px}.r-1qkqhnw{color:#f45d22}.r-b5skir{background-color:#17bf63}.r-zx61xx{background-color:#15ac59}.r-5ctkeg{border-color:#17bf63}.r-1cqwhho{box-shadow:#17bf63 0px 0px 0px 1px}.r-nw8l94{color:#17bf63}.r-yfoy6g{background-color:#15202b}.r-14lw9ot{background-color:#fff}.r-kemksi{background-color:#000}.r-18jsvk2{color:#0f1419}.Button--primary{background-color:#1da1f2 !important;border:1px solid #1da1f2 !important;color:#fff !important}.r-demo{border-style:solid !important;border-radius:16px !important;border-width:1px !important}.demo-TW{border-color:#2f3336 !important}.demo-TD{border:1px solid #000 !important}.demo-NT{border:1px solid var(--accent_border) !important}html.dark .r-tetTD{background-color:#15202b !important;border-radius:14px}.r-tetTD{background-color:#fff !important;border-radius:14px}.r-hoverTD{background-color:#005fd1;border-color:#005fd1;color:#fff}.r-jwli3a{color:#fff}.tet{margin-top:4px;flex-wrap:wrap;line-height:16px;font-size:13px;font-weight:400;overflow-wrap:break-word;min-width:0px;display:flex}.r-kzbkwu{padding-bottom:12px !important}.r-i023vh{padding-right:16px !important}.r-1qhn6m8{padding-left:16px !important}.r-11rk87y{padding-bottom:32px !important}.r-1v1z2uz{margin-top:32px !important}.r-1n7yuxj{margin-left:32px !important;margin-right:32px !important}.r-vrz42v{line-height:28px}.r-1blvdjr{font-size:23px}.r-htvplk{min-width:600px !important}.r-rsyp9y{max-height:90vh}.r-1pjcn9w{max-width:80vw}.rm,button:not(.mini)>#tetSVG,button.mini>span{display:none !important}.tetFreeze{overflow:hidden !important;overscroll-behavior-y:none !important}#tetMenuButton,#tetSave,#tetReload,#tetReset{list-style:none;text-align:inherit;text-decoration:none;border-radius:15px;justify-content:center;display:flex !important;font-family:inherit;font-size:20px !important;font-weight:bold !important;padding:0px !important}#tetMenuButton{z-index:10;width:8vw;height:auto;position:fixed;top:65%;left:0px}#tetMenuButton.tetTD{left:90% !important;top:0% !important}#tetMenuButton,#tetSave,#tetReload,#tetReset,#tet,.tet{cursor:pointer !important}input#apifield,#tetName,#tetSelector>select{padding-left:2% !important}#apifield,#tetSelector,#tetSave,#tetReload,#tetReset{margin-top:2%}#tetDemo{margin:4px 0px 4px 0px;line-height:16px;font-size:13px;flex-wrap:wrap;font-weight:400;min-width:0px;display:flex !important}.btNav,.navbackground{position:fixed !important;width:100vw;height:100vh}#tetSVG{right:35% !important}.navbackground{top:0;left:0}.mini{min-height:3% !important;overflow:hidden;background:transparent}.r-hover{text-decoration-line:underline !important;outline-style:none !important}/*# sourceMappingURL=menu.css.map */`;
+tetCSS = `.tetNitterHover{background-color:#1a1a1a}.tetNitter{background-color:transparent}.tetNText{text-decoration:underline}.r-urgr8i{background-color:#1da1f2}.r-p1n3y5{border-color:#1da1f2}.r-13gxpu9{color:#1da1f2}.r-1q3imqu{background-color:#1a91da}.r-1bih22f{box-shadow:#1da1f2 0px 0px 0px 1px}.r-1vkxrha{background-color:#ffad1f}.r-v6khid{border-color:#ffad1f}.r-61mi1v{color:#ffad1f}.r-1kplyi6{background-color:#e69c1c}.r-cdj8wb{box-shadow:#ffad1f 0px 0px 0px 1px}.r-1dgebii{background-color:#e0245e}.r-1iofnty{border-color:#e0245e}.r-daml9f{color:#e0245e}.r-1ucxkr8{background-color:#ca2055}.r-jd07pc{box-shadow:#e0245e 0px 0px 0px 1px}.r-1qqlz1x{background-color:#794bc4}.r-njt2r9{background-color:#865dca}.r-hy56xe{border-color:#794bc4}.r-11mmphe{box-shadow:#794bc4 0px 0px 0px 1px}.r-xfsgu1{color:#794bc4}.r-18z3xeu{background-color:#f45d22}.r-1kplyi6{background-color:#dc541f}.r-1xl5njo{border-color:#f45d22}.r-b8m25f{box-shadow:#f45d22 0px 0px 0px 1px}.r-1qkqhnw{color:#f45d22}.r-b5skir{background-color:#17bf63}.r-zx61xx{background-color:#15ac59}.r-5ctkeg{border-color:#17bf63}.r-1cqwhho{box-shadow:#17bf63 0px 0px 0px 1px}.r-nw8l94{color:#17bf63}.r-yfoy6g{background-color:#15202b}.r-14lw9ot{background-color:#fff}.r-kemksi{background-color:#000}.r-18jsvk2{color:#0f1419}.Button--primary{background-color:#1da1f2 !important;border:1px solid #1da1f2 !important;color:#fff !important}.r-demo{border-style:solid !important;border-radius:16px !important;border-width:1px !important}.demo-TW{border-color:#2f3336 !important}.demo-TD{border:1px solid #000 !important}.demo-NT{border:1px solid var(--accent_border) !important}html.dark .r-tetTD{background-color:#15202b !important;border-radius:14px}.r-tetTD{background-color:#fff !important;border-radius:14px}.r-hoverTD{background-color:#005fd1;border-color:#005fd1;color:#fff}.r-jwli3a{color:#fff}.tet{margin-top:4px;flex-wrap:wrap;line-height:16px;font-size:13px;font-weight:400;overflow-wrap:break-word;min-width:0px;display:flex}.r-kzbkwu{padding-bottom:12px !important}.r-i023vh{padding-right:16px !important}.r-1qhn6m8{padding-left:16px !important}.r-11rk87y{padding-bottom:32px !important}.r-1v1z2uz{margin-top:32px !important}.r-1n7yuxj{margin-left:32px !important;margin-right:32px !important}.r-vrz42v{line-height:28px}.r-1blvdjr{font-size:23px}.r-htvplk{min-width:600px !important}.r-rsyp9y{max-height:90vh}.r-1pjcn9w{max-width:80vw}.rm,button:not(.mini)>#tetSVG,button.mini>span{display:none !important}.tetFreeze{overflow:hidden !important;overscroll-behavior-y:none !important}#tetMenuButton,#tetSave,#tetReload,#tetReset{list-style:none;text-align:inherit;text-decoration:none;border-radius:15px;justify-content:center;display:flex !important;font-family:inherit;font-size:20px !important;font-weight:bold !important;padding:0px !important}#tetMenuButton{z-index:10;width:8vw;height:auto;position:fixed;top:65%;left:0px}#tetMenuButton.tetTD{left:90% !important;top:0% !important}#tetMenuButton,#tetSave,#tetReload,#tetReset,#tet,.tet{cursor:pointer !important}input#apifield,#tetName,#tetSelector>select{padding-left:2% !important}#tetSave,#tetReload,#tetReset{margin:2% 25% 0px 25%;}#apifield,#tetSelector{margin-top:2%}#tetDemo{margin:4px 0px 4px 0px;line-height:16px;font-size:13px;flex-wrap:wrap;font-weight:400;min-width:0px;display:flex !important}.btNav,.navbackground{position:fixed !important;width:100vw;height:100vh}#tetSVG{right:35% !important}.navbackground{top:0;left:0}.mini{min-height:3% !important;overflow:hidden;background:transparent}.r-hover{text-decoration-line:underline !important;outline-style:none !important}/*# sourceMappingURL=menu.css.map */`;
 let TETConfig = {},
 //#region Languages
 en = {
@@ -806,7 +807,7 @@ sidebar = `<button title="Menu" id="tetMenuButton" class="mini tetDisplayColor c
     <div class="css-1dbjc4n r-16y2uox r-1wbh5a2 r-1jgb5lz r-1ye8kvj r-13qz1uu">
       <div class="css-1dbjc4n r-1pp923h r-1moyyf3 r-16y2uox r-1wbh5a2 r-1dqxon3">
         <div class="css-1dbjc4n r-11rk87y r-1dye5f7">
-          <div dir="auto" class="tetTextColor r-9ilb82 r-1qd0xha r-a023e6 r-16dba41 r-rjixqe r-117bsoe r-bcqeeo r-q4m81j r-qvutc0">
+          <div dir="auto" class="tetTextColor r-9ilb82 r-1qd0xha r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-q4m81j r-qvutc0">
             <span class="css-16my406 r-poiln3 r-qvutc0">v${tetInfo.version}</span>
           </div>
           <div class="css-1dbjc4n r-1ifxtd0 r-1n7yuxj">
@@ -848,7 +849,7 @@ sidebar = `<button title="Menu" id="tetMenuButton" class="mini tetDisplayColor c
                                           <div dir="auto" class="tetTextColor css-901oao css-bfa6kz r-1fmj7o5 r-1qd0xha r-a023e6 r-b88u0q r-rjixqe r-bcqeeo r-1udh08x r-3s2u2q r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">${tetInfo.name}</span></span></div>
                                         </div>
                                         <div class="css-1dbjc4n r-18u37iz r-1wbh5a2 r-13hce6t">
-                                          <div dir="ltr" class="css-901oao css-bfa6kz r-9ilb82 r-18u37iz r-1qd0xha r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">@Demo</span></div>
+                                          <div dir="ltr" class="css-901oao css-bfa6kz r-9ilb82 r-18u37iz r-1qd0xha r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">@for_lollipops</span></div>
                                         </div>
                                       </div>
                                     </div>
@@ -875,7 +876,7 @@ sidebar = `<button title="Menu" id="tetMenuButton" class="mini tetDisplayColor c
           </div>
           <div id="tetSelector" class="tetBackground css-1dbjc4n r-1kqtdi0 r-z2wwpe r-rs99b7 r-16xksha">
             <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Languages</span></div>
-            <select id="languages" name="languages" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
+            <select id="languages" name="languages" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-a023e6 r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
               <option class="tetBackground" value="en">English</option>
               <option class="tetBackground" value="es">Español</option>
               <option class="tetBackground" value="zh">中文</option>
@@ -904,7 +905,7 @@ sidebar = `<button title="Menu" id="tetMenuButton" class="mini tetDisplayColor c
           </div>
           <div id="tetSelector" class="tetBackground css-1dbjc4n r-1kqtdi0 r-z2wwpe r-rs99b7 r-16xksha">
             <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Translators</span></div>
-            <select id="translator" name="translator" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
+            <select id="translator" name="translator" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-a023e6 r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
               <optgroup class="tetBackground" label="External Translators">
                 <option class="tetBackground" value="bing">Bing Translate</option>
                 <option class="tetBackground" value="deepl">DeepL Translator</option>
@@ -925,7 +926,7 @@ sidebar = `<button title="Menu" id="tetMenuButton" class="mini tetDisplayColor c
           </div>
           <div id="tetSelector" class="tetBackground css-1dbjc4n r-1kqtdi0 r-z2wwpe r-rs99b7 r-16xksha">
             <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Display</span></div>
-            <select id="display" name="display" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
+            <select id="display" name="display" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-a023e6 r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
               <option class="tetBackground" value="text + icon">Text + Icon</option>
               <option class="tetBackground" value="text">Text Only</option>
               <option class="tetBackground" value="icon">Icon Only</option>
@@ -933,7 +934,7 @@ sidebar = `<button title="Menu" id="tetMenuButton" class="mini tetDisplayColor c
           </div>
           <div id="tetSelector" class="tetBackground css-1dbjc4n r-1kqtdi0 r-z2wwpe r-rs99b7 r-16xksha">
             <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Color</span></div>
-            <select id="colorselect" name="colorselect" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
+            <select id="colorselect" name="colorselect" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-a023e6 r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
               <optgroup class="tetBackground" label="Twitter">
                 <option class="tetBackground" value="r-urgr8i">Blue</option>
                 <option class="tetBackground" value="r-1vkxrha">Yellow</option>
@@ -952,7 +953,7 @@ sidebar = `<button title="Menu" id="tetMenuButton" class="mini tetDisplayColor c
           </div>
           <div id="tetSelector" class="tetBackground css-1dbjc4n r-1kqtdi0 r-z2wwpe r-rs99b7 r-16xksha">
             <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Theme</span></div>
-            <select id="theme" name="theme" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
+            <select id="theme" name="theme" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-a023e6 r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
               <optgroup class="tetBackground" label="Twitter">
                 <option class="tetBackground" value="#FFFFFF">Default</option>
                 <option class="tetBackground" value="#15202B">Dim</option>
@@ -969,7 +970,7 @@ sidebar = `<button title="Menu" id="tetMenuButton" class="mini tetDisplayColor c
           <input id="apifield" type="password" name="apikey" placeholder="PASTE API KEY" class="tetTextColor tetBackground tetFields deepl css-1dbjc4n r-1kqtdi0 r-z2wwpe r-rs99b7 r-16xksha">
           <div id="tetSelector" class="tetBackground tetFields deepl css-1dbjc4n r-1kqtdi0 r-z2wwpe r-rs99b7 r-16xksha">
             <div id="tetName" dir="auto" class="css-901oao r-9ilb82 r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Version</span></div>
-            <select id="api-version" name="api-version" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-1inkyih r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
+            <select id="api-version" name="api-version" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-a023e6 r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
               <option class="tetBackground" value="api-free">Free</option>
               <option class="tetBackground" value="api-pro">Pro</option>
             </select>
