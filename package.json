@@ -1,36 +1,80 @@
 {
-    "name": "userscriptrepo",
-    "version": "0.0.1",
-    "description": "Repo for my userscripts.",
-    "scripts": {
-        "build": "webpack --config=build/webpack.gf.config.js && node build/userscript.js",
-        "build:dev": "webpack --config=build/webpack.config.dev.js && node build/userscript.js"
+  "name": "userscriptrepo",
+  "productName": "Twitter External Translator",
+  "description": "Adds external & internal translators",
+  "author": "Magic of Lolis <magicoflolis@gmail.com>",
+  "homepage": "https://github.com/magicoflolis/userscriptrepo#readme",
+  "version": "0.27",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@babel/cli": "^7.14.5",
+    "@babel/core": "^7.14.5",
+    "@babel/eslint-parser": "^7.14.5",
+    "@babel/preset-env": "^7.14.5",
+    "@types/babel__core": "^7.1.14",
+    "@types/copy-webpack-plugin": "^8.0.0",
+    "@types/jquery": "^3.5.5",
+    "babel-loader": "^8.2.2",
+    "copy-webpack-plugin": "^8.1.0",
+    "eslint": "^7.28.0",
+    "html-loader": "^2.1.2",
+    "jquery": ">=3.6.0",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.0",
+    "wrapper-webpack-plugin": "^2.1.0"
+  },
+  "dependencies": {
+    "core-js": "^3.14.0",
+    "css-loader": "^5.2.6",
+    "sass": "^1.35.1",
+    "sass-loader": "^12.1.0",
+    "style-loader": "^2.0.0"
+  },
+  "scripts": {
+    "dev": "webpack --progress --config=webpackConfig/webpack.dev.config.js",
+    "dev:watch": "webpack --watch --progress --config=webpackConfig/webpack.dev.config.js",
+    "build:user": "webpack --config=webpackConfig/webpack.config.js && node webpackConfig/userscript.js",
+    "setup": "npm install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/magicoflolis/userscriptrepo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/magicoflolis/userscriptrepo/issues/new"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "chrome": true,
+      "es2021": true,
+      "firefox": true,
+      "jquery": true,
+      "mozilla": true,
+      "greasemonkey": true,
+      "node": true
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/magicoflolis/userscriptrepo.git"
-    },
-    "keywords": [
-        "userjs",
-        "greasemonkey",
-        "violentmonkey",
-        "tampermonkey"
+    "extends": [
+      "eslint:all"
     ],
-    "author": "Magic of Lolis <magicoflolis@gmail.com>",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/magicoflolis/userscriptrepo/issues"
-    },
-    "homepage": "https://github.com/magicoflolis/userscriptrepo#readme",
-    "devDependencies": {
-        "@babel/core": "^7.14.3",
-        "@babel/preset-env": "^7.14.2",
-        "babel-core": "^6.26.3",
-        "babel-loader": "^8.2.2",
-        "copy-webpack-plugin": "^8.1.1",
-        "css-loader": "^5.2.4",
-        "style-loader": "^2.0.0",
-        "webpack": "^5.37.1",
-        "webpack-cli": "^4.7.0"
+    "parserOptions": {
+      "sourceType": "module",
+      "allowImportExportEverywhere": false,
+      "ecmaFeatures": {
+        "globalReturn": true,
+        "arrowFunctions": true,
+        "modules": true
+      },
+      "ecmaVersion": 12
     }
+  },
+  "keywords": [
+    "userjs",
+    "greasemonkey",
+    "violentmonkey",
+    "tampermonkey",
+    "javascript",
+    "browser"
+  ]
 }
