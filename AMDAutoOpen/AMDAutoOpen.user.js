@@ -3,7 +3,7 @@
 // @description  Automatically opens the first option.
 // @author       Magic of Lolis <magicoflolis@gmail.com>
 // @icon         https://www.amd.com/themes/custom/amd/favicon.ico
-// @version      0.2
+// @version      0.3
 // @namespace    https://github.com/magicoflolis/userscriptrepo/tree/master/AMDAutoOpen#amd-auto-expand
 // @homepageURL  https://github.com/magicoflolis/userscriptrepo/tree/master/AMDAutoOpen#amd-auto-expand
 // @supportURL   https://github.com/magicoflolis/userscriptrepo/issues/new
@@ -11,7 +11,6 @@
 // @downloadURL  https://github.com/magicoflolis/userscriptrepo/raw/master/AMDAutoOpen/AMDAutoOpen.user.js
 // @match        https://www.amd.com/*/support/*
 // @grant        GM_addStyle
-// @run-at       document-body
 // ==/UserScript==
 
 "use strict";
