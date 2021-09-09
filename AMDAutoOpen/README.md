@@ -23,6 +23,10 @@ Greasy Fork | [Install](https://greasyfork.org/scripts/423087) | Stable updates
 * Adds scroll to top button
 * Top button CSS can be customized
 
+### Source Code
+
+* [GitHub](https://github.com/magicoflolis/userscriptrepo/tree/master/AMDAutoOpen)
+
 ### Contacts
 
 [GitHub](https://github.com/magicoflolis)

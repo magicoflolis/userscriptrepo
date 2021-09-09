@@ -66,6 +66,10 @@ Translate.com | ✔️
 * Fix any bugs along the way.
 * Show multiple translators at once.
 
+### Source Code
+
+* [GitHub](https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator)
+
 ### Contacts
 
 [GitHub](https://github.com/magicoflolis)
