@@ -4,12 +4,6 @@
 
 _Authors source code & information found [here](https://github.com/jae-jae/Userscript-Plus#userscript)_
 
-- [Magics Userscript+](#magics-userscript)
-  - [About](#about)
-  - [Features](#features)
-  - [Extensions](#extensions)
-  - [Issues](#issues)
-
 ## About
 
 > Check known [bugs/issues](#bugs)

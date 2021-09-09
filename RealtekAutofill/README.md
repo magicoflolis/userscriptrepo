@@ -1,23 +1,23 @@
 # Realtek Autofill Email Form
 
-> Automatically submits email form
+> Will automatically fill and submit email form.
+
+![Preview](https://raw.githubusercontent.com/magicoflolis/userscriptrepo/master/assets/Realtek.gif.gif)
 
 ***
 
-**GitHub:**
-
-* [Direct link](https://github.com/magicoflolis/userscriptrepo/raw/master/RealtekAutofill/RealtekAutofill.user.js)
-
-**Greasy Fork:**
-
-* [Page link](https://greasyfork.org/scripts/423088)
+| Version | Direct Link | Note |
+|:----------:|:----------:|:----------:|
+GitHub | [Install](https://github.com/magicoflolis/userscriptrepo/raw/master/RealtekAutofill/RealtekAutofill.user.js) | Faster updates
+Greasy Fork | [Install](https://greasyfork.org/scripts/423088) | Stable updates
 
 ***
 
 ## **Features:**
 
-* Auto completes email form submission
-* Email address can be manually configured
+> Email address can be changed
+
+* Auto fill and completes email form submission
 
 ### Contacts
 

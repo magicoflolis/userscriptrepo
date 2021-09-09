@@ -1,6 +1,6 @@
 # Twitter External Translator
 
-> Adds external & internal translators.
+> Adds a "Translate with ..." button to Tweets and User Bios.
 
 *This was a fork of [DeepL Twitter translation](https://greasyfork.org/scripts/411976)*
 
@@ -8,19 +8,12 @@
 
 ***
 
-> Only have one enabled!
-
-**Stable:**
-
-> Hosted here.
-
-* Click [Install](#install-area) on top
-
-**Legacy:**
-
-> Hosted on [GitHub](https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator).
-
-* [Direct link](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js)
+| Version | Direct Link | Note | Alternative |
+|:----------:|:----------:|:----------:|:----------:|
+Stable | [Install](#install-area) | **Recommended version** | [Install [GitHub]](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslator.user.js)
+Stable | [Install [Greasy Fork]](https://greasyfork.org/scripts/421643) | **Recommended version** |
+Legacy | [Install [GitHub]](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js) | For incompatibility issues. |
+~~Beta~~ | ~~[Install [GitHub]](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js)~~ | *Outdated* | -
 
 ***
 
@@ -28,6 +21,7 @@
 
 > Please check the [Bugs / Issues](#bugs--issues) or [contact](#contacts) me for any issues!
 
+* [ Script ] Added support for Inline Translators! (Disabled translators are WIP)
 * [ Menu ] Added Config Menu!
 * [ Menu ] Multiple language support!
 * [ Menu ] Support for matching Twitter colors
@@ -39,11 +33,8 @@
 
 ## Changelog
 
-> MyMemory API [usage limits](https://mymemory.translated.net/doc/usagelimits.php)
-
-* [ Translator ] Added support for Inline Translators! (Some are disabled)
-* [ Script ] Added more excludes.
-* [ TweetDeck ] Re-enabled menu
+* [ Script ] Fixed font issues for Twitter.com
+* [ Sites ] Added Nitter.net
 
  Translators | Supported
 :-----------:|:---------:
@@ -56,6 +47,7 @@ Translate.com | ✔️
 
 ## Bugs / Issues
 
+* *Sometimes* "Translate tweet" won't appear on Twitter. (Clicking a picture and opening the right sidebar to view the Tweet & Replies)
 * TwitLonger is currently broken.
 * Inline Translators don't work on TweetDeck.
 * MyMemory API does not work in Bios.
@@ -64,6 +56,7 @@ Translate.com | ✔️
 
 **Footnotes:**
 
+* Required to be logged in.
 * [ Translator ] Twitters built-in translation uses Google Translate, TweetDeck uses Bing Microsoft Translator.
 * [ TweetDeck ] Only appears in one column.
 * [ Translator ] Yandex Translate may default to Russian.
@@ -73,6 +66,10 @@ Translate.com | ✔️
 
 * Fix any bugs along the way.
 * Show multiple translators at once.
+
+### Source Code
+
+* [GitHub](https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator)
 
 ### Contacts
 
