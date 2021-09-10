@@ -47,6 +47,7 @@ Translate.com | ✔️
 
 ## Bugs / Issues
 
+* [ User Script ] *May* conflict with [Magic Userscript+ : Show Site All UserJS](https://greasyfork.org/scripts/421603).
 * *Sometimes* "Translate tweet" won't appear on Twitter. (Clicking a picture and opening the right sidebar to view the Tweet & Replies)
 * TwitLonger is currently broken.
 * Inline Translators don't work on TweetDeck.
