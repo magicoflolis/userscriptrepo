@@ -5,6 +5,8 @@
 // @icon         https://www.amazon.com/favicon.ico
 // @version      2.1.2
 // @namespace    https://greasyfork.org/scripts/416635
+// @updateURL    https://github.com/magicoflolis/userscriptrepo/raw/master/Amazon/CountryOfOrigin.user.js
+// @downloadURL  https://github.com/magicoflolis/userscriptrepo/raw/master/Amazon/CountryOfOrigin.user.js
 // @license      GPL-3.0-only
 // @include      https://www.amazon.*/gp/product/*
 // @include      https://www.amazon.*/*/dp/*

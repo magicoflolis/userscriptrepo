@@ -1,12 +1,12 @@
 # Country of origin for Amazon products
 
-> **Fork / rework of [Country of origin for Amazon products]((https://greasyfork.org/scripts/416635))**
+> **Fork / rework of [Country of origin for Amazon products](https://greasyfork.org/scripts/416635)**
 
 ***
 
 | Version | Direct Link | Note |
 |:----------:|:----------:|:----------:|
-GitHub | [Install](https://github.com/magicoflolis/userscriptrepo/raw/master/Amazon/CountryOfOrigin.user.js) |
+GitHub | [Install](https://github.com/magicoflolis/userscriptrepo/raw/master/Amazon/CountryOfOrigin.user.js) | Will only receive updates from this repo.
 Greasy Fork | Install |
 
 ***
@@ -18,6 +18,12 @@ This userscript fetches and displays the country of origin at the start of the p
 Hover over flag to see country and Vendor name.
 
 This script was initially developed to make boycotting the CCP more easy after repeated disappointments with purchased products and the ongoing human rights violations of the chinese communist party.
+
+## Changes
+
+* Shorten includes from 5 to 2.
+* Added amazon.ca as an exclude.
+* Various small code improvements.
 
 ### Original Userscript
 
