@@ -1,0 +1,433 @@
+
+.tetAvatarFrame,
+#tetAvatar {
+  align-items: stretch;
+  border: 0px solid black;
+  box-sizing: border-box;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  margin: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding: 0px;
+  position: relative;
+  z-index: 0;
+}
+
+.tet {
+  margin-top: 4px;
+  flex-wrap: wrap;
+  line-height: 16px;
+  font-size: 13px;
+  font-weight: 400;
+  overflow-wrap: break-word;
+  width: fit-content;
+  height: min-content;
+  display: flex;
+}
+
+.tetAvatarFrame {
+  flex-basis: auto;
+  z-index: 0;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  left: 0px;
+  bottom: 0px;
+  overflow: hidden;
+  border-radius: 9999px;
+  #tetAvatar {
+    background-image: url("https://abs.twimg.com/favicons/twitter.ico");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    z-index: -1;
+    background-color: rgba(0, 0, 0, 0);
+    height: 100%;
+    width: 100%;
+    position: absolute;
+  }
+}
+
+.tet-main {
+  padding: 0px 32px 32px 32px !important;
+  flex-shrink: 1;
+  -moz-box-flex: 1;
+  flex-grow: 1;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tet-options {
+  display: inline-grid;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+.tet-header {
+  min-width: 0px;
+  text-align: center;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  white-space: normal;
+  display: grid;
+  margin: 32px 0px 12px 0px !important;
+  .css-901oao {
+    line-height: 28px;
+    font-size: 23px;
+    font-weight: 800;
+  }
+  .tet-info {
+    line-height: 20px;
+    font-size: 15px;
+    font-weight: 400;
+    color: #6e767d;
+    margin-top: 1%;
+  }
+  span {
+    color: inherit;
+    font: inherit;
+    white-space: inherit;
+  }
+}
+.tetAlert {
+  right: 0px;
+  left: 0px;
+  bottom: 0px;
+  position: fixed !important;
+  z-index: 10000 !important;
+  // width: 80vw;
+  // height: 80vh;
+  h1.tetAlertTxt {
+    line-height: 24px;
+    font-size: 20px;
+    font-weight: 700;
+    min-width: 0px;
+    span {
+      font-family: inherit;
+    };
+  };
+  .tetAlertTxt > span,
+  .tetAlertTxt {
+    white-space: normal;
+    text-align: center;
+    overflow-wrap: break-word;
+    font-family: "TwitterChirp", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  };
+  div.tetAlertTxt {
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 20px;
+    min-width: 0px;
+    width: 100%;
+  };
+  .tetConfirmation {
+    width: 20%;
+    // height: 20%;
+    border-radius: 16px;
+    left: 40%;
+    top: 40%;
+    position: fixed;
+  };
+  .tetAlertBtns {
+    margin: 2% 25% 2% 25%;
+    white-space: nowrap;
+    outline-style: none;
+    transition-property: background-color, box-shadow;
+    transition-duration: 0.2s;
+    flex-grow: 1;
+    user-select: none;
+    border-color: rgba(0, 0, 0, 0);
+    overflow: hidden;
+    border-width: 1px;
+    border-style: solid;
+    cursor: pointer;
+    &:nth-child(2) {
+      margin: 0px 25% 4% 25%;
+    }
+    > div {
+      font-size: 15px;
+      font-weight: 700;
+      font-family: "TwitterChirp", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 20px;
+      overflow-wrap: break-word;
+      min-width: 0px;
+      align-items: center;
+      justify-content: center;
+      flex-grow: 1;
+      flex-direction: row;
+      text-align: center;
+      display: flex;
+      > span {
+        font-size: 15px;
+        font-family: inherit;
+        line-height: 20px;
+        overflow-wrap: break-word;
+        min-width: 0px;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: inherit;
+        font: inherit;
+        border: 0px solid black;
+        box-sizing: border-box;
+        display: inline;
+        margin: 0px;
+        padding: 0px;
+        > span {
+          border: 0px solid black;
+          box-sizing: border-box;
+          display: inline;
+          margin: 0px;
+          padding: 0px;
+        }
+      }
+    }
+  }
+};
+
+#tetForm {
+  max-width: 80vw;
+  max-height: 90vh;
+  min-width: 600px !important;
+  flex-shrink: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  > div {
+    border-radius: 16px;
+  }
+  .tetBackground {
+    .tetTextColor {
+      overflow-wrap: break-word;
+      span {
+        overflow-wrap: break-word;
+      }
+    }
+  }
+  .tet-containter {
+    width: 100%;
+    &.tet-fg {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+}
+
+.tet-head,
+#tetName > span,
+#tweet-text > span,
+#tetMenuButton > span {
+  color: inherit;
+  font: inherit;
+  font-family: inherit;
+  white-space: inherit;
+  overflow-wrap: break-word;
+}
+
+.rm,
+button:not(.mini)>#tetSVG,
+button.mini>span {
+  display: none !important
+}
+
+.tetFreeze {
+  overflow: hidden !important;
+  overscroll-behavior-y: none !important
+}
+
+#tetMenuButton {
+  z-index: 10;
+  width: 8vw;
+  height: auto;
+  position: fixed;
+  top: 65%;
+  left: 0px;
+  &.tetTD {
+    left: 90% !important;
+    top: 0% !important;
+  };
+  > svg {
+    position: relative;
+    max-width: 100%;
+    height: 1.25em;
+    fill: currentcolor;
+    margin-right: 12px;
+    user-select: none;
+    right: 35% !important;
+  };
+};
+
+#tetMenuButton,
+.tetAlertBtns,
+#tetReload,
+#tetReset {
+  list-style: none;
+  text-align: inherit;
+  text-decoration: none;
+  border-radius: 15px;
+  justify-content: center;
+  display: flex !important;
+  font-family: inherit;
+  font-size: 20px !important;
+  font-weight: bold !important;
+  padding: 0px !important;
+};
+
+button.tetBtn {
+  &.mini {
+    border: transparent !important;
+    background: transparent !important;
+  }
+}
+
+#tetMenuButton,
+.tetAlertBtns,
+#tetReload,
+#tetReset,
+#tet,
+.tet {
+  cursor: pointer !important;
+}
+
+.tet.tet-td {
+  display: inherit;
+}
+
+#tet {
+  justify-items: center;
+}
+
+input#apifield,
+#tetName,
+#tetSelector>select {
+  padding-left: 2% !important
+}
+
+#tetReload,
+#tetReset {
+  margin: 2% 25% 0px 25%;
+}
+
+#apifield,
+#tetSelector {
+  border-radius: 4px;
+  border-width: 1px;
+  margin: 2% 6% 0px 6%;
+}
+
+.r-demo {
+  outline-style: none;
+  margin: 0px 32px 0px 32px !important;
+  padding: 12px 0px 12px 0px !important;
+  overflow: hidden;
+  -webkit-box-direction: normal;
+  -webkit-box-orient: horizontal;
+  -moz-box-direction: normal;
+  -moz-box-orient: horizontal;
+  flex-direction: row !important;
+  flex-shrink: 1;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  flex-grow: 1;
+  .tet-av {
+    width: 100%;
+    margin-left: 12px !important;
+    margin-right: 12px !important;
+    -webkit-box-flex: 0;
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: 48px;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    align-items: center;
+    height: 48px;
+    overflow: hidden;
+    border-radius: 9999px;
+    outline-style: none;
+    display: block;
+  }
+  .tet-txt {
+    flex-basis: 0px;
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    flex-grow: 1;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    justify-content: center;
+    .txt-header {
+      margin-bottom: 2px;
+      -moz-box-align: start;
+      align-items: start;
+      -moz-box-pack: justify;
+      justify-content: space-between;
+      -moz-box-direction: normal;
+      -moz-box-orient: horizontal;
+      flex-direction: row;
+      max-width: 100%;
+      .tet-at {
+        display: flex;
+        margin-left: 4px;
+        color: #6e767d;
+        font-weight: 400;
+        font-size: 15px;
+        line-height: 20px;
+        overflow-wrap: break-word;
+        min-width: 0px;
+      }
+    }
+  }
+}
+
+#tetDemo {
+  margin: 4px 0px 0px 0px;
+  line-height: 16px;
+  font-size: 13px;
+  flex-wrap: wrap;
+  font-weight: 400;
+  min-width: 0px;
+  display: flex !important
+}
+
+.btNav {
+  justify-content: center;
+  flex-direction: row;
+  top: 0px;
+  span {
+    font-family: inherit;
+  }
+}
+
+.btNav,
+.navbackground {
+  position: fixed !important;
+  width: 100vw;
+  height: 100vh
+}
+
+.navbackground {
+  top: 0;
+  left: 0;
+  &.warn {
+    z-index: 10 !important;
+  }
+}
+
+.mini {
+  min-height: 3% !important;
+  overflow: hidden;
+  background: transparent;
+  border-color: transparent;
+}
+
+.r-hover {
+  text-decoration-line: underline !important;
+  outline-style: none !important
+}
+
+#tweet-text {
+  font-size: 23px !important;
+  font-weight: 400 !important;
+  line-height: 28px !important;
+}

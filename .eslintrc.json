@@ -1,0 +1,28 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "greasemonkey": true,
+    "jquery": true
+  },
+  "extends": [
+    "eslint:all",
+    "prettier"
+  ],
+  "parserOptions": {
+    "sourceType": "module",
+    "allowImportExportEverywhere": false,
+    "ecmaFeatures": {
+      "globalReturn": true,
+      "arrowFunctions": true,
+      "modules": true
+    },
+    "ecmaVersion": 12
+  },
+  "plugins": [
+    "prettier"
+  ],
+  "rules": {
+    "prefer-const": "error"
+  }
+}

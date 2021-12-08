@@ -4,60 +4,68 @@
 
 *This was a fork of [DeepL Twitter translation](https://greasyfork.org/scripts/411976)*
 
-![Menu Preview](https://raw.githubusercontent.com/magicoflolis/userscriptrepo/master/assets/ExternalTranslator.gif)
-
 ***
 
-| Version | Direct Link | Note | Alternative |
+| Version | Link | Alternative | Note |
 |:----------:|:----------:|:----------:|:----------:|
-Stable | [Install](#install-area) | **Recommended version** | [Install [GitHub]](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslator.user.js)
-Stable | [Install [Greasy Fork]](https://greasyfork.org/scripts/421643) | **Recommended version** |
-Legacy | [Install [GitHub]](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js) | For incompatibility issues. |
-~~Beta~~ | ~~[Install [GitHub]](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorbeta.user.js)~~ | *Outdated* | -
+Stable | [Install](#install-area) | [Install [GitHub]](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/dist/twittertranslator.user.js) | **Recommended version**
+Legacy | - | [Install [GitHub]](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/dist/twittertranslatorlegacy.user.js) | For incompatibility issues.
 
 ***
+
+| Preview |
+|:----------:|
+![Menu Preview](https://raw.githubusercontent.com/magicoflolis/userscriptrepo/master/assets/ExternalTranslator.gif)|
+
+> Please check the [Bugs / Issues](#bugs--issues) or [contact](#contacts) me for any issues! If this update is causing you problems, revert to previous version.
+
+## What's New
+
+> The menu, comments and CSS have been compressed to reduce size.
+
+* [ Script ] Reworked **alot** of behind the scenes for this script.
+* [ Script ] Removed "Save", "Reset", "Reload" buttons.
+* [ Script ] Added "Restore to Defaults" button.
+* [ Script ] Added confirmation prompt to "Restore to Defaults".
+* [ Menu ] Will automatically default to current sites theme.
+* [ Menu ] Will automatically select the current language of the site.
+* Each [ WIP ] is functional.
+* [ WIP ] Every theme can be applied to any site!
+* [ WIP ] Added help for each menu item.
+* [ WIP ] Reworked the menus CSS.
 
 ## **Features:**
 
-> Please check the [Bugs / Issues](#bugs--issues) or [contact](#contacts) me for any issues!
-
-* [ Script ] Added support for Inline Translators! (Disabled translators are WIP)
-* [ Menu ] Added Config Menu!
+* [ Script ] Support for Inline Translators! (Disabled translators are WIP)
+* [ Menu ] Config Menu!
 * [ Menu ] Multiple language support!
 * [ Menu ] Support for matching Twitter colors
 * [ Menu ] Support for matching Twitter theme
-* [ Site ] Added support for [TwitLonger](https://www.twitlonger.com)
-* [ Site ] Added support for [TweetDeck](https://tweetdeck.twitter.com)
-* [ Site ] Added support for every [Nitter](https://github.com/zedeus/nitter/wiki/Instances#official-instances)
-* [ README ] If this update is causing you problems, switch to [Legacy](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js). Feel free to [contact](#contacts) me for additional help, thank you!
+* [ Site ] Support for [TwitLonger](https://www.twitlonger.com)
+* [ Site ] Support for [TweetDeck](https://tweetdeck.twitter.com)
+* [ Site ] Support for every [Nitter](https://github.com/zedeus/nitter/wiki/Instances#official-instances)
 
-## Changelog
+**Supported Translators:**
 
-* [ Script ] Fixed font issues for Twitter.com
-* [ Sites ] Added Nitter.net
-
- Translators | Supported
-:-----------:|:---------:
-DeepL Translate | ✔️
-Yandex Translate | ✔️
-Bing Microsoft Translator| ✔️
-Google Translate | ✔️
-MyMemory | ✔️
-Translate.com | ✔️
+ Translator | External | Internal
+:-----------:|:---------:|:---------:
+DeepL Translate | ✔️ | ✔️
+Yandex Translate | ✔️ | -
+Bing Microsoft Translator| ✔️ | -
+Google Translate | ✔️ | ✔️
+MyMemory | ✔️ | ✔️
+Translate.com | ✔️ | -
 
 ## Bugs / Issues
 
 * [ User Script ] *May* conflict with [Magic Userscript+ : Show Site All UserJS](https://greasyfork.org/scripts/421603).
-* *Sometimes* "Translate tweet" won't appear on Twitter. (Clicking a picture and opening the right sidebar to view the Tweet & Replies)
-* TwitLonger is currently broken.
-* Inline Translators don't work on TweetDeck.
-* MyMemory API does not work in Bios.
+* [ Script ] *Sometimes* "Translate tweet" won't appear on Twitter. (Clicking a picture and opening the right sidebar to view the Tweet & Replies)
+* [ Translator ] Inline Translators don't work on TweetDeck.
+* [ Translator ] MyMemory API doesn't work in Bios.
 * [ Menu ] Cannot be moved or disabled. ( WIP / Use [Legacy](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js) if bothered by this. )
-* [ Translator ] [DeepL](https://www.deepl.com/translator) may not work in Bios or TweetDeck. ( Swap translators if needed )
 
 **Footnotes:**
 
-* Required to be logged in.
 * [ Translator ] Twitters built-in translation uses Google Translate, TweetDeck uses Bing Microsoft Translator.
 * [ TweetDeck ] Only appears in one column.
 * [ Translator ] Yandex Translate may default to Russian.
@@ -66,6 +74,7 @@ Translate.com | ✔️
 ## Roadmap
 
 * Fix any bugs along the way.
+* Automatically match Twitter colors.
 * Show multiple translators at once.
 
 ### Source Code

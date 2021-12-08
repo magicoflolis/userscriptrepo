@@ -1,0 +1,11 @@
+{
+  "name": "tet",
+  "version": "0.28",
+  "description": "Adds external & internal translators",
+  "scripts": {
+    "dev:Userscript": "node tools/userscript.js",
+    "dev:Sass": "sass -w ./src/sass/twittertranslator.scss:./dist/css/twittertranslator.css ./src/sass/foreign.scss:./dist/css/foreign.css -s compressed",
+    "dev:Server": "http-server ./dist -c5",
+    "lint:Beautify": "js-beautify -r dist/twittertranslator.user.js --config ../.jsbeautifyrc.json"
+  }
+}
