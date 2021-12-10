@@ -8,9 +8,11 @@ let tetInfo = {
 //'https://pbs.twimg.com/profile_images/1013798240683266048/zRim1x6M_normal.jpg'
 tetAvatar = tetInfo.icon,
 enableLogs = false;
-// Enables logs during development.
+// Automatically enables logs during development.
 (tetInfo.name === "[Dev] Twitter External Translator") ? enableLogs = true : false;
 /**
+ * Logs can be forced by setting `enableLog` to `true`.
+ * OR when `alert` is "error"
  * @param {() => boolean} msg
  * @param {string} alert
  */
@@ -25,19 +27,32 @@ qs = (element, all) => {
 ael = (event, callback, elm = document) => {
   return elm.addEventListener(event, callback);
 },
+/**
+ * Will inject CSS into the head of the document.
+ * Each CSS starts with the following IDs: #tet-${common/foreign}
+ * @param {string} css
+ * @param {string} name
+ */
 injectCSS = (css, name = "common") => {
   return document.head.insertAdjacentHTML('beforeend', `<style id="tet-${name}">${css}</style>`);
 },
+// Automatically hides the SVG after 5 seconds.
 autoHide = async () => {
   await new Promise((resolve) => setTimeout(resolve, 5000));
   $('svg#tetSVG').hide();
 },
+/**
+ * @param {Node} elm
+ * @param {MutationCallback} callback
+ * @param {MutationObserverInit} options
+ */
 TETObserve = (elm, callback, options = {subtree:true,childList:true}) => {
   let observer = new MutationObserver(callback);
   callback([], observer);
   observer.observe(elm, options);
   return observer;
 },
+// Saves the Config to localStorage.
 TETSave = (key = "Config", value = JSON.stringify(TETConfig)) => {
   GM.setValue(key, value);
   localStorage.TETConfig = value;
@@ -82,8 +97,8 @@ icons = {
   }
 },
 defaultLang = $("html").attr("lang"),
+// Will restore the theme depending on the current site.
 defaultTheme = () => {
-  // Will restore the theme depending on the current site.
   let b = $("body").attr("style"),
   twit = (b === "background-color: #FFFFFF;") ? "#FFFFFF" : (b === "background-color: #15202B;") ? "#15202B" : "#000000";
   return find.twitter ? twit : find.tweetdeck ? "tweetdeck" : find.nitter ? "nitter" : find.twitlonger ? "#FFFFFF" : "#000000";
@@ -1185,12 +1200,9 @@ new Promise((resolve, reject) => {
 }),
 tetEach = (elm, context, callback) => {
   for (let i = 0; i < elm.length; i++) {
-    if(!callback) {
-      elm.addClass(context);
-    } else {
-      ael("mouseenter", callback, elm[i]);
-      ael("mouseleave", callback, elm[i]);
-    };
+    (!callback) ? elm.addClass(context) : (
+      ael("mouseenter", callback, elm[i]),
+      ael("mouseleave", callback, elm[i]) );
   };
 };
 //#endregion
@@ -1350,7 +1362,7 @@ function TwitLonger() {
 
 //#region Menu
 function Menu() {
-  try {
+try {
   log("Menu init");
   let nav = $('.navbackground'),
     menuBtn = $('button#tetMenuButton'),
@@ -1607,6 +1619,7 @@ function Menu() {
   (TETConfig.lang !== DefaultConfig.lang || TETConfig.lang !== "en" || TETConfig.lang !== "en-US") ? TETLanguageChange() : false;
   autoHide();
 } catch (e) {
+  // We log the error and restore the config to default.
   log(e, "error");
   TETConfig = DefaultConfig;
   TETSave();
@@ -1614,7 +1627,11 @@ function Menu() {
 };
 //#endregion
 
-//#region Init Userscript
+//#region Initialize Userscript
+// Section taken from `AC-baidu-重定向优化百度搜狗谷歌必应搜索_favicon_双列`
+// Link: https://greasyfork.org/scripts/14178/code
+// Version: 25.01
+// Line: 674.
 await Promise.all([GM.getValue("Config")]).then((data) => {
   if(lh === "tweetdeck.twitter.com" && !document.cookie.includes("twid")) {
     log("Must be login!!! Canceling...", "error");
@@ -1642,7 +1659,9 @@ await Promise.all([GM.getValue("Config")]).then((data) => {
   log("Starting TET Injection");
   TETInject();
 }).catch((e) => {
-  TETConfig = DefaultConfig;
+  // We log the error and restore the config to default.
   log(e, "error");
+  TETConfig = DefaultConfig;
+  TETSave();
 })
 //#endregion

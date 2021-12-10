@@ -17,16 +17,17 @@ Legacy | [Install [GitHub]](https://github.com/magicoflolis/userscriptrepo/raw/m
 |:----------:|
 ![Menu Preview](https://raw.githubusercontent.com/magicoflolis/userscriptrepo/master/assets/ExternalTranslator.gif)|
 
-> Please check the [Bugs / Issues](#bugs--issues) or [contact](#contacts) me for any issues! If this update is causing you problems, revert to previous version.
-
 ## What's New
 
-> The menu, comments and CSS have been compressed to reduce size.
+> Please check the [Bugs / Issues](#bugs--issues) or [contact](#contacts) me for any issues! If this update is causing you problems, revert to previous version.
 
+* The menu and CSS have been compressed to reduce file size. Comments can be found under `src/main.js` on GitHub.
 * [ Script ] Reworked **alot** of behind the scenes for this script.
+* [ Script ] Now works while logged out!
 * [ Script ] Removed "Save", "Reset", "Reload" buttons.
 * [ Script ] Added "Restore to Defaults" button.
 * [ Script ] Added confirmation prompt to "Restore to Defaults".
+* [ Site ] Added mobile.twitter.com
 * [ Menu ] Will automatically default to current sites theme.
 * [ Menu ] Will automatically select the current language of the site.
 * Each [ WIP ] is functional.
@@ -47,14 +48,18 @@ Legacy | [Install [GitHub]](https://github.com/magicoflolis/userscriptrepo/raw/m
 
 **Supported Translators:**
 
- Translator | External | Internal
+ Translator | External | Inline / Internal
 :-----------:|:---------:|:---------:
-DeepL Translate | ✔️ | ✔️
-Yandex Translate | ✔️ | -
-Bing Microsoft Translator| ✔️ | -
-Google Translate | ✔️ | ✔️
-MyMemory | ✔️ | ✔️
-Translate.com | ✔️ | -
+DeepL Translate | ✔️ | ✔️ |
+Yandex Translate | ✔️ | - |
+Bing Microsoft Translator| ✔️ | - |
+Google Translate | ✔️ | ✔️ |
+MyMemory | ✔️ | ✔️ |
+Translate.com | ✔️ | - |
+
+## Wiki
+
+* [Userscript Documentation](https://github.com/magicoflolis/userscriptrepo/wiki)
 
 ## Bugs / Issues
 
@@ -62,7 +67,7 @@ Translate.com | ✔️ | -
 * [ Script ] *Sometimes* "Translate tweet" won't appear on Twitter. (Clicking a picture and opening the right sidebar to view the Tweet & Replies)
 * [ Translator ] Inline Translators don't work on TweetDeck.
 * [ Translator ] MyMemory API doesn't work in Bios.
-* [ Menu ] Cannot be moved or disabled. ( WIP / Use [Legacy](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/twittertranslatorlegacy.user.js) if bothered by this. )
+* [ Menu ] Cannot be moved or disabled. ( WIP / Use [Legacy](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/dist/twittertranslatorlegacy.user.js) if bothered by this. )
 
 **Footnotes:**
 

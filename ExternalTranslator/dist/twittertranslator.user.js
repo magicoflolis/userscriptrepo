@@ -55,13 +55,13 @@
 // @description:ru-RU   Добавляет сторонних переводчиков в Twitter
 // @description:ru      Добавляет сторонних переводчиков в Twitter
 // @description:es      Añade traductores de terceros a Twitter
+// @version      0.28
 // @author       Magic <magicoflolis@tuta.io>
 // @icon         https://abs.twimg.com/favicons/twitter.ico
-// @version      0.28
 // @namespace    https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @homepageURL  https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @supportURL   https://github.com/magicoflolis/userscriptrepo/issues/new
-// @require      https://code.jquery.com/jquery-3.6.0.slim.min.js?_=1638935718515
+// @require      https://code.jquery.com/jquery-3.6.0.slim.min.js?_=1639163749547
 // @match        https://mobile.twitter.com/*
 // @match        https://twitter.com/*
 // @match        https://tweetdeck.twitter.com/*
@@ -87,6 +87,7 @@
 // @grant        GM.deleteValue
 // @grant        GM_info
 // @grant        GM_xmlhttpRequest
+// @license      MIT
 // ==/UserScript==
 
 // Uncompressed source code:
