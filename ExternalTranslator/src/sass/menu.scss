@@ -37,7 +37,6 @@
   left: 0px;
   bottom: 0px;
   overflow: hidden;
-  border-radius: 9999px;
   #tetAvatar {
     background-image: url("https://abs.twimg.com/favicons/twitter.ico");
     background-size: cover;
@@ -299,7 +298,11 @@ button.tetBtn {
   justify-items: center;
 }
 
-input#apifield,
+#apifield {
+  width: initial;
+}
+
+#apifield,
 #tetName,
 #tetSelector>select {
   padding-left: 2% !important
@@ -344,7 +347,6 @@ input#apifield,
     align-items: center;
     height: 48px;
     overflow: hidden;
-    border-radius: 9999px;
     outline-style: none;
     display: block;
   }

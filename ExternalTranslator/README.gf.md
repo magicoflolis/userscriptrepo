@@ -8,7 +8,7 @@
 
 | Version | Link | Alternative | Note |
 |:----------:|:----------:|:----------:|:----------:|
-Stable | [Install](#install-area) | [Install [GitHub]](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/dist/twittertranslator.user.js) | **Recommended version**
+Stable | [Install](#install-area) | [Install [GitHub]](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/dist/twittertranslator.user.js) | Recommended version.
 Legacy | - | [Install [GitHub]](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/dist/twittertranslatorlegacy.user.js) | For incompatibility issues.
 
 ***
@@ -21,12 +21,25 @@ Legacy | - | [Install [GitHub]](https://github.com/magicoflolis/userscriptrepo/r
 
 > Please check the [Bugs / Issues](#bugs--issues) or [contact](#contacts) me for any issues! If this update is causing you problems, revert to previous version.
 
-* The menu and CSS have been compressed to reduce file size. Comments can be found under `src/main.js` on GitHub.
-* [ Script ] Reworked **alot** of behind the scenes for this script.
+* This update will reset your config.
+* [ Translator ] Added 2 new Open-Source translators! ( LibreTranslate & Lingva Translate)
+* [ Translator ] Both require no API key to use internally.
+* [ Translator ] LibreTranslate is *Internal only.*
+
+## **Features:**
+
+> The menu and CSS have been compressed to reduce file size. Comments can be found under `src/main.js` on GitHub.
+
+* [ Script ] Support for Internal Translators! (Disabled translators are WIP)
+* [ Menu ] Config Menu!
+* [ Menu ] Multiple language support!
+* [ Menu ] Support for matching Twitter colors
+* [ Menu ] Support for matching Twitter theme
+* [ Site ] Support for [TwitLonger](https://www.twitlonger.com)
+* [ Site ] Support for [TweetDeck](https://tweetdeck.twitter.com)
+* [ Site ] Support for every [Nitter](https://github.com/zedeus/nitter/wiki/Instances#official-instances)
 * [ Script ] Now works while logged out!
-* [ Script ] Removed "Save", "Reset", "Reload" buttons.
 * [ Script ] Added "Restore to Defaults" button.
-* [ Script ] Added confirmation prompt to "Restore to Defaults".
 * [ Site ] Added mobile.twitter.com
 * [ Menu ] Will automatically default to current sites theme.
 * [ Menu ] Will automatically select the current language of the site.
@@ -35,27 +48,18 @@ Legacy | - | [Install [GitHub]](https://github.com/magicoflolis/userscriptrepo/r
 * [ WIP ] Added help for each menu item.
 * [ WIP ] Reworked the menus CSS.
 
-## **Features:**
-
-* [ Script ] Support for Inline Translators! (Disabled translators are WIP)
-* [ Menu ] Config Menu!
-* [ Menu ] Multiple language support!
-* [ Menu ] Support for matching Twitter colors
-* [ Menu ] Support for matching Twitter theme
-* [ Site ] Support for [TwitLonger](https://www.twitlonger.com)
-* [ Site ] Support for [TweetDeck](https://tweetdeck.twitter.com)
-* [ Site ] Support for every [Nitter](https://github.com/zedeus/nitter/wiki/Instances#official-instances)
-
 **Supported Translators:**
 
- Translator | External | Inline / Internal
+ Translator | External | Internal
 :-----------:|:---------:|:---------:
-DeepL Translate | ✔️ | ✔️ |
-Yandex Translate | ✔️ | - |
 Bing Microsoft Translator| ✔️ | - |
+DeepL Translate | ✔️ | ✔️ |
 Google Translate | ✔️ | ✔️ |
+LibreTranslate | - | ✔️ |
+Lingva Translate | ✔️ | ✔️ |
 MyMemory | ✔️ | ✔️ |
 Translate.com | ✔️ | - |
+Yandex Translate | ✔️ | - |
 
 ## Wiki
 
@@ -65,9 +69,9 @@ Translate.com | ✔️ | - |
 
 * [ User Script ] *May* conflict with [Magic Userscript+ : Show Site All UserJS](https://greasyfork.org/scripts/421603).
 * [ Script ] *Sometimes* "Translate tweet" won't appear on Twitter. (Clicking a picture and opening the right sidebar to view the Tweet & Replies)
-* [ Translator ] Inline Translators don't work on TweetDeck.
+* [ Translator ] Internal Translators don't work on TweetDeck.
 * [ Translator ] MyMemory API doesn't work in Bios.
-* [ Menu ] Cannot be moved or disabled. ( WIP / Use [Legacy](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/dist/twittertranslatorlegacy.user.js) if bothered by this. )
+* [ Menu ] Cannot be moved or disabled. ( WIP )
 
 **Footnotes:**
 

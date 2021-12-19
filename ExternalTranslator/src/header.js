@@ -6,7 +6,7 @@
 "use strict";
 
 (async () => {
-let twCSS = `{twCSS}`,
+let twCSS = `{foreign}`,
 tetCSS = `{tetCSS}`;
 
 {code}

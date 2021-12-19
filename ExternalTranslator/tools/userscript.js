@@ -1,11 +1,11 @@
-const babel = require("@babel/core"),
-fs = require("fs"),
-watch = require('node-watch');
+import { transformFileSync } from "@babel/core";
+import { readFileSync, writeFile } from "fs";
+import watch from 'node-watch';
 watch('./src/main.js', { recursive: true }, (evt, name) => {
-let header = fs.readFileSync("./src/header.js").toString(),
-  twCSS = fs.readFileSync("./dist/css/foreign.css").toString(),
-  tetCSS = fs.readFileSync("./dist/css/twittertranslator.css").toString(),
-  code = babel.transformFileSync("./src/main.js").code,
+let header = readFileSync("./src/header.js").toString(),
+  foreign = readFileSync("./dist/css/foreign.css").toString(),
+  tetCSS = readFileSync("./dist/css/twittertranslator.css").toString(),
+  code = transformFileSync("./src/main.js").code,
   nano = (template, data) => {
   return template.replace(/\{([\w\.]*)\}/g, (str, key) => {
     let keys = key.split("."),
@@ -17,12 +17,12 @@ let header = fs.readFileSync("./src/header.js").toString(),
 renderOut = (outFile, jshead) => {
   let ujs = nano(header, {
     jshead: jshead,
-    twCSS: twCSS,
+    foreign: foreign,
     tetCSS: tetCSS,
     code: code,
     time: +new Date(),
   });
-  fs.writeFile(outFile, ujs, (err) => {
+  writeFile(outFile, ujs, (err) => {
     return (err) ? console.log(err) : console.log(`build: ${outFile}`);
   });
 },
@@ -117,18 +117,18 @@ jshead_prod = `// ==UserScript==
 // @description:ru-RU   Добавляет сторонних переводчиков в Twitter
 // @description:ru      Добавляет сторонних переводчиков в Twitter
 // @description:es      Añade traductores de terceros a Twitter
-// @version      0.28
+// @version      0.29
 ${jshead_common}`,
 jshead_dev = `// ==UserScript==
 // @name         [Dev] Twitter External Translator
 // @description  Adds external & internal translators
-// @version      12.10.21
+// @version      12.18.21
 ${jshead_common}`;
   console.log('%s changed.', name);
   // Development version
   renderOut("./dist/twittertranslator.dev.user.js", jshead_dev);
   // Release version
-  // renderOut("./dist/twittertranslator.user.js", jshead_prod);
+  renderOut("./dist/twittertranslator.user.js", jshead_prod);
 });
 
 // watcher.on('change', (evt, name) => {

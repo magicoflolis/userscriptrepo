@@ -63,6 +63,9 @@ $accent_border: #FF6C6091;
 #tetSelector > select {
   background-color: transparent;
   border: transparent;
+  &:focus {
+    box-shadow: none !important;
+  }
 }
 
 .r-kemksi > div#tetName,
@@ -97,6 +100,7 @@ h1.tetNTextColor {
   }
 }
 
+input.tetNTextColor,
 select.tetNTextColor,
 div.tetNTextColor {
   color: $fg_color;
@@ -175,6 +179,7 @@ svg.tetNTextColor {
   border-color: $tetBlue;
 }
 
+.tetBtn.tweetdeck,
 .r-13gxpu9 {
   color: $tetBlue;
   &#tetName {
