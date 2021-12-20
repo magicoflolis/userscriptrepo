@@ -42,8 +42,6 @@ jshead_common = `// @author       Magic <magicoflolis@tuta.io>
 // @namespace    https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @homepageURL  https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @supportURL   https://github.com/magicoflolis/userscriptrepo/issues/new
-// @downloadURL  https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/dist/twittertranslator.user.js
-// @updateURL    https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/dist/twittertranslator.meta.js
 // @require      https://code.jquery.com/jquery-3.6.0.slim.min.js?_=${time}
 // @match        https://mobile.twitter.com/*
 // @match        https://twitter.com/*
@@ -129,7 +127,7 @@ jshead_prod = `// ==UserScript==
 // @description:ru-RU   Добавляет сторонних переводчиков в Twitter
 // @description:ru      Добавляет сторонних переводчиков в Twitter
 // @description:es      Añade traductores de terceros a Twitter
-// @version      0.29a2
+// @version      0.30
 ${jshead_common}`,
 jshead_dev = `// ==UserScript==
 // @name         [Dev] Twitter External Translator
@@ -141,7 +139,7 @@ ${jshead_common}`;
   renderHead("./dist/twittertranslator.dev.meta.js", jshead_dev);
   renderOut("./dist/twittertranslator.dev.user.js", jshead_dev);
   // Release version
-  renderHead("./dist/twittertranslator.meta.js", jshead_dev);
+  renderHead("./dist/twittertranslator.meta.js", jshead_prod);
   renderOut("./dist/twittertranslator.user.js", jshead_prod);
 });
 

@@ -21,16 +21,18 @@ Legacy | - | [Install [GitHub]](https://github.com/magicoflolis/userscriptrepo/r
 
 > Please check the [Bugs / Issues](#bugs--issues) or [contact](#contacts) me for any issues! If this update is causing you problems, revert to previous version.
 
-* This update will reset your config.
-* [ Translator ] Added 2 new Open-Source translators! ( LibreTranslate & Lingva Translate)
-* [ Translator ] Both require no API key to use internally.
-* [ Translator ] LibreTranslate is *Internal only.*
+* This update *may* reset your config.
+* You can now customize every translator link! ( DeepL Api is written in a function )
+* Example: [https://translate.google.com](https://translate.google.com/) => [https://translate.google.co.uk](https://translate.google.co.uk/)
+* Added ✨ for recommendations.
+* UI tweaks.
+* Bug fixes.
 
 ## **Features:**
 
 > The menu and CSS have been compressed to reduce file size. Comments can be found under `src/main.js` on GitHub.
 
-* [ Script ] Support for Internal Translators! (Disabled translators are WIP)
+* [ Script ] Support for External & Internal Translators!
 * [ Menu ] Config Menu!
 * [ Menu ] Multiple language support!
 * [ Menu ] Support for matching Twitter colors
@@ -69,7 +71,6 @@ Yandex Translate | ✔️ | - |
 
 * [ User Script ] *May* conflict with [Magic Userscript+ : Show Site All UserJS](https://greasyfork.org/scripts/421603).
 * [ Script ] *Sometimes* "Translate tweet" won't appear on Twitter. (Clicking a picture and opening the right sidebar to view the Tweet & Replies)
-* [ Translator ] Internal Translators don't work on TweetDeck.
 * [ Translator ] MyMemory API doesn't work in Bios.
 * [ Menu ] Cannot be moved or disabled. ( WIP )
 
