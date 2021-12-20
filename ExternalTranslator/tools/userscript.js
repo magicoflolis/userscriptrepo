@@ -3,15 +3,25 @@ import { readFileSync, writeFile } from "fs";
 import watch from 'node-watch';
 watch('./src/main.js', { recursive: true }, (evt, name) => {
 let header = readFileSync("./src/header.js").toString(),
-  foreign = readFileSync("./dist/css/foreign.css").toString(),
-  tetCSS = readFileSync("./dist/css/twittertranslator.css").toString(),
-  code = transformFileSync("./src/main.js").code,
-  nano = (template, data) => {
-  return template.replace(/\{([\w\.]*)\}/g, (str, key) => {
-    let keys = key.split("."),
-      v = data[keys.shift()];
-    for (let i = 0, l = keys.length; i < l; i++) v = v[keys[i]];
-    return typeof v !== "undefined" && v !== null ? v : "";
+meta = readFileSync("./src/meta.js").toString(),
+foreign = readFileSync("./dist/css/foreign.css").toString(),
+tetCSS = readFileSync("./dist/css/twittertranslator.css").toString(),
+code = transformFileSync("./src/main.js").code,
+nano = (template, data) => {
+return template.replace(/\{([\w\.]*)\}/g, (str, key) => {
+  let keys = key.split("."),
+    v = data[keys.shift()];
+  for (let i = 0, l = keys.length; i < l; i++) v = v[keys[i]];
+  return typeof v !== "undefined" && v !== null ? v : "";
+});
+},
+renderHead = (outFile, jshead) => {
+  let ujs = nano(meta, {
+    jshead: jshead,
+    time: +new Date(),
+  });
+  writeFile(outFile, ujs, (err) => {
+    return (err) ? console.log(err) : console.log(`build: ${outFile}`);
   });
 },
 renderOut = (outFile, jshead) => {
@@ -32,6 +42,8 @@ jshead_common = `// @author       Magic <magicoflolis@tuta.io>
 // @namespace    https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @homepageURL  https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @supportURL   https://github.com/magicoflolis/userscriptrepo/issues/new
+// @downloadURL  https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator/dist/twittertranslator.user.js
+// @updateURL    https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator/dist/twittertranslator.meta.js
 // @require      https://code.jquery.com/jquery-3.6.0.slim.min.js?_=${time}
 // @match        https://mobile.twitter.com/*
 // @match        https://twitter.com/*
@@ -117,17 +129,19 @@ jshead_prod = `// ==UserScript==
 // @description:ru-RU   Добавляет сторонних переводчиков в Twitter
 // @description:ru      Добавляет сторонних переводчиков в Twitter
 // @description:es      Añade traductores de terceros a Twitter
-// @version      0.29
+// @version      0.29a1
 ${jshead_common}`,
 jshead_dev = `// ==UserScript==
 // @name         [Dev] Twitter External Translator
 // @description  Adds external & internal translators
-// @version      12.18.21
+// @version      12.19.21
 ${jshead_common}`;
   console.log('%s changed.', name);
   // Development version
+  renderHead("./dist/twittertranslator.dev.meta.js", jshead_dev);
   renderOut("./dist/twittertranslator.dev.user.js", jshead_dev);
   // Release version
+  renderHead("./dist/twittertranslator.meta.js", jshead_dev);
   renderOut("./dist/twittertranslator.user.js", jshead_prod);
 });
 

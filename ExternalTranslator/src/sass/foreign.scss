@@ -7,9 +7,10 @@
 
 //@include prefix(display, flex, ms moz webkit);
 
-.tet {
-  margin-top: 1%;
-};
+.prf-header > div > .tet {
+  display: inline-block !important;
+  width: 100% !important;
+}
 
 .css-1dbjc4n {
   -moz-box-align: stretch;

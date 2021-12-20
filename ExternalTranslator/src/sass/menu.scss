@@ -16,8 +16,19 @@
   z-index: 0;
 }
 
+.tet,
+.tet-info,
+#tweet-text {
+  margin-top: 1% !important;
+}
+
+#tweet-text,
+.tet-demoframe {
+  position: relative;
+}
+
 .tet {
-  margin-top: 4px;
+  font-family: "TwitterChirp", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   flex-wrap: wrap;
   line-height: 16px;
   font-size: 13px;
@@ -82,7 +93,6 @@
     font-size: 15px;
     font-weight: 400;
     color: #6e767d;
-    margin-top: 1%;
   }
   span {
     color: inherit;
@@ -225,6 +235,7 @@
   overflow-wrap: break-word;
 }
 
+option[disabled=""],
 .rm,
 button:not(.mini)>#tetSVG,
 button.mini>span {
@@ -429,6 +440,7 @@ button.tetBtn {
 }
 
 #tweet-text {
+  font-family: "TwitterChirp", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   font-size: 23px !important;
   font-weight: 400 !important;
   line-height: 28px !important;

@@ -55,13 +55,15 @@
 // @description:ru-RU   Добавляет сторонних переводчиков в Twitter
 // @description:ru      Добавляет сторонних переводчиков в Twitter
 // @description:es      Añade traductores de terceros a Twitter
-// @version      0.29
+// @version      0.29a1
 // @author       Magic <magicoflolis@tuta.io>
 // @icon         https://abs.twimg.com/favicons/twitter.ico
 // @namespace    https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @homepageURL  https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
 // @supportURL   https://github.com/magicoflolis/userscriptrepo/issues/new
-// @require      https://code.jquery.com/jquery-3.6.0.slim.min.js?_=1639877374147
+// @downloadURL  https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator/dist/twittertranslator.user.js
+// @updateURL    https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator/dist/twittertranslator.meta.js
+// @require      https://code.jquery.com/jquery-3.6.0.slim.min.js?_=1639963678499
 // @match        https://mobile.twitter.com/*
 // @match        https://twitter.com/*
 // @match        https://tweetdeck.twitter.com/*
@@ -96,9 +98,9 @@
 "use strict";
 
 (async () => {
-let twCSS = `.tet{margin-top:1%}.css-1dbjc4n{-moz-box-align:stretch;-moz-box-direction:normal;-moz-box-orient:vertical;align-items:stretch;border:0px solid #000;box-sizing:border-box;display:flex;flex-basis:auto;flex-direction:column;flex-shrink:0;margin:0px;min-height:0px;min-width:0px;padding:0px;position:relative;z-index:0}.r-b88u0q{font-weight:700}select{height:auto !important}.r-qvutc0{overflow-wrap:break-word}.r-1adg3ll{display:block}.r-u8s1d{position:absolute}.r-1wbh5a2{flex-shrink:1}.r-1ny4l3l{outline-style:none}.r-1mi75qu{box-shadow:rgba(0,0,0,.02) 0px 0px 2px inset}.r-1udh08x{overflow:hidden}.r-1awozwy{-webkit-box-align:center;-moz-box-align:center;align-items:center}.r-1hwvwag{flex-basis:48px}.r-18kxxzh{-webkit-box-flex:0;flex-grow:0}.r-1777fci{-webkit-box-pack:center;-moz-box-pack:center;justify-content:center}.r-18u37iz{-webkit-box-direction:normal;-webkit-box-orient:horizontal;-moz-box-direction:normal;-moz-box-orient:horizontal;flex-direction:row}.r-ipm5af{top:0px}.r-1ifxtd0{margin-bottom:16px}.r-6gpygo{margin-bottom:12px !important}.r-1jgb5lz{margin-left:auto;margin-right:auto}.r-1ye8kvj{max-width:600px}.r-16y2uox{-webkit-box-flex:1;-moz-box-flex:1;flex-grow:1}.r-ttdzmv{padding-top:12px !important}.r-1iusvr4{flex-basis:0px}.r-13qz1uu{width:100%}.r-1dye5f7{padding-left:32px;padding-right:32px}.r-9ilb82{color:#6e767d}.r-16dba41{font-weight:400}.r-1vr29t4{font-weight:800}.r-a023e6{font-size:15px}.r-1qd0xha{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}.r-rjixqe{line-height:20px}.r-1cwl3u0{line-height:16px}.r-bcqeeo{min-width:0px}/*# sourceMappingURL=foreign.css.map */
+let twCSS = `.prf-header>div>.tet{display:inline-block !important;width:100% !important}.css-1dbjc4n{-moz-box-align:stretch;-moz-box-direction:normal;-moz-box-orient:vertical;align-items:stretch;border:0px solid #000;box-sizing:border-box;display:flex;flex-basis:auto;flex-direction:column;flex-shrink:0;margin:0px;min-height:0px;min-width:0px;padding:0px;position:relative;z-index:0}.r-b88u0q{font-weight:700}select{height:auto !important}.r-qvutc0{overflow-wrap:break-word}.r-1adg3ll{display:block}.r-u8s1d{position:absolute}.r-1wbh5a2{flex-shrink:1}.r-1ny4l3l{outline-style:none}.r-1mi75qu{box-shadow:rgba(0,0,0,.02) 0px 0px 2px inset}.r-1udh08x{overflow:hidden}.r-1awozwy{-webkit-box-align:center;-moz-box-align:center;align-items:center}.r-1hwvwag{flex-basis:48px}.r-18kxxzh{-webkit-box-flex:0;flex-grow:0}.r-1777fci{-webkit-box-pack:center;-moz-box-pack:center;justify-content:center}.r-18u37iz{-webkit-box-direction:normal;-webkit-box-orient:horizontal;-moz-box-direction:normal;-moz-box-orient:horizontal;flex-direction:row}.r-ipm5af{top:0px}.r-1ifxtd0{margin-bottom:16px}.r-6gpygo{margin-bottom:12px !important}.r-1jgb5lz{margin-left:auto;margin-right:auto}.r-1ye8kvj{max-width:600px}.r-16y2uox{-webkit-box-flex:1;-moz-box-flex:1;flex-grow:1}.r-ttdzmv{padding-top:12px !important}.r-1iusvr4{flex-basis:0px}.r-13qz1uu{width:100%}.r-1dye5f7{padding-left:32px;padding-right:32px}.r-9ilb82{color:#6e767d}.r-16dba41{font-weight:400}.r-1vr29t4{font-weight:800}.r-a023e6{font-size:15px}.r-1qd0xha{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}.r-rjixqe{line-height:20px}.r-1cwl3u0{line-height:16px}.r-bcqeeo{min-width:0px}/*# sourceMappingURL=foreign.css.map */
 `,
-tetCSS = `#tetMenuButton>span{color:#fff !important}#tetSelector>select{background-color:transparent;border:transparent}#tetSelector>select:focus{box-shadow:none !important}.r-kemksi>div#tetName,.r-yfoy6g>div#tetName{color:#6e767d}.tetNitterHover{background-color:#ff6c60}.tetNitter{border-color:#ffaca0;box-shadow:#ffaca0 0px 0px 0px 1px}.tetBtn.nitter{color:#fff;border:transparent;background-color:#ff6c60}h1.tetNTextColor{color:#888889}.nitter{border:1px solid #ff6c60;background-color:#0f0f0f}.nitter #tetName{color:#ff6c60}input.tetNTextColor,select.tetNTextColor,div.tetNTextColor{color:#f8f8f2}svg.tetNTextColor{color:#888889}.tetNText{color:#ff6c60 !important}.tetNBackground{background-color:#161616}.Button--primary{border-color:#1da1f2;box-shadow:#1da1f2 0px 0px 0px 1px}.r-tetTD{border-radius:14px;background-color:#15202b}.r-tetTD #tetName{color:#8899a6}.prf-header>div>.tet.tet-td{color:#fff !important}.tet-td{color:#1da1f2}.tet-td#tetName{color:#1da1f2 !important}.tet-td.tet{color:#8899a6}.r-hoverTD{background-color:#005fd1}.r-9ilb82{color:#6e767d}.r-1kqtdi0{border-color:#2f3336}#apifield{border-color:#2f3336}#tetSelector.r-1kqtdi0{border-color:#2f3336}#tetSelector.r-1kqtdi0#tetName{color:#6e767d !important}#tetSelector.r-1kqtdi0.r-tetTD{border-color:#8899a6}.r-urgr8i{background-color:#1da1f2}.r-p1n3y5{border-color:#1da1f2}.tetBtn.tweetdeck,.r-13gxpu9{color:#1da1f2}.tetBtn.tweetdeck#tetName,.r-13gxpu9#tetName{color:#1da1f2 !important}.r-1q3imqu{background-color:#1a91da}.r-1bih22f{box-shadow:#1da1f2 0px 0px 0px 1px}.r-1vkxrha{background-color:#ffad1f}.r-v6khid{border-color:#ffad1f}.r-61mi1v{color:#ffad1f}.r-61mi1v#tetName{color:#ffad1f !important}.r-1kplyi6{background-color:#e69c1c}.r-cdj8wb{box-shadow:#ffad1f 0px 0px 0px 1px}.r-1dgebii{background-color:#e0245e}.r-1iofnty{border-color:#e0245e}.r-daml9f{color:#e0245e}.r-daml9f#tetName{color:#e0245e !important}.r-1ucxkr8{background-color:#ca2055}.r-jd07pc{box-shadow:#e0245e 0px 0px 0px 1px}.r-168457u{background-color:#7856ff}.r-njt2r9{background-color:#865dca}.r-hy56xe{border-color:#7856ff}.r-11mmphe{box-shadow:#794bc4 0px 0px 0px 1px}.r-xfsgu1{color:#7856ff}.r-xfsgu1#tetName{color:#7856ff !important}.r-18z3xeu{background-color:#f45d22}.r-1kplyi6{background-color:#dc541f}.r-1xl5njo{border-color:#f45d22}.r-b8m25f{box-shadow:#f45d22 0px 0px 0px 1px}.r-1qkqhnw{color:#f45d22}.r-1qkqhnw#tetName{color:#f45d22 !important}.r-b5skir{background-color:#17bf63}.r-zx61xx{background-color:#15ac59}.r-5ctkeg{border-color:#17bf63}.r-1cqwhho{box-shadow:#17bf63 0px 0px 0px 1px}.r-nw8l94{color:#17bf63}.r-nw8l94#tetName{color:#17bf63 !important}.r-yfoy6g{background-color:#15202b}.r-14lw9ot{background-color:#fff}.r-kemksi{background-color:#000}.r-18jsvk2{color:#0f1419}.r-demo{border-style:solid !important;border-radius:16px !important;border-width:1px !important}.demo-TW{border-color:#2f3336 !important}.demo-TD{border:1px solid #8899a6 !important}.demo-NT{border:1px solid #FF6C6091 !important}.r-jwli3a{color:#fff}.tetAvatarFrame,#tetAvatar{align-items:stretch;border:0px solid #000;box-sizing:border-box;display:flex;flex-basis:auto;flex-direction:column;flex-shrink:0;margin:0px;min-height:0px;min-width:0px;padding:0px;position:relative;z-index:0}.tet{margin-top:4px;flex-wrap:wrap;line-height:16px;font-size:13px;font-weight:400;overflow-wrap:break-word;width:fit-content;height:min-content;display:flex}.tetAvatarFrame{flex-basis:auto;z-index:0;position:absolute;top:0px;right:0px;left:0px;bottom:0px;overflow:hidden}.tetAvatarFrame #tetAvatar{background-image:url("https://abs.twimg.com/favicons/twitter.ico");background-size:cover;background-repeat:no-repeat;background-position:center center;z-index:-1;background-color:rgba(0,0,0,0);height:100%;width:100%;position:absolute}.tet-main{padding:0px 32px 32px 32px !important;flex-shrink:1;-moz-box-flex:1;flex-grow:1;width:100%;margin-left:auto;margin-right:auto}.tet-options{display:inline-grid;grid-template-rows:1fr 1fr 1fr}.tet-header{min-width:0px;text-align:center;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;white-space:normal;display:grid;margin:32px 0px 12px 0px !important}.tet-header .css-901oao{line-height:28px;font-size:23px;font-weight:800}.tet-header .tet-info{line-height:20px;font-size:15px;font-weight:400;color:#6e767d;margin-top:1%}.tet-header span{color:inherit;font:inherit;white-space:inherit}.tetAlert{right:0px;left:0px;bottom:0px;position:fixed !important;z-index:10000 !important}.tetAlert h1.tetAlertTxt{line-height:24px;font-size:20px;font-weight:700;min-width:0px}.tetAlert h1.tetAlertTxt span{font-family:inherit}.tetAlert .tetAlertTxt>span,.tetAlert .tetAlertTxt{white-space:normal;text-align:center;overflow-wrap:break-word;font-family:"TwitterChirp",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}.tetAlert div.tetAlertTxt{font-weight:400;font-size:15px;line-height:20px;min-width:0px;width:100%}.tetAlert .tetConfirmation{width:20%;border-radius:16px;left:40%;top:40%;position:fixed}.tetAlert .tetAlertBtns{margin:2% 25% 2% 25%;white-space:nowrap;outline-style:none;transition-property:background-color,box-shadow;transition-duration:.2s;flex-grow:1;user-select:none;border-color:rgba(0,0,0,0);overflow:hidden;border-width:1px;border-style:solid;cursor:pointer}.tetAlert .tetAlertBtns:nth-child(2){margin:0px 25% 4% 25%}.tetAlert .tetAlertBtns>div{font-size:15px;font-weight:700;font-family:"TwitterChirp",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:20px;overflow-wrap:break-word;min-width:0px;align-items:center;justify-content:center;flex-grow:1;flex-direction:row;text-align:center;display:flex}.tetAlert .tetAlertBtns>div>span{font-size:15px;font-family:inherit;line-height:20px;overflow-wrap:break-word;min-width:0px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:inherit;font:inherit;border:0px solid #000;box-sizing:border-box;display:inline;margin:0px;padding:0px}.tetAlert .tetAlertBtns>div>span>span{border:0px solid #000;box-sizing:border-box;display:inline;margin:0px;padding:0px}#tetForm{max-width:80vw;max-height:90vh;min-width:600px !important;flex-shrink:1;border-radius:16px;overflow:hidden}#tetForm>div{border-radius:16px}#tetForm .tetBackground .tetTextColor{overflow-wrap:break-word}#tetForm .tetBackground .tetTextColor span{overflow-wrap:break-word}#tetForm .tet-containter{width:100%}#tetForm .tet-containter.tet-fg{margin-left:auto;margin-right:auto}.tet-head,#tetName>span,#tweet-text>span,#tetMenuButton>span{color:inherit;font:inherit;font-family:inherit;white-space:inherit;overflow-wrap:break-word}.rm,button:not(.mini)>#tetSVG,button.mini>span{display:none !important}.tetFreeze{overflow:hidden !important;overscroll-behavior-y:none !important}#tetMenuButton{z-index:10;width:8vw;height:auto;position:fixed;top:65%;left:0px}#tetMenuButton.tetTD{left:90% !important;top:0% !important}#tetMenuButton>svg{position:relative;max-width:100%;height:1.25em;fill:currentcolor;margin-right:12px;user-select:none;right:35% !important}#tetMenuButton,.tetAlertBtns,#tetReload,#tetReset{list-style:none;text-align:inherit;text-decoration:none;border-radius:15px;justify-content:center;display:flex !important;font-family:inherit;font-size:20px !important;font-weight:bold !important;padding:0px !important}button.tetBtn.mini{border:transparent !important;background:transparent !important}#tetMenuButton,.tetAlertBtns,#tetReload,#tetReset,#tet,.tet{cursor:pointer !important}.tet.tet-td{display:inherit}#tet{justify-items:center}#apifield{width:initial}#apifield,#tetName,#tetSelector>select{padding-left:2% !important}#tetReload,#tetReset{margin:2% 25% 0px 25%}#apifield,#tetSelector{border-radius:4px;border-width:1px;margin:2% 6% 0px 6%}.r-demo{outline-style:none;margin:0px 32px 0px 32px !important;padding:12px 0px 12px 0px !important;overflow:hidden;-webkit-box-direction:normal;-webkit-box-orient:horizontal;-moz-box-direction:normal;-moz-box-orient:horizontal;flex-direction:row !important;flex-shrink:1;-webkit-box-flex:1;-moz-box-flex:1;flex-grow:1}.r-demo .tet-av{width:100%;margin-left:12px !important;margin-right:12px !important;-webkit-box-flex:0;flex-grow:0;flex-shrink:1;flex-basis:48px;-webkit-box-align:center;-moz-box-align:center;align-items:center;height:48px;overflow:hidden;outline-style:none;display:block}.r-demo .tet-txt{flex-basis:0px;-webkit-box-flex:1;-moz-box-flex:1;flex-grow:1;-webkit-box-pack:center;-moz-box-pack:center;justify-content:center}.r-demo .tet-txt .txt-header{margin-bottom:2px;-moz-box-align:start;align-items:start;-moz-box-pack:justify;justify-content:space-between;-moz-box-direction:normal;-moz-box-orient:horizontal;flex-direction:row;max-width:100%}.r-demo .tet-txt .txt-header .tet-at{display:flex;margin-left:4px;color:#6e767d;font-weight:400;font-size:15px;line-height:20px;overflow-wrap:break-word;min-width:0px}#tetDemo{margin:4px 0px 0px 0px;line-height:16px;font-size:13px;flex-wrap:wrap;font-weight:400;min-width:0px;display:flex !important}.btNav{justify-content:center;flex-direction:row;top:0px}.btNav span{font-family:inherit}.btNav,.navbackground{position:fixed !important;width:100vw;height:100vh}.navbackground{top:0;left:0}.navbackground.warn{z-index:10 !important}.mini{min-height:3% !important;overflow:hidden;background:transparent;border-color:transparent}.r-hover{text-decoration-line:underline !important;outline-style:none !important}#tweet-text{font-size:23px !important;font-weight:400 !important;line-height:28px !important}/*# sourceMappingURL=twittertranslator.css.map */
+tetCSS = `#tetMenuButton>span{color:#fff !important}#tetSelector>select{background-color:transparent;border:transparent}#tetSelector>select:focus{box-shadow:none !important}.r-kemksi>div#tetName,.r-yfoy6g>div#tetName{color:#6e767d}.tetNitterHover{background-color:#ff6c60}.tetNitter{border-color:#ffaca0;box-shadow:#ffaca0 0px 0px 0px 1px}.tetBtn.nitter{color:#fff;border:transparent;background-color:#ff6c60}h1.tetNTextColor{color:#888889}.nitter{border:1px solid #ff6c60;background-color:#0f0f0f}.nitter #tetName{color:#ff6c60}input.tetNTextColor,select.tetNTextColor,div.tetNTextColor{color:#f8f8f2}svg.tetNTextColor{color:#888889}.tetNText{color:#ff6c60 !important}.tetNBackground{background-color:#161616}.Button--primary{border-color:#1da1f2;box-shadow:#1da1f2 0px 0px 0px 1px}.r-tetTD{border-radius:14px;background-color:#15202b}.r-tetTD #tetName{color:#8899a6}.prf-header>div>.tet.tet-td{color:#fff !important}.tet-td{color:#1da1f2}.tet-td#tetName{color:#1da1f2 !important}.tet-td.tet{color:#8899a6}.r-hoverTD{background-color:#005fd1}.r-9ilb82{color:#6e767d}.r-1kqtdi0{border-color:#2f3336}#apifield{border-color:#2f3336}#tetSelector.r-1kqtdi0{border-color:#2f3336}#tetSelector.r-1kqtdi0#tetName{color:#6e767d !important}#tetSelector.r-1kqtdi0.r-tetTD{border-color:#8899a6}.r-urgr8i{background-color:#1d9bf0}.r-p1n3y5{border-color:#1d9bf0}.tetBtn.tweetdeck{color:#1da1f2}.tetBtn.tweetdeck#tetName{color:#1da1f2 !important}.r-13gxpu9{color:#1d9bf0}.r-13gxpu9#tetName{color:#1d9bf0 !important}.r-1q3imqu{background-color:#1a91da}.r-1bih22f{box-shadow:#1da1f2 0px 0px 0px 1px}.r-1vkxrha{background-color:#ffd400}.r-v6khid{border-color:#ffd400}.r-61mi1v{color:#ffd400}.r-61mi1v#tetName{color:#ffd400 !important}.r-1kplyi6{background-color:#e69c1c}.r-cdj8wb{box-shadow:#ffad1f 0px 0px 0px 1px}.r-1dgebii{background-color:#f91880}.r-1iofnty{border-color:#f91880}.r-daml9f{color:#f91880}.r-daml9f#tetName{color:#f91880 !important}.r-1ucxkr8{background-color:#ca2055}.r-jd07pc{box-shadow:#e0245e 0px 0px 0px 1px}.r-168457u{background-color:#7856ff}.r-njt2r9{background-color:#865dca}.r-hy56xe{border-color:#7856ff}.r-11mmphe{box-shadow:#794bc4 0px 0px 0px 1px}.r-xfsgu1{color:#7856ff}.r-xfsgu1#tetName{color:#7856ff !important}.r-18z3xeu{background-color:#ff7a00}.r-1kplyi6{background-color:#dc541f}.r-1xl5njo{border-color:#ff7a00}.r-b8m25f{box-shadow:#f45d22 0px 0px 0px 1px}.r-1qkqhnw{color:#ff7a00}.r-1qkqhnw#tetName{color:#ff7a00 !important}.r-b5skir{background-color:#00ba7c}.r-zx61xx{background-color:#15ac59}.r-5ctkeg{border-color:#00ba7c}.r-1cqwhho{box-shadow:#17bf63 0px 0px 0px 1px}.r-nw8l94{color:#00ba7c}.r-nw8l94#tetName{color:#00ba7c !important}.r-yfoy6g{background-color:#15202b}.r-14lw9ot{background-color:#fff}.r-kemksi{background-color:#000}.r-18jsvk2{color:#0f1419}.r-demo{border-style:solid !important;border-radius:16px !important;border-width:1px !important}.demo-TW{border-color:#2f3336 !important}.demo-TD{border:1px solid #8899a6 !important}.demo-NT{border:1px solid #FF6C6091 !important}.r-jwli3a{color:#fff}.tetAvatarFrame,#tetAvatar{align-items:stretch;border:0px solid #000;box-sizing:border-box;display:flex;flex-basis:auto;flex-direction:column;flex-shrink:0;margin:0px;min-height:0px;min-width:0px;padding:0px;position:relative;z-index:0}.tet,.tet-info,#tweet-text{margin-top:1% !important}#tweet-text,.tet-demoframe{position:relative}.tet{font-family:"TwitterChirp",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;flex-wrap:wrap;line-height:16px;font-size:13px;font-weight:400;overflow-wrap:break-word;width:fit-content;height:min-content;display:flex}.tetAvatarFrame{flex-basis:auto;z-index:0;position:absolute;top:0px;right:0px;left:0px;bottom:0px;overflow:hidden}.tetAvatarFrame #tetAvatar{background-image:url("https://abs.twimg.com/favicons/twitter.ico");background-size:cover;background-repeat:no-repeat;background-position:center center;z-index:-1;background-color:rgba(0,0,0,0);height:100%;width:100%;position:absolute}.tet-main{padding:0px 32px 32px 32px !important;flex-shrink:1;-moz-box-flex:1;flex-grow:1;width:100%;margin-left:auto;margin-right:auto}.tet-options{display:inline-grid;grid-template-rows:1fr 1fr 1fr}.tet-header{min-width:0px;text-align:center;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;white-space:normal;display:grid;margin:32px 0px 12px 0px !important}.tet-header .css-901oao{line-height:28px;font-size:23px;font-weight:800}.tet-header .tet-info{line-height:20px;font-size:15px;font-weight:400;color:#6e767d}.tet-header span{color:inherit;font:inherit;white-space:inherit}.tetAlert{right:0px;left:0px;bottom:0px;position:fixed !important;z-index:10000 !important}.tetAlert h1.tetAlertTxt{line-height:24px;font-size:20px;font-weight:700;min-width:0px}.tetAlert h1.tetAlertTxt span{font-family:inherit}.tetAlert .tetAlertTxt>span,.tetAlert .tetAlertTxt{white-space:normal;text-align:center;overflow-wrap:break-word;font-family:"TwitterChirp",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}.tetAlert div.tetAlertTxt{font-weight:400;font-size:15px;line-height:20px;min-width:0px;width:100%}.tetAlert .tetConfirmation{width:20%;border-radius:16px;left:40%;top:40%;position:fixed}.tetAlert .tetAlertBtns{margin:2% 25% 2% 25%;white-space:nowrap;outline-style:none;transition-property:background-color,box-shadow;transition-duration:.2s;flex-grow:1;user-select:none;border-color:rgba(0,0,0,0);overflow:hidden;border-width:1px;border-style:solid;cursor:pointer}.tetAlert .tetAlertBtns:nth-child(2){margin:0px 25% 4% 25%}.tetAlert .tetAlertBtns>div{font-size:15px;font-weight:700;font-family:"TwitterChirp",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:20px;overflow-wrap:break-word;min-width:0px;align-items:center;justify-content:center;flex-grow:1;flex-direction:row;text-align:center;display:flex}.tetAlert .tetAlertBtns>div>span{font-size:15px;font-family:inherit;line-height:20px;overflow-wrap:break-word;min-width:0px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:inherit;font:inherit;border:0px solid #000;box-sizing:border-box;display:inline;margin:0px;padding:0px}.tetAlert .tetAlertBtns>div>span>span{border:0px solid #000;box-sizing:border-box;display:inline;margin:0px;padding:0px}#tetForm{max-width:80vw;max-height:90vh;min-width:600px !important;flex-shrink:1;border-radius:16px;overflow:hidden}#tetForm>div{border-radius:16px}#tetForm .tetBackground .tetTextColor{overflow-wrap:break-word}#tetForm .tetBackground .tetTextColor span{overflow-wrap:break-word}#tetForm .tet-containter{width:100%}#tetForm .tet-containter.tet-fg{margin-left:auto;margin-right:auto}.tet-head,#tetName>span,#tweet-text>span,#tetMenuButton>span{color:inherit;font:inherit;font-family:inherit;white-space:inherit;overflow-wrap:break-word}option[disabled=""],.rm,button:not(.mini)>#tetSVG,button.mini>span{display:none !important}.tetFreeze{overflow:hidden !important;overscroll-behavior-y:none !important}#tetMenuButton{z-index:10;width:8vw;height:auto;position:fixed;top:65%;left:0px}#tetMenuButton.tetTD{left:90% !important;top:0% !important}#tetMenuButton>svg{position:relative;max-width:100%;height:1.25em;fill:currentcolor;margin-right:12px;user-select:none;right:35% !important}#tetMenuButton,.tetAlertBtns,#tetReload,#tetReset{list-style:none;text-align:inherit;text-decoration:none;border-radius:15px;justify-content:center;display:flex !important;font-family:inherit;font-size:20px !important;font-weight:bold !important;padding:0px !important}button.tetBtn.mini{border:transparent !important;background:transparent !important}#tetMenuButton,.tetAlertBtns,#tetReload,#tetReset,#tet,.tet{cursor:pointer !important}.tet.tet-td{display:inherit}#tet{justify-items:center}#apifield{width:initial}#apifield,#tetName,#tetSelector>select{padding-left:2% !important}#tetReload,#tetReset{margin:2% 25% 0px 25%}#apifield,#tetSelector{border-radius:4px;border-width:1px;margin:2% 6% 0px 6%}.r-demo{outline-style:none;margin:0px 32px 0px 32px !important;padding:12px 0px 12px 0px !important;overflow:hidden;-webkit-box-direction:normal;-webkit-box-orient:horizontal;-moz-box-direction:normal;-moz-box-orient:horizontal;flex-direction:row !important;flex-shrink:1;-webkit-box-flex:1;-moz-box-flex:1;flex-grow:1}.r-demo .tet-av{width:100%;margin-left:12px !important;margin-right:12px !important;-webkit-box-flex:0;flex-grow:0;flex-shrink:1;flex-basis:48px;-webkit-box-align:center;-moz-box-align:center;align-items:center;height:48px;overflow:hidden;outline-style:none;display:block}.r-demo .tet-txt{flex-basis:0px;-webkit-box-flex:1;-moz-box-flex:1;flex-grow:1;-webkit-box-pack:center;-moz-box-pack:center;justify-content:center}.r-demo .tet-txt .txt-header{margin-bottom:2px;-moz-box-align:start;align-items:start;-moz-box-pack:justify;justify-content:space-between;-moz-box-direction:normal;-moz-box-orient:horizontal;flex-direction:row;max-width:100%}.r-demo .tet-txt .txt-header .tet-at{display:flex;margin-left:4px;color:#6e767d;font-weight:400;font-size:15px;line-height:20px;overflow-wrap:break-word;min-width:0px}#tetDemo{margin:4px 0px 0px 0px;line-height:16px;font-size:13px;flex-wrap:wrap;font-weight:400;min-width:0px;display:flex !important}.btNav{justify-content:center;flex-direction:row;top:0px}.btNav span{font-family:inherit}.btNav,.navbackground{position:fixed !important;width:100vw;height:100vh}.navbackground{top:0;left:0}.navbackground.warn{z-index:10 !important}.mini{min-height:3% !important;overflow:hidden;background:transparent;border-color:transparent}.r-hover{text-decoration-line:underline !important;outline-style:none !important}#tweet-text{font-family:"TwitterChirp",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:23px !important;font-weight:400 !important;line-height:28px !important}/*# sourceMappingURL=twittertranslator.css.map */
 `;
 
 //#region Config
@@ -123,8 +125,7 @@ tetInfo.name === "[Dev] Twitter External Translator" ? enableLogs = true : false
 const log = (message, alert) => {
   let t = performance.now(),
       head = "[TET]";
-  console.groupCollapsed(`${head} Time: ${t}ms ${alert === "error" ? "ERROR" : ""}`);
-  return enableLogs ? (console.log(message), console.groupEnd()) : false;
+  return enableLogs ? (console.groupCollapsed(`${head} Time: ${t}ms ${alert === "error" ? "ERROR" : ""}`), console.log(message), console.groupEnd()) : false;
 },
 
 /** Element | querySelector all */
@@ -229,897 +230,907 @@ defaultTheme = () => {
       twit = b === "background-color: #FFFFFF;" ? "#FFFFFF" : b === "background-color: #15202B;" ? "#15202B" : "#000000";
   return find.twitter ? twit : find.tweetdeck ? "tweetdeck" : find.nitter ? "nitter" : find.twitlonger ? "#FFFFFF" : "#000000";
 },
-      defaultDesc = "Pretend I'm a foreign language.";
+      defaultDesc = "Pretend I'm a foreign language.",
+      deeplfn = () => {
+  return this.api.version == "api-pro" ? 'api' : 'api-free';
+};
 
 let TETConfig = {},
     //#region Languages
-en = {
-  sel: `English (en)`,
-  tw: `Translate with`,
-  lg: `Language`,
-  tr: `Translator`,
-  ds: `Display`,
-  menu: `Menu`,
-  th: `Theme`,
-  df: `Default`,
-  di: `Dim`,
-  lo: `Lights out`,
-  col: `Color`,
-  cb: `Blue`,
-  cy: `Yellow`,
-  cr: `Red`,
-  cp: `Purple`,
-  co: `Orange`,
-  cg: `Green`,
-  t: `Text`,
-  i: `Icon`,
-  ti: `Text + Icon`,
-  res: `Restore to Defaults`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: `Full explanation found on GitHub.`,
-    display: `Prefer text only? How about just an icon instead?`,
-    color: `A rainbow of choices.`,
-    theme: `It's best to match your current theme!`
+languages = {
+  en: {
+    sel: `English (en)`,
+    tw: `Translate with`,
+    lg: `Language`,
+    tr: `Translator`,
+    ds: `Display`,
+    menu: `Menu`,
+    th: `Theme`,
+    df: `Default`,
+    di: `Dim`,
+    lo: `Lights out`,
+    col: `Color`,
+    cb: `Blue`,
+    cy: `Yellow`,
+    cr: `Red`,
+    cp: `Purple`,
+    co: `Orange`,
+    cg: `Green`,
+    t: `Text`,
+    i: `Icon`,
+    ti: `Text + Icon`,
+    res: `Restore to Defaults`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: `More info found on GitHub.`,
+      display: `Prefer text only? How about just an icon instead?`,
+      color: `A rainbow of choices.`,
+      theme: `It's best to match your current theme!`
+    },
+    quest: {
+      head: `Are you sure?`,
+      body: `Website will be reloaded.`,
+      yes: `Yes`,
+      no: `No`
+    },
+    fn: checkLng
   },
-  quest: {
-    head: `Are you sure?`,
-    body: `Website will be reloaded.`,
-    yes: `Yes`,
-    no: `No`
+  zh: {
+    sel: `中文 (zh)`,
+    tw: `翻译与`,
+    lg: `语种`,
+    tr: `译者`,
+    ds: `显示`,
+    ti: `文本+图标`,
+    menu: `菜单`,
+    th: `主题`,
+    df: `默认情况下`,
+    di: `凹陷`,
+    lo: `熄灯`,
+    col: `颜色`,
+    cb: `蓝色`,
+    cy: `黄色`,
+    cr: `红色`,
+    cp: `紫色`,
+    co: `橙色`,
+    cg: `绿色`,
+    t: `案文`,
+    i: `图标`,
+    res: `恢复`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `你确定吗？`,
+      body: `网站将被重新加载`,
+      yes: `是的`,
+      no: `不确定`
+    },
+    fn: checkLng
   },
-  fn: checkLng
-},
-    zh = {
-  sel: `中文 (zh)`,
-  tw: `翻译与`,
-  lg: `语种`,
-  tr: `译者`,
-  ds: `显示`,
-  ti: `文本+图标`,
-  menu: `菜单`,
-  th: `主题`,
-  df: `默认情况下`,
-  di: `凹陷`,
-  lo: `熄灯`,
-  col: `颜色`,
-  cb: `蓝色`,
-  cy: `黄色`,
-  cr: `红色`,
-  cp: `紫色`,
-  co: `橙色`,
-  cg: `绿色`,
-  t: `案文`,
-  i: `图标`,
-  res: `恢复`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
+  bg: {
+    sel: `Български (bg)`,
+    tw: `Преведете с`,
+    lg: `Език`,
+    tr: `Преводач`,
+    ds: `Показване на`,
+    ti: `Текст + икона`,
+    menu: `Меню`,
+    th: `Тема`,
+    df: `По подразбиране`,
+    di: `Dim`,
+    lo: `Изгасяне на осветлението`,
+    col: `Цвят`,
+    cb: `Синьо`,
+    cy: `Жълто`,
+    cr: `Червено`,
+    cp: `Лилаво`,
+    co: `Оранжево`,
+    cg: `Зелено`,
+    t: `Текст`,
+    i: `Икона`,
+    res: `Възстановявам`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Сигурни ли сте?`,
+      body: `Уебсайтът ще бъде презареден.`,
+      yes: `Да`,
+      no: `Не`
+    },
+    fn: checkLng
   },
-  quest: {
-    head: `你确定吗？`,
-    body: `网站将被重新加载`,
-    yes: `是的`,
-    no: `不确定`
+  cs: {
+    sel: `Česky (cs)`,
+    tw: `Přeložit pomocí`,
+    lg: `Jazyk`,
+    tr: `Překladatel`,
+    ds: `Zobrazit`,
+    ti: `Text + ikona`,
+    menu: `Nabídka`,
+    th: `Téma`,
+    df: `Výchozí`,
+    di: `Dim`,
+    lo: `Zhasnout světla`,
+    col: `Barva`,
+    cb: `Modrá`,
+    cy: `Žlutá`,
+    cr: `Červená`,
+    cp: `Fialová`,
+    co: `Oranžová`,
+    cg: `Zelená`,
+    t: `Text`,
+    i: `Ikona`,
+    res: `Obnovit`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Jste si jistý?`,
+      body: `Webové stránky budou znovu načteny.`,
+      yes: `Ano`,
+      no: `Ne`
+    },
+    fn: checkLng
   },
-  fn: checkLng
-},
-    bg = {
-  sel: `Български (bg)`,
-  tw: `Преведете с`,
-  lg: `Език`,
-  tr: `Преводач`,
-  ds: `Показване на`,
-  ti: `Текст + икона`,
-  menu: `Меню`,
-  th: `Тема`,
-  df: `По подразбиране`,
-  di: `Dim`,
-  lo: `Изгасяне на осветлението`,
-  col: `Цвят`,
-  cb: `Синьо`,
-  cy: `Жълто`,
-  cr: `Червено`,
-  cp: `Лилаво`,
-  co: `Оранжево`,
-  cg: `Зелено`,
-  t: `Текст`,
-  i: `Икона`,
-  res: `Възстановявам`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
+  da: {
+    sel: `Dansk (da)`,
+    tw: `Oversæt med`,
+    lg: `Sprog`,
+    tr: `Oversætter`,
+    ds: `Vis`,
+    ti: `Tekst + ikon`,
+    menu: `Menu`,
+    th: `Tema`,
+    df: `Standard`,
+    di: `Dim`,
+    lo: `Lyset slukkes`,
+    col: `Farve`,
+    cb: `Blå`,
+    cy: `Gul`,
+    cr: `Rød`,
+    cp: `Lilla`,
+    co: `Orange`,
+    cg: `Grøn`,
+    t: `Tekst`,
+    i: `Ikon`,
+    res: `Genskabe`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Er du sikker?`,
+      body: `Hjemmesiden vil blive genindlæst.`,
+      yes: `Ja`,
+      no: `Nej`
+    },
+    fn: checkLng
   },
-  quest: {
-    head: `Сигурни ли сте?`,
-    body: `Уебсайтът ще бъде презареден.`,
-    yes: `Да`,
-    no: `Не`
+  et: {
+    sel: `Eesti (et)`,
+    tw: `Tõlge koos`,
+    lg: `Keel`,
+    tr: `Tõlkija`,
+    ds: `Kuva`,
+    ti: `Tekst + ikoon`,
+    menu: `Menüü`,
+    th: `Teema`,
+    df: `Vaikimisi`,
+    di: `Dim`,
+    lo: `Valgus välja lülitatud`,
+    col: `Värv`,
+    cb: `Sinine`,
+    cy: `Kollane`,
+    cr: `Punane`,
+    cp: `Lilla`,
+    co: `Oranž`,
+    cg: `Roheline`,
+    t: `Tekst`,
+    i: `Ikoon`,
+    res: `Taastada`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Oled sa kindel?`,
+      body: `Veebileht laaditakse uuesti.`,
+      yes: `Jah`,
+      no: `Ei`
+    },
+    fn: checkLng
   },
-  fn: checkLng
-},
-    cs = {
-  sel: `Česky (cs)`,
-  tw: `Přeložit pomocí`,
-  lg: `Jazyk`,
-  tr: `Překladatel`,
-  ds: `Zobrazit`,
-  ti: `Text + ikona`,
-  menu: `Nabídka`,
-  th: `Téma`,
-  df: `Výchozí`,
-  di: `Dim`,
-  lo: `Zhasnout světla`,
-  col: `Barva`,
-  cb: `Modrá`,
-  cy: `Žlutá`,
-  cr: `Červená`,
-  cp: `Fialová`,
-  co: `Oranžová`,
-  cg: `Zelená`,
-  t: `Text`,
-  i: `Ikona`,
-  res: `Obnovit`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
+  fi: {
+    sel: `Suomalainen (fi)`,
+    tw: `Käännä kanssa`,
+    lg: `Kieli`,
+    tr: `Kääntäjä`,
+    ds: `Näytä`,
+    ti: `Teksti + kuvake`,
+    menu: `Valikko`,
+    th: `Teema`,
+    df: `Oletus`,
+    di: `Dim`,
+    lo: `Valot pois päältä`,
+    col: `Väri`,
+    cb: `Sininen`,
+    cy: `Keltainen`,
+    cr: `Punainen`,
+    cp: `Violetti`,
+    co: `Oranssi`,
+    cg: `Vihreä`,
+    t: `Teksti`,
+    i: `Kuvake`,
+    res: `Palauta`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Oletko varma?`,
+      body: `Sivusto ladataan uudelleen.`,
+      yes: `Kyllä`,
+      no: `Ei`
+    },
+    fn: checkLng
   },
-  quest: {
-    head: `Jste si jistý?`,
-    body: `Webové stránky budou znovu načteny.`,
-    yes: `Ano`,
-    no: `Ne`
+  el: {
+    sel: `Ελληνική (el)`,
+    tw: `Μεταφράστε με`,
+    lg: `Γλώσσα`,
+    tr: `Μεταφραστής`,
+    ds: `Εμφάνιση`,
+    ti: `Κείμενο + εικονίδιο`,
+    menu: `Μενού`,
+    th: `Θέμα`,
+    df: `Προεπιλογή`,
+    di: `Dim`,
+    lo: `Σβήνει τα φώτα`,
+    col: `Χρώμα`,
+    cb: `Μπλε`,
+    cy: `Κίτρινο`,
+    cr: `Κόκκινο`,
+    cp: `Μωβ`,
+    co: `Πορτοκαλί`,
+    cg: `Πράσινο`,
+    t: `Κείμενο`,
+    i: `Εικονίδιο`,
+    res: `Επαναφορά`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Είσαι σίγουρος;`,
+      body: `Η ιστοσελίδα θα επαναφορτωθεί.`,
+      yes: `Ναι`,
+      no: `Όχι`
+    },
+    fn: checkLng
   },
-  fn: checkLng
-},
-    da = {
-  sel: `Dansk (da)`,
-  tw: `Oversæt med`,
-  lg: `Sprog`,
-  tr: `Oversætter`,
-  ds: `Vis`,
-  ti: `Tekst + ikon`,
-  menu: `Menu`,
-  th: `Tema`,
-  df: `Standard`,
-  di: `Dim`,
-  lo: `Lyset slukkes`,
-  col: `Farve`,
-  cb: `Blå`,
-  cy: `Gul`,
-  cr: `Rød`,
-  cp: `Lilla`,
-  co: `Orange`,
-  cg: `Grøn`,
-  t: `Tekst`,
-  i: `Ikon`,
-  res: `Genskabe`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
+  hu: {
+    sel: `Magyar (hu)`,
+    tw: `Fordítson a`,
+    lg: `Nyelv`,
+    tr: `Fordító`,
+    ds: `Megjelenítés`,
+    ti: `Szöveg + ikon`,
+    menu: `Menü`,
+    th: `Téma`,
+    df: `Alapértelmezett`,
+    di: `Dim`,
+    lo: `Fények kikapcsolva`,
+    col: `Szín`,
+    cb: `Kék`,
+    cy: `Sárga`,
+    cr: `Piros`,
+    cp: `Lila`,
+    co: `Narancs`,
+    cg: `Zöld`,
+    t: `Szöveg`,
+    i: `Ikon`,
+    res: `Visszaállítása`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Biztos vagy benne?`,
+      body: `A weboldal újratöltődik.`,
+      yes: `Igen`,
+      no: `Nem`
+    },
+    fn: checkLng
   },
-  quest: {
-    head: `Er du sikker?`,
-    body: `Hjemmesiden vil blive genindlæst.`,
-    yes: `Ja`,
-    no: `Nej`
+  lv: {
+    sel: `Latviešu (lv)`,
+    tw: `Tulkot ar`,
+    lg: `Valoda`,
+    tr: `Tulkotājs`,
+    ds: `Displejs`,
+    ti: `Teksts + ikona`,
+    menu: `Izvēlne`,
+    th: `Tēma`,
+    df: `Noklusējuma`,
+    di: `Dim`,
+    lo: `Izslēgt gaismu`,
+    col: `Krāsa`,
+    cb: `Zils`,
+    cy: `Dzeltens`,
+    cr: `Sarkans`,
+    cp: `Violeta`,
+    co: `Oranža`,
+    cg: `Zaļš`,
+    t: `Teksts`,
+    i: `Ikona`,
+    res: `Atjaunot`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Vai esat pārliecināts?`,
+      body: `Tīmekļa vietne tiks ielādēta no jauna.`,
+      yes: `Jā`,
+      no: `Nē`
+    },
+    fn: checkLng
   },
-  fn: checkLng
-},
-    et = {
-  sel: `Eesti (et)`,
-  tw: `Tõlge koos`,
-  lg: `Keel`,
-  tr: `Tõlkija`,
-  ds: `Kuva`,
-  ti: `Tekst + ikoon`,
-  menu: `Menüü`,
-  th: `Teema`,
-  df: `Vaikimisi`,
-  di: `Dim`,
-  lo: `Valgus välja lülitatud`,
-  col: `Värv`,
-  cb: `Sinine`,
-  cy: `Kollane`,
-  cr: `Punane`,
-  cp: `Lilla`,
-  co: `Oranž`,
-  cg: `Roheline`,
-  t: `Tekst`,
-  i: `Ikoon`,
-  res: `Taastada`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
+  lt: {
+    sel: `Lietuvių kalba (lt)`,
+    tw: `Išversti su`,
+    lg: `Kalba`,
+    tr: `Vertėjas`,
+    ds: `Rodyti`,
+    ti: `Tekstas + piktograma`,
+    menu: `Meniu`,
+    th: `Tema`,
+    df: `Numatytoji`,
+    di: `Dim`,
+    lo: `Išjungti šviesą`,
+    col: `Spalva`,
+    cb: `Mėlyna`,
+    cy: `Geltona`,
+    cr: `Raudona`,
+    cp: `Violetinė`,
+    co: `Oranžinė`,
+    cg: `Žalia`,
+    t: `Tekstas`,
+    i: `Ikona`,
+    res: `Atkurti`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Ar tikrai?`,
+      body: `Svetainė bus iš naujo įkelta.`,
+      yes: `Taip`,
+      no: `Ne`
+    },
+    fn: checkLng
   },
-  quest: {
-    head: `Oled sa kindel?`,
-    body: `Veebileht laaditakse uuesti.`,
-    yes: `Jah`,
-    no: `Ei`
+  ro: {
+    sel: `Românesc (ro)`,
+    tw: `Tradu cu`,
+    lg: `Limba`,
+    tr: `Traducător`,
+    ds: `Afișați`,
+    ti: `Text + Icoană`,
+    menu: `Meniu`,
+    th: `Tema`,
+    df: `Implicit`,
+    di: `Dim`,
+    lo: `Stinge lumina`,
+    col: `Culoare`,
+    cb: `Albastru`,
+    cy: `Galben`,
+    cr: `Roșu`,
+    cp: `Violet`,
+    co: `Portocaliu`,
+    cg: `Verde`,
+    t: `Text`,
+    i: `Icoană`,
+    res: `Restaurați`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Ești sigur?`,
+      body: `Site-ul va fi reîncărcat.`,
+      yes: `Da`,
+      no: `Nu`
+    },
+    fn: checkLng
   },
-  fn: checkLng
-},
-    fi = {
-  sel: `Suomalainen (fi)`,
-  tw: `Käännä kanssa`,
-  lg: `Kieli`,
-  tr: `Kääntäjä`,
-  ds: `Näytä`,
-  ti: `Teksti + kuvake`,
-  menu: `Valikko`,
-  th: `Teema`,
-  df: `Oletus`,
-  di: `Dim`,
-  lo: `Valot pois päältä`,
-  col: `Väri`,
-  cb: `Sininen`,
-  cy: `Keltainen`,
-  cr: `Punainen`,
-  cp: `Violetti`,
-  co: `Oranssi`,
-  cg: `Vihreä`,
-  t: `Teksti`,
-  i: `Kuvake`,
-  res: `Palauta`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
+  sk: {
+    sel: `Slovenská (sk)`,
+    tw: `Preložiť s`,
+    lg: `Jazyk`,
+    tr: `Prekladateľ`,
+    ds: `Zobraziť`,
+    ti: `Text + ikona`,
+    menu: `Ponuka`,
+    th: `Téma`,
+    df: `Predvolené nastavenie`,
+    di: `Dim`,
+    lo: `Zhasnuté svetlá`,
+    col: `Farba`,
+    cb: `Modrá`,
+    cy: `Žltá`,
+    cr: `Červená`,
+    cp: `Fialová`,
+    co: `Oranžová`,
+    cg: `Zelená`,
+    t: `Text`,
+    i: `Ikona`,
+    res: `Obnovenie`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Ste si istý?`,
+      body: `Webová stránka bude znovu načítaná.`,
+      yes: `Áno`,
+      no: `Nie`
+    },
+    fn: checkLng
   },
-  quest: {
-    head: `Oletko varma?`,
-    body: `Sivusto ladataan uudelleen.`,
-    yes: `Kyllä`,
-    no: `Ei`
+  sl: {
+    sel: `Slovenski (sl)`,
+    tw: `Prevedi z`,
+    lg: `Jezik`,
+    tr: `Prevajalec`,
+    ds: `Prikaži`,
+    ti: `Besedilo + ikona`,
+    menu: `Meni`,
+    th: `Tema`,
+    df: `Privzeto`,
+    di: `Dim`,
+    lo: `Ugasne luči`,
+    col: `Barva`,
+    cb: `Modra`,
+    cy: `Rumena`,
+    cr: `Rdeča`,
+    cp: `Vijolična`,
+    co: `Oranžna`,
+    cg: `Zelena`,
+    t: `Besedilo`,
+    i: `Ikona`,
+    res: `Obnovitev`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Ste prepričani?`,
+      body: `Spletna stran bo ponovno naložena.`,
+      yes: `Da`,
+      no: `Ne`
+    },
+    fn: checkLng
   },
-  fn: checkLng
-},
-    el = {
-  sel: `Ελληνική (el)`,
-  tw: `Μεταφράστε με`,
-  lg: `Γλώσσα`,
-  tr: `Μεταφραστής`,
-  ds: `Εμφάνιση`,
-  ti: `Κείμενο + εικονίδιο`,
-  menu: `Μενού`,
-  th: `Θέμα`,
-  df: `Προεπιλογή`,
-  di: `Dim`,
-  lo: `Σβήνει τα φώτα`,
-  col: `Χρώμα`,
-  cb: `Μπλε`,
-  cy: `Κίτρινο`,
-  cr: `Κόκκινο`,
-  cp: `Μωβ`,
-  co: `Πορτοκαλί`,
-  cg: `Πράσινο`,
-  t: `Κείμενο`,
-  i: `Εικονίδιο`,
-  res: `Επαναφορά`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
+  sv: {
+    sel: `Svenska (sv)`,
+    tw: `Översätt med`,
+    lg: `Språk`,
+    tr: `Översättare`,
+    ds: `Visa`,
+    ti: `Text + ikon`,
+    menu: `Meny`,
+    th: `Tema`,
+    df: `Standard`,
+    di: `Dim`,
+    lo: `Ljuset släcks`,
+    col: `Färg`,
+    cb: `Blå`,
+    cy: `Gul`,
+    cr: `Röd`,
+    cp: `Lila`,
+    co: `Orange`,
+    cg: `Grön`,
+    t: `Text`,
+    i: `Ikon`,
+    res: `Återställ`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Är du säker?`,
+      body: `Webbplatsen kommer att laddas om.`,
+      yes: `Ja`,
+      no: `Nej`
+    },
+    fn: checkLng
   },
-  quest: {
-    head: `Είσαι σίγουρος;`,
-    body: `Η ιστοσελίδα θα επαναφορτωθεί.`,
-    yes: `Ναι`,
-    no: `Όχι`
+  nl: {
+    sel: `Nederlands (nl)`,
+    tw: `Vertaal met`,
+    lg: `Taal`,
+    tr: `Vertaler`,
+    ds: `Weergave`,
+    ti: `Tekst + Pictogram`,
+    menu: `Menu`,
+    th: `Thema`,
+    df: `Standaard`,
+    di: `Dimmen`,
+    lo: `Licht uit`,
+    col: `Kleur`,
+    cb: `Blauw`,
+    cy: `Geel`,
+    cr: `Rood`,
+    cp: `Paars`,
+    co: `Oranje`,
+    cg: `Groen`,
+    t: `Tekst`,
+    i: `Icoon`,
+    res: `Herstel`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Ben je zeker?`,
+      body: `De website wordt opnieuw geladen.`,
+      yes: `Ja`,
+      no: `Nee`
+    },
+    fn: checkLng
   },
-  fn: checkLng
-},
-    hu = {
-  sel: `Magyar (hu)`,
-  tw: `Fordítson a`,
-  lg: `Nyelv`,
-  tr: `Fordító`,
-  ds: `Megjelenítés`,
-  ti: `Szöveg + ikon`,
-  menu: `Menü`,
-  th: `Téma`,
-  df: `Alapértelmezett`,
-  di: `Dim`,
-  lo: `Fények kikapcsolva`,
-  col: `Szín`,
-  cb: `Kék`,
-  cy: `Sárga`,
-  cr: `Piros`,
-  cp: `Lila`,
-  co: `Narancs`,
-  cg: `Zöld`,
-  t: `Szöveg`,
-  i: `Ikon`,
-  res: `Visszaállítása`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
+  fr: {
+    sel: `Français (fr)`,
+    tw: `Traduire avec`,
+    lg: `Langue`,
+    tr: `Traducteur`,
+    ds: `Afficher`,
+    ti: `Texte + Icône`,
+    menu: `Menu`,
+    th: `Thème`,
+    df: `Défaut`,
+    di: `Dim`,
+    lo: `Extinction des lumières`,
+    col: `Couleur`,
+    cb: `Bleu`,
+    cy: `Jaune`,
+    cr: `Rouge`,
+    cp: `Violet`,
+    co: `Orange`,
+    cg: `Vert`,
+    t: `Texte`,
+    i: `Icône`,
+    res: `Restaurer`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Vous êtes sûr ?`,
+      body: `Le site web va être rechargé.`,
+      yes: `Oui`,
+      no: `Non`
+    },
+    fn: checkLng
   },
-  quest: {
-    head: `Biztos vagy benne?`,
-    body: `A weboldal újratöltődik.`,
-    yes: `Igen`,
-    no: `Nem`
+  de: {
+    sel: `Deutsch (de)`,
+    tw: `Übersetzen mit`,
+    lg: `Sprache`,
+    tr: `Übersetzer`,
+    ds: `Anzeige`,
+    ti: `Text + Symbol`,
+    menu: `Menü`,
+    th: `Thema`,
+    df: `Standard`,
+    di: `Dimmen`,
+    lo: `Licht aus`,
+    col: `Farbe`,
+    cb: `Blau`,
+    cy: `Gelb`,
+    cr: `Rot`,
+    cp: `Lila`,
+    co: `Orange`,
+    cg: `Grün`,
+    t: `Text`,
+    i: `Icon`,
+    res: `Wiederherstellen`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Sind Sie sicher?`,
+      body: `Die Website wird neu geladen.`,
+      yes: `Ja`,
+      no: `Nein`
+    },
+    fn: checkLng
   },
-  fn: checkLng
-},
-    lv = {
-  sel: `Latviešu (lv)`,
-  tw: `Tulkot ar`,
-  lg: `Valoda`,
-  tr: `Tulkotājs`,
-  ds: `Displejs`,
-  ti: `Teksts + ikona`,
-  menu: `Izvēlne`,
-  th: `Tēma`,
-  df: `Noklusējuma`,
-  di: `Dim`,
-  lo: `Izslēgt gaismu`,
-  col: `Krāsa`,
-  cb: `Zils`,
-  cy: `Dzeltens`,
-  cr: `Sarkans`,
-  cp: `Violeta`,
-  co: `Oranža`,
-  cg: `Zaļš`,
-  t: `Teksts`,
-  i: `Ikona`,
-  res: `Atjaunot`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
+  it: {
+    sel: `Italiano (it)`,
+    tw: `Tradurre con`,
+    lg: `Lingua`,
+    tr: `Traduttore`,
+    ds: `Visualizza`,
+    ti: `Testo + icona`,
+    menu: `Menu`,
+    th: `Tema`,
+    df: `Default`,
+    di: `Dim`,
+    lo: `Luci spente`,
+    col: `Colore`,
+    cb: `Blu`,
+    cy: `Giallo`,
+    cr: `Rosso`,
+    cp: `Viola`,
+    co: `Arancione`,
+    cg: `Verde`,
+    t: `Testo`,
+    i: `Icona`,
+    res: `Ripristinare`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Sei sicuro?`,
+      body: `Il sito sarà ricaricato.`,
+      yes: `Sì`,
+      no: `No`
+    },
+    fn: checkLng
   },
-  quest: {
-    head: `Vai esat pārliecināts?`,
-    body: `Tīmekļa vietne tiks ielādēta no jauna.`,
-    yes: `Jā`,
-    no: `Nē`
+  ja: {
+    sel: `日本語 (ja)`,
+    tw: `で翻訳する`,
+    lg: `言語`,
+    tr: `翻訳者`,
+    ds: `ディスプレイ`,
+    ti: `テキスト＋アイコン`,
+    menu: `メニュー`,
+    th: `テーマ`,
+    df: `デフォルト`,
+    di: `暗い`,
+    lo: `消灯`,
+    col: `カラー`,
+    cb: `青`,
+    cy: `黄`,
+    cr: `赤`,
+    cp: `紫`,
+    co: `オレンジ`,
+    cg: `グリーン`,
+    t: `テキスト`,
+    i: `アイコン`,
+    res: `リストア`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `本当にいいの？`,
+      body: `ウェブサイトが再読み込みされます。`,
+      yes: `はい`,
+      no: `いいえ`
+    },
+    fn: checkLng
   },
-  fn: checkLng
-},
-    lt = {
-  sel: `Lietuvių kalba (lt)`,
-  tw: `Išversti su`,
-  lg: `Kalba`,
-  tr: `Vertėjas`,
-  ds: `Rodyti`,
-  ti: `Tekstas + piktograma`,
-  menu: `Meniu`,
-  th: `Tema`,
-  df: `Numatytoji`,
-  di: `Dim`,
-  lo: `Išjungti šviesą`,
-  col: `Spalva`,
-  cb: `Mėlyna`,
-  cy: `Geltona`,
-  cr: `Raudona`,
-  cp: `Violetinė`,
-  co: `Oranžinė`,
-  cg: `Žalia`,
-  t: `Tekstas`,
-  i: `Ikona`,
-  res: `Atkurti`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
+  pl: {
+    sel: `Polski (pl)`,
+    tw: `Tłumaczenie za pomocą`,
+    lg: `Język`,
+    tr: `Tłumacz`,
+    ds: `Wyświetlacz`,
+    ti: `Tekst + Ikona`,
+    menu: `Menu`,
+    th: `Motyw`,
+    df: `Domyślnie`,
+    di: `Ściemniaj`,
+    lo: `Nie świeci się`,
+    col: `Kolor`,
+    cb: `Niebieski`,
+    cy: `Żółty`,
+    cr: `Czerwony`,
+    cp: `Purpurowy`,
+    co: `Pomarańczowy`,
+    cg: `Zielony`,
+    t: `Tekst`,
+    i: `Ikona`,
+    res: `Przywróć`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Czy jesteś pewien?`,
+      body: `Strona zostanie przeładowana.`,
+      yes: `Tak`,
+      no: `Nie`
+    },
+    fn: checkLng
   },
-  quest: {
-    head: `Ar tikrai?`,
-    body: `Svetainė bus iš naujo įkelta.`,
-    yes: `Taip`,
-    no: `Ne`
+  pt: {
+    sel: `Português (pt)`,
+    tw: `Traduzir com`,
+    lg: `Idioma`,
+    tr: `Tradutora`,
+    ds: `Mostrar`,
+    ti: `Texto + Ícone`,
+    menu: `Menu`,
+    th: `Tema`,
+    df: `Por defeito`,
+    di: `Dim`,
+    lo: `Luzes apagadas`,
+    col: `Cor`,
+    cb: `Azul`,
+    cy: `Amarelo`,
+    cr: `Vermelho`,
+    cp: `Púrpura`,
+    co: `Laranja`,
+    cg: `Verde`,
+    t: `Texto`,
+    i: `Ícone`,
+    res: `Restaurar`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Tem a certeza?`,
+      body: `O website será carregado de novo.`,
+      yes: `Sim`,
+      no: `Não`
+    },
+    fn: checkLng
   },
-  fn: checkLng
-},
-    ro = {
-  sel: `Românesc (ro)`,
-  tw: `Tradu cu`,
-  lg: `Limba`,
-  tr: `Traducător`,
-  ds: `Afișați`,
-  ti: `Text + Icoană`,
-  menu: `Meniu`,
-  th: `Tema`,
-  df: `Implicit`,
-  di: `Dim`,
-  lo: `Stinge lumina`,
-  col: `Culoare`,
-  cb: `Albastru`,
-  cy: `Galben`,
-  cr: `Roșu`,
-  cp: `Violet`,
-  co: `Portocaliu`,
-  cg: `Verde`,
-  t: `Text`,
-  i: `Icoană`,
-  res: `Restaurați`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
+  ru: {
+    sel: `Russisch (ru)`,
+    tw: `Перевод с`,
+    lg: `Язык`,
+    tr: `Переводчик`,
+    ds: `Показать`,
+    ti: `Текст + иконка`,
+    menu: `Меню`,
+    th: `Тема`,
+    df: `По умолчанию`,
+    di: `Приглушить`,
+    lo: `Выключить свет`,
+    col: `Цвет`,
+    cb: `Синий`,
+    cy: `Желтый`,
+    cr: `Красный`,
+    cp: `Фиолетовый`,
+    co: `Оранжевый`,
+    cg: `Зеленый`,
+    t: `Текст`,
+    i: `иконка`,
+    res: `Восстановить`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `Вы уверены?`,
+      body: `Сайт будет перезагружен.`,
+      yes: `Да`,
+      no: `Нет`
+    },
+    fn: checkLng
   },
-  quest: {
-    head: `Ești sigur?`,
-    body: `Site-ul va fi reîncărcat.`,
-    yes: `Da`,
-    no: `Nu`
-  },
-  fn: checkLng
-},
-    sk = {
-  sel: `Slovenská (sk)`,
-  tw: `Preložiť s`,
-  lg: `Jazyk`,
-  tr: `Prekladateľ`,
-  ds: `Zobraziť`,
-  ti: `Text + ikona`,
-  menu: `Ponuka`,
-  th: `Téma`,
-  df: `Predvolené nastavenie`,
-  di: `Dim`,
-  lo: `Zhasnuté svetlá`,
-  col: `Farba`,
-  cb: `Modrá`,
-  cy: `Žltá`,
-  cr: `Červená`,
-  cp: `Fialová`,
-  co: `Oranžová`,
-  cg: `Zelená`,
-  t: `Text`,
-  i: `Ikona`,
-  res: `Obnovenie`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
-  },
-  quest: {
-    head: `Ste si istý?`,
-    body: `Webová stránka bude znovu načítaná.`,
-    yes: `Áno`,
-    no: `Nie`
-  },
-  fn: checkLng
-},
-    sl = {
-  sel: `Slovenski (sl)`,
-  tw: `Prevedi z`,
-  lg: `Jezik`,
-  tr: `Prevajalec`,
-  ds: `Prikaži`,
-  ti: `Besedilo + ikona`,
-  menu: `Meni`,
-  th: `Tema`,
-  df: `Privzeto`,
-  di: `Dim`,
-  lo: `Ugasne luči`,
-  col: `Barva`,
-  cb: `Modra`,
-  cy: `Rumena`,
-  cr: `Rdeča`,
-  cp: `Vijolična`,
-  co: `Oranžna`,
-  cg: `Zelena`,
-  t: `Besedilo`,
-  i: `Ikona`,
-  res: `Obnovitev`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
-  },
-  quest: {
-    head: `Ste prepričani?`,
-    body: `Spletna stran bo ponovno naložena.`,
-    yes: `Da`,
-    no: `Ne`
-  },
-  fn: checkLng
-},
-    sv = {
-  sel: `Svenska (sv)`,
-  tw: `Översätt med`,
-  lg: `Språk`,
-  tr: `Översättare`,
-  ds: `Visa`,
-  ti: `Text + ikon`,
-  menu: `Meny`,
-  th: `Tema`,
-  df: `Standard`,
-  di: `Dim`,
-  lo: `Ljuset släcks`,
-  col: `Färg`,
-  cb: `Blå`,
-  cy: `Gul`,
-  cr: `Röd`,
-  cp: `Lila`,
-  co: `Orange`,
-  cg: `Grön`,
-  t: `Text`,
-  i: `Ikon`,
-  res: `Återställ`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
-  },
-  quest: {
-    head: `Är du säker?`,
-    body: `Webbplatsen kommer att laddas om.`,
-    yes: `Ja`,
-    no: `Nej`
-  },
-  fn: checkLng
-},
-    nl = {
-  sel: `Nederlands (nl)`,
-  tw: `Vertaal met`,
-  lg: `Taal`,
-  tr: `Vertaler`,
-  ds: `Weergave`,
-  ti: `Tekst + Pictogram`,
-  menu: `Menu`,
-  th: `Thema`,
-  df: `Standaard`,
-  di: `Dimmen`,
-  lo: `Licht uit`,
-  col: `Kleur`,
-  cb: `Blauw`,
-  cy: `Geel`,
-  cr: `Rood`,
-  cp: `Paars`,
-  co: `Oranje`,
-  cg: `Groen`,
-  t: `Tekst`,
-  i: `Icoon`,
-  res: `Herstel`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
-  },
-  quest: {
-    head: `Ben je zeker?`,
-    body: `De website wordt opnieuw geladen.`,
-    yes: `Ja`,
-    no: `Nee`
-  },
-  fn: checkLng
-},
-    fr = {
-  sel: `Français (fr)`,
-  tw: `Traduire avec`,
-  lg: `Langue`,
-  tr: `Traducteur`,
-  ds: `Afficher`,
-  ti: `Texte + Icône`,
-  menu: `Menu`,
-  th: `Thème`,
-  df: `Défaut`,
-  di: `Dim`,
-  lo: `Extinction des lumières`,
-  col: `Couleur`,
-  cb: `Bleu`,
-  cy: `Jaune`,
-  cr: `Rouge`,
-  cp: `Violet`,
-  co: `Orange`,
-  cg: `Vert`,
-  t: `Texte`,
-  i: `Icône`,
-  res: `Restaurer`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
-  },
-  quest: {
-    head: `Vous êtes sûr ?`,
-    body: `Le site web va être rechargé.`,
-    yes: `Oui`,
-    no: `Non`
-  },
-  fn: checkLng
-},
-    de = {
-  sel: `Deutsch (de)`,
-  tw: `Übersetzen mit`,
-  lg: `Sprache`,
-  tr: `Übersetzer`,
-  ds: `Anzeige`,
-  ti: `Text + Symbol`,
-  menu: `Menü`,
-  th: `Thema`,
-  df: `Standard`,
-  di: `Dimmen`,
-  lo: `Licht aus`,
-  col: `Farbe`,
-  cb: `Blau`,
-  cy: `Gelb`,
-  cr: `Rot`,
-  cp: `Lila`,
-  co: `Orange`,
-  cg: `Grün`,
-  t: `Text`,
-  i: `Icon`,
-  res: `Wiederherstellen`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
-  },
-  quest: {
-    head: `Sind Sie sicher?`,
-    body: `Die Website wird neu geladen.`,
-    yes: `Ja`,
-    no: `Nein`
-  },
-  fn: checkLng
-},
-    it = {
-  sel: `Italiano (it)`,
-  tw: `Tradurre con`,
-  lg: `Lingua`,
-  tr: `Traduttore`,
-  ds: `Visualizza`,
-  ti: `Testo + icona`,
-  menu: `Menu`,
-  th: `Tema`,
-  df: `Default`,
-  di: `Dim`,
-  lo: `Luci spente`,
-  col: `Colore`,
-  cb: `Blu`,
-  cy: `Giallo`,
-  cr: `Rosso`,
-  cp: `Viola`,
-  co: `Arancione`,
-  cg: `Verde`,
-  t: `Testo`,
-  i: `Icona`,
-  res: `Ripristinare`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
-  },
-  quest: {
-    head: `Sei sicuro?`,
-    body: `Il sito sarà ricaricato.`,
-    yes: `Sì`,
-    no: `No`
-  },
-  fn: checkLng
-},
-    ja = {
-  sel: `日本語 (ja)`,
-  tw: `で翻訳する`,
-  lg: `言語`,
-  tr: `翻訳者`,
-  ds: `ディスプレイ`,
-  ti: `テキスト＋アイコン`,
-  menu: `メニュー`,
-  th: `テーマ`,
-  df: `デフォルト`,
-  di: `暗い`,
-  lo: `消灯`,
-  col: `カラー`,
-  cb: `青`,
-  cy: `黄`,
-  cr: `赤`,
-  cp: `紫`,
-  co: `オレンジ`,
-  cg: `グリーン`,
-  t: `テキスト`,
-  i: `アイコン`,
-  res: `リストア`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
-  },
-  quest: {
-    head: `本当にいいの？`,
-    body: `ウェブサイトが再読み込みされます。`,
-    yes: `はい`,
-    no: `いいえ`
-  },
-  fn: checkLng
-},
-    pl = {
-  sel: `Polski (pl)`,
-  tw: `Tłumaczenie za pomocą`,
-  lg: `Język`,
-  tr: `Tłumacz`,
-  ds: `Wyświetlacz`,
-  ti: `Tekst + Ikona`,
-  menu: `Menu`,
-  th: `Motyw`,
-  df: `Domyślnie`,
-  di: `Ściemniaj`,
-  lo: `Nie świeci się`,
-  col: `Kolor`,
-  cb: `Niebieski`,
-  cy: `Żółty`,
-  cr: `Czerwony`,
-  cp: `Purpurowy`,
-  co: `Pomarańczowy`,
-  cg: `Zielony`,
-  t: `Tekst`,
-  i: `Ikona`,
-  res: `Przywróć`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
-  },
-  quest: {
-    head: `Czy jesteś pewien?`,
-    body: `Strona zostanie przeładowana.`,
-    yes: `Tak`,
-    no: `Nie`
-  },
-  fn: checkLng
-},
-    pt = {
-  sel: `Português (pt)`,
-  tw: `Traduzir com`,
-  lg: `Idioma`,
-  tr: `Tradutora`,
-  ds: `Mostrar`,
-  ti: `Texto + Ícone`,
-  menu: `Menu`,
-  th: `Tema`,
-  df: `Por defeito`,
-  di: `Dim`,
-  lo: `Luzes apagadas`,
-  col: `Cor`,
-  cb: `Azul`,
-  cy: `Amarelo`,
-  cr: `Vermelho`,
-  cp: `Púrpura`,
-  co: `Laranja`,
-  cg: `Verde`,
-  t: `Texto`,
-  i: `Ícone`,
-  res: `Restaurar`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
-  },
-  quest: {
-    head: `Tem a certeza?`,
-    body: `O website será carregado de novo.`,
-    yes: `Sim`,
-    no: `Não`
-  },
-  fn: checkLng
-},
-    ru = {
-  sel: `Russisch (ru)`,
-  tw: `Перевод с`,
-  lg: `Язык`,
-  tr: `Переводчик`,
-  ds: `Показать`,
-  ti: `Текст + иконка`,
-  menu: `Меню`,
-  th: `Тема`,
-  df: `По умолчанию`,
-  di: `Приглушить`,
-  lo: `Выключить свет`,
-  col: `Цвет`,
-  cb: `Синий`,
-  cy: `Желтый`,
-  cr: `Красный`,
-  cp: `Фиолетовый`,
-  co: `Оранжевый`,
-  cg: `Зеленый`,
-  t: `Текст`,
-  i: `иконка`,
-  res: `Восстановить`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
-  },
-  quest: {
-    head: `Вы уверены?`,
-    body: `Сайт будет перезагружен.`,
-    yes: `Да`,
-    no: `Нет`
-  },
-  fn: checkLng
-},
-    es = {
-  sel: `Español (es)`,
-  tw: `Traducir con`,
-  lg: `Idioma`,
-  tr: `Traductor`,
-  ds: `Mostrar`,
-  ti: `Texto + Icono`,
-  menu: `Menú`,
-  th: `Tema`,
-  df: `Por defecto`,
-  di: `Atenuar`,
-  lo: `Luces apagadas`,
-  col: `Colores`,
-  cb: `Azul`,
-  cy: `Amarillo`,
-  cr: `Rojo`,
-  cp: `Púrpura`,
-  co: `Naranja`,
-  cg: `Verde`,
-  t: `Texto`,
-  i: `Icono`,
-  res: `Restaurar`,
-  desc: {
-    language: `Site Language: ${defaultLang}`,
-    translate: ` [WIP] Translate`,
-    display: ` [WIP] Display`,
-    color: ` [WIP] Color`,
-    theme: ` [WIP] Theme`
-  },
-  quest: {
-    head: `¿Está seguro?`,
-    body: `El sitio web será recargado.`,
-    yes: `Sí`,
-    no: `No`
-  },
-  fn: checkLng
+  es: {
+    sel: `Español (es)`,
+    tw: `Traducir con`,
+    lg: `Idioma`,
+    tr: `Traductor`,
+    ds: `Mostrar`,
+    ti: `Texto + Icono`,
+    menu: `Menú`,
+    th: `Tema`,
+    df: `Por defecto`,
+    di: `Atenuar`,
+    lo: `Luces apagadas`,
+    col: `Colores`,
+    cb: `Azul`,
+    cy: `Amarillo`,
+    cr: `Rojo`,
+    cp: `Púrpura`,
+    co: `Naranja`,
+    cg: `Verde`,
+    t: `Texto`,
+    i: `Icono`,
+    res: `Restaurar`,
+    desc: {
+      language: `Site Language: ${defaultLang}`,
+      translate: ` [WIP] Translate`,
+      display: ` [WIP] Display`,
+      color: ` [WIP] Color`,
+      theme: ` [WIP] Theme`
+    },
+    quest: {
+      head: `¿Está seguro?`,
+      body: `El sitio web será recargado.`,
+      yes: `Sí`,
+      no: `No`
+    },
+    fn: checkLng
+  } // fn() {
+  //   for (let key in languages) {
+  //     log( languages[key] ); // Apple, Orange, Pear
+  //   }
+  // }
+
 },
     //#endregion
 DefaultConfig = {
@@ -1135,33 +1146,47 @@ DefaultConfig = {
     version: "api-free"
   },
   url: {
+    bing: "https://www.bing.com",
+    bingIT: "",
+    deepl: "https://www.deepl.com",
+    deeplIT: `https://${deeplfn}.deepl.com`,
+    google: "https://translate.google.com",
+    googleIT: "https://translation.googleapis.com",
     libre: "https://libretranslate.de/translate",
-    lingva: "https://lingva.ml"
+    lingva: "https://lingva.ml",
+    mymemory: "https://mymemory.translated.net",
+    mymemoryIT: "https://api.mymemory.translated.net",
+    translate: "https://www.translate.com",
+    translateIT: "",
+    yandex: "https://translate.yandex.com",
+    yandexIT: ""
   },
   cBG: 'rgba(91, 112, 131, 0.4)',
   cColor: "r-p1n3y5 r-1bih22f",
-  cDisplay: `DeepL ${icons.deepl}`,
   cHover: "r-1q3imqu",
-  cLang: en.fn().tw,
+  cDisplay: `DeepL ${icons.fn().deepl}`,
+  // Configured display of translator
+  cLang: languages.en.tw,
+  // "Translate with ..."
   cText: "r-jwli3a",
   cTheme: "r-kemksi",
   cSub: "r-13gxpu9"
 },
-    fetchURL = async (url, content, btLang) => {
-  const res = await fetch(url, {
+    fetchURL = async (url, content, source) => {
+  let res = await fetch(url, {
     method: "POST",
     body: JSON.stringify({
       q: `${content}`,
-      source: `${btLang}`,
+      source: `${source}`,
       target: `${TETConfig.lang}`,
       api_key: `${TETConfig.api.libre}`
     }),
     headers: {
       "Content-Type": "application/json"
     }
-  });
-  let r = await res.json();
-  return r;
+  }),
+      r = await res.json();
+  return Promise.resolve(r);
 },
     get = (url, responseType = 'json', retry = 3) => new Promise((resolve, reject) => {
   try {
@@ -1200,17 +1225,17 @@ DefaultConfig = {
     <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm8.472 9.442c-.242.19-.472.368-.63.486-.68-1.265-1.002-1.78-1.256-2.007-.163-.145-.37-.223-.78-.375-.367-.136-1.482-.55-1.65-.85-.087-.153.136-.602.23-.793.088-.177.164-.33.196-.497.123-.646-.33-1.146-.728-1.59-.066-.072-.153-.17-.23-.26.335-.12.862-.26 1.42-.384 1.95 1.448 3.26 3.704 3.428 6.272zm-9.788-7.83c.076.25.145.5.182.678-.255.15-.663.363-.96.52-.262.136-.522.273-.738.392-.247.137-.442.234-.6.313-.347.174-.598.3-.833.553-.068.073-.26.278-1.02 1.886l-1.79-.656c1.293-1.94 3.362-3.31 5.76-3.685zM12 20.5c-4.687 0-8.5-3.813-8.5-8.5 0-1.197.25-2.335.7-3.37.47.182 1.713.66 2.75 1.035-.107.336-.245.854-.26 1.333-.03.855.502 1.7.562 1.792.053.08.12.15.2.207.303.21.687.5.827.616.063.343.166 1.26.23 1.833.144 1.266.175 1.48.24 1.65.005.012.514 1.188 1.315 1.188.576-.003.673-.206 1.855-2.688.244-.512.45-.95.513-1.058.1-.144.597-.61.87-.83.55-.442.76-1.82.413-2.682-.335-.83-1.92-2.08-2.5-2.195-.17-.033-.43-.04-.953-.053-.497-.01-1.25-.028-1.536-.09-.098-.024-.314-.094-.605-.196.32-.668.627-1.28.71-1.4.05-.052.168-.112.408-.234.17-.086.383-.192.653-.34.208-.116.458-.247.71-.38 1.168-.612 1.484-.8 1.658-1.082.11-.177.263-.44-.04-1.544 1.042.027 2.038.24 2.955.61-.89.32-1.024.595-1.106.77-.367.784.256 1.475.667 1.93.096.107.24.268.32.38l-.017.036c-.234.472-.67 1.35-.196 2.194.406.72 1.384 1.13 2.437 1.52.134.05.25.092.33.126.16.208.496.79 1 1.735l.154.285c.078.14.33.505.842.505.167 0 .363-.04.59-.137.032-.013.083-.035.18-.094C19.72 17.405 16.22 20.5 12 20.5zm-3.812-9.45c.01-.285.102-.646.184-.907l.027.006c.397.09 1.037.11 1.83.13.32.006.59.008.615 0 .326.143 1.355 1 1.483 1.31.113.28.05.812-.034 1.01-.233.197-.845.735-1.085 1.078-.093.13-.212.373-.64 1.274-.133.276-.313.654-.488 1.013-.026-.225-.054-.472-.08-.686-.225-2.003-.273-2.22-.42-2.445-.05-.078-.202-.31-1.135-.973-.117-.213-.268-.564-.26-.813z"></path>
   </g>
 </svg><span class="css-901oao css-16my406 r-bcqeeobuttontc0 r-jwli3a">Menu</span></button>
-<div role="dialog" tabindex="0" id="tetTW" class="btNav css-1dbjc4n r-1awozwy r-18u37iz r-1777fci r-ipm5af r-g6jmlv">
+<div role="dialog" id="tetTW" class="btNav css-1dbjc4n r-1awozwy r-18u37iz r-1777fci r-ipm5af r-g6jmlv">
 <div class="navbackground rm"></div>
 <div class="tetAlert rm css-1dbjc4n">
   <div class="tetConfirmation tetBackground css-1dbjc4n">
     <h1 class="tetAlertTxt tetTextColor css-4rbku5 css-901oao"><span class="tet-alert-head css-901oao css-16my406">Are you sure?</span></h1>
     <div class="tetAlertTxt tetTextColor css-901oao"><span class="tet-alert-span css-901oao css-16my406">Website will be reloaded.</span></div>
     <div class="css-1dbjc4n">
-      <div role="button" class="tetAlertBtns confirm css-18t94o4 css-1dbjc4n tetBtn" style="background-color: rgb(239, 243, 244);" data-testid="confirmationSheetConfirm">
+      <div class="tetAlertBtns confirm css-18t94o4 css-1dbjc4n tetBtn" style="background-color: rgb(239, 243, 244);" data-testid="confirmationSheetConfirm">
         <div class="css-901oao" style="color: rgb(15, 20, 25);"><span><span class="tet-confirm">Yes</span></span></div>
       </div>
-      <div role="button" class="tetAlertBtns deny tetDisplayColor css-18t94o4 css-1dbjc4n tetBtn" data-testid="confirmationSheetCancel">
+      <div class="tetAlertBtns deny tetDisplayColor css-18t94o4 css-1dbjc4n tetBtn" data-testid="confirmationSheetCancel">
         <div class="css-901oao" style="color: rgb(239, 243, 244);"><span><span class="tet-deny">No</span></span></div>
       </div>
     </div>
@@ -1234,71 +1259,71 @@ DefaultConfig = {
           <div class="css-1dbjc4n txt-header">
             <div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs r-1ny4l3l">
               <div class="css-1dbjc4n r-1awozwy r-18u37iz r-dnmrzs">
-                <div class="tetTextColor css-901oao css-bfa6kz r-1fmj7o5 r-1qd0xha r-a023e6 r-b88u0q r-rjixqe r-bcqeeo r-1udh08x r-3s2u2q r-qvutc0" dir="auto"><span class="css-901oao css-16my406"><span class="css-901oao css-16my406">${tetInfo.name}</span></span></div>
+                <div class="tetTextColor css-901oao css-bfa6kz r-1fmj7o5 r-1qd0xha r-a023e6 r-b88u0q r-rjixqe r-bcqeeo r-1udh08x r-3s2u2q r-qvutc0"><span class="css-901oao css-16my406"><span class="css-901oao css-16my406">${tetInfo.name}</span></span></div>
               </div>
               <div class="tet-at css-901oao css-bfa6kz" dir="ltr"><span class="css-901oao css-16my406">@for_lollipops</span></div>
             </div>
           </div>
-          <div dir="auto" class="tetTextColor css-901oao r-1fmj7o5 r-1qd0xha r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-bnwqim r-qvutc0"><span class="css-901oao css-16my406 tet-demotext">${defaultDesc}</span></div>
-          <div id="tetDemo" class="css-901oao" dir="auto" aria-expanded="false" role="button" tabindex="0">${TETConfig.cLang} ${TETConfig.cDisplay}</div>
+          <div class="tetTextColor css-901oao r-1fmj7o5 r-1qd0xha r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-bnwqim r-qvutc0"><span class="css-901oao css-16my406 tet-demotext">${defaultDesc}</span></div>
+          <div id="tetDemo" class="css-901oao"></div>
         </div>
       </div>
       <div class="css-1dbjc4n tet-options">
         <div id="tetSelector" class="tetBackground css-1dbjc4n r-16xksha r-1kqtdi0">
-          <div id="tetName" dir="auto" class="css-901oao  r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao">Languages</span></div>
+          <div id="tetName" class="css-901oao r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao">Languages</span></div>
           <select id="languages" name="languages" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-a023e6 r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
-            <option class="tetBackground" value="en">${en.sel}</option>
-            <option class="tetBackground" value="es">${es.sel}</option>
-            <option class="tetBackground" value="zh">${zh.sel}</option>
-            <option class="tetBackground" value="bg">${bg.sel}</option>
-            <option class="tetBackground" value="cs">${cs.sel}</option>
-            <option class="tetBackground" value="da">${da.sel}</option>
-            <option class="tetBackground" value="de">${de.sel}</option>
-            <option class="tetBackground" value="el">${el.sel}</option>
-            <option class="tetBackground" value="et">${et.sel}</option>
-            <option class="tetBackground" value="fi">${fi.sel}</option>
-            <option class="tetBackground" value="fr">${fr.sel}</option>
-            <option class="tetBackground" value="hu">${hu.sel}</option>
-            <option class="tetBackground" value="it">${it.sel}</option>
-            <option class="tetBackground" value="ja">${ja.sel}</option>
-            <option class="tetBackground" value="lv">${lv.sel}</option>
-            <option class="tetBackground" value="lt">${lt.sel}</option>
-            <option class="tetBackground" value="nl">${nl.sel}</option>
-            <option class="tetBackground" value="pl">${pl.sel}</option>
-            <option class="tetBackground" value="pt">${pt.sel}</option>
-            <option class="tetBackground" value="ro">${ro.sel}</option>
-            <option class="tetBackground" value="ru">${ru.sel}</option>
-            <option class="tetBackground" value="sk">${sk.sel}</option>
-            <option class="tetBackground" value="sl">${sl.sel}</option>
-            <option class="tetBackground" value="sv">${sv.sel}</option>
+            <option class="tetBackground" value="en">${languages.en.sel}</option>
+            <option class="tetBackground" value="es">${languages.es.sel}</option>
+            <option class="tetBackground" value="zh">${languages.zh.sel}</option>
+            <option class="tetBackground" value="bg">${languages.bg.sel}</option>
+            <option class="tetBackground" value="cs">${languages.cs.sel}</option>
+            <option class="tetBackground" value="da">${languages.da.sel}</option>
+            <option class="tetBackground" value="de">${languages.de.sel}</option>
+            <option class="tetBackground" value="el">${languages.el.sel}</option>
+            <option class="tetBackground" value="et">${languages.et.sel}</option>
+            <option class="tetBackground" value="fi">${languages.fi.sel}</option>
+            <option class="tetBackground" value="fr">${languages.fr.sel}</option>
+            <option class="tetBackground" value="hu">${languages.hu.sel}</option>
+            <option class="tetBackground" value="it">${languages.it.sel}</option>
+            <option class="tetBackground" value="ja">${languages.ja.sel}</option>
+            <option class="tetBackground" value="lv">${languages.lv.sel}</option>
+            <option class="tetBackground" value="lt">${languages.lt.sel}</option>
+            <option class="tetBackground" value="nl">${languages.nl.sel}</option>
+            <option class="tetBackground" value="pl">${languages.pl.sel}</option>
+            <option class="tetBackground" value="pt">${languages.pt.sel}</option>
+            <option class="tetBackground" value="ro">${languages.ro.sel}</option>
+            <option class="tetBackground" value="ru">${languages.ru.sel}</option>
+            <option class="tetBackground" value="sk">${languages.sk.sel}</option>
+            <option class="tetBackground" value="sl">${languages.sl.sel}</option>
+            <option class="tetBackground" value="sv">${languages.sv.sel}</option>
           </select>
         </div>
         <div id="tetSelector" class="tetBackground css-1dbjc4n r-16xksha r-1kqtdi0">
-          <div id="tetName" dir="auto" class="css-901oao  r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao">Translators</span></div>
+          <div id="tetName" class="css-901oao  r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao">Translators</span></div>
           <select id="translator" name="translator" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-a023e6 r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
-            <optgroup class="tetBackground" label="External Translators">
+            <optgroup class="tetBackground" label="External Translators ⤴">
               <option class="tetBackground" value="bing">Bing Translate</option>
-              <option class="tetBackground" value="deepl">DeepL Translator</option>
+              <option class="tetBackground" value="deepl">DeepL Translator ✨</option>
               <option class="tetBackground" value="google">Google Translate</option>
               <option class="tetBackground" value="lingva">Lingva Translate</option>
               <option class="tetBackground" value="mymemory">MyMemory</option>
               <option class="tetBackground" value="translate">Translate.com</option>
               <option class="tetBackground" value="yandex">Yandex Translator</option>
             </optgroup>
-            <optgroup class="tetBackground" label="Internal Translators">
+            <optgroup class="tetBackground" label="Internal Translators ⤵">
               <option class="tetBackground" disabled="" value="bingIT">Azure Cognitive Services</option>
-              <option class="tetBackground" value="deeplIT">DeepL API</option>
-              <option class="tetBackground" value="googleIT">Google Cloud API</option>
+              <option class="tetBackground" value="deeplIT">DeepL</option>
+              <option class="tetBackground" value="googleIT">Google Cloud</option>
               <option class="tetBackground" value="libre">LibreTranslate</option>
-              <option class="tetBackground" value="lingvaIT">Lingva Translate API</option>
-              <option class="tetBackground" value="mymemoryIT">MyMemory API</option>
-              <option class="tetBackground" disabled="" value="translateIT">Translate.com API</option>
-              <option class="tetBackground" disabled="" value="yandexIT">Yandex Translator API</option>
+              <option class="tetBackground" value="lingvaIT">Lingva Translate ✨</option>
+              <option class="tetBackground" value="mymemoryIT">MyMemory</option>
+              <option class="tetBackground" disabled="" value="translateIT">Translate.com</option>
+              <option class="tetBackground" disabled="" value="yandexIT">Yandex Translator</option>
             </optgroup>
           </select>
         </div>
         <div id="tetSelector" class="tetBackground css-1dbjc4n r-16xksha r-1kqtdi0">
-          <div id="tetName" dir="auto" class="css-901oao  r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao">Display</span></div>
+          <div id="tetName" class="css-901oao  r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao">Display</span></div>
           <select id="display" name="display" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-a023e6 r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
             <option class="tetBackground" value="text + icon">Text + Icon</option>
             <option class="tetBackground" value="text">Text Only</option>
@@ -1306,7 +1331,7 @@ DefaultConfig = {
           </select>
         </div>
         <div id="tetSelector" class="tetBackground css-1dbjc4n r-16xksha r-1kqtdi0">
-          <div id="tetName" dir="auto" class="css-901oao  r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao">Color</span></div>
+          <div id="tetName" class="css-901oao  r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao">Color</span></div>
           <select id="colorselect" name="colorselect" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-a023e6 r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
             <optgroup class="tetBackground" label="Twitter">
               <option class="tetBackground" value="r-urgr8i">Blue</option>
@@ -1322,7 +1347,7 @@ DefaultConfig = {
           </select>
         </div>
         <div id="tetSelector" class="tetBackground css-1dbjc4n r-16xksha r-1kqtdi0">
-          <div id="tetName" dir="auto" class="css-901oao  r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao">Theme</span></div>
+          <div id="tetName" class="css-901oao  r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao">Theme</span></div>
           <select id="theme" name="theme" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-a023e6 r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
             <optgroup class="tetBackground" label="Twitter">
               <option class="tetBackground" value="#FFFFFF">Default</option>
@@ -1337,12 +1362,13 @@ DefaultConfig = {
         </div>
         <input id="apifield" type="password" name="apikey" placeholder="PASTE API KEY" class="tetTextColor tetBackground tetFields deepl css-1dbjc4n r-16xksha">
         <div id="tetSelector" class="tetBackground tetFields deepl css-1dbjc4n r-16xksha r-1kqtdi0">
-          <div id="tetName" dir="auto" class="css-901oao r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao">Version</span></div>
+          <div id="tetName" class="css-901oao r-1qd0xha r-n6v787 r-16dba41 r-1cwl3u0 r-bcqeeo r-1pn2ns4 r-tskmnb r-633pao r-u8s1d r-qvutc0"><span class="css-901oao">Version</span></div>
           <select id="api-version" name="api-version" class="tetTextColor r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-1loqt21 r-1qd0xha r-a023e6 r-rjixqe r-crgep1 r-t60dpp r-1pn2ns4 r-ttdzmv">
             <option class="tetBackground" value="api-free">Free</option>
             <option class="tetBackground" value="api-pro">Pro</option>
           </select>
         </div>
+        <input id="apifield" type="url" name="apikey" placeholder="(OPTIONAL) PASTE URL" class="tetTextColor tetBackground tet-url css-1dbjc4n r-16xksha">
         <input id="apifield" type="password" name="apikey" placeholder="(OPTIONAL) PASTE API KEY" class="tetTextColor tetBackground tetFields libre css-1dbjc4n r-16xksha">
         <input id="apifield" type="url" name="apikey" placeholder="PASTE URL" class="tetTextColor tetBackground tetFields libre css-1dbjc4n r-16xksha">
         <input id="apifield" type="url" name="apikey" placeholder="PASTE URL" class="tetTextColor tetBackground tetFields lingva css-1dbjc4n r-16xksha">
@@ -1393,60 +1419,103 @@ function checkLng() {
 
 ;
 
-function TETDisplayChange(mode = "nonrepeat") {
-  let cSel = TETConfig.translator,
-      v = icons.fn(),
-      disA = cSel == "lingva" || cSel == "lingvaIT" ? TETConfig.cDisplay = v.lingva : cSel == "libre" ? TETConfig.cDisplay = v.libre : cSel == "bingIT" ? TETConfig.cDisplay = v.azure : cSel == "googleIT" ? TETConfig.cDisplay = v.gCloud : cSel == "google" ? TETConfig.cDisplay = v.google : cSel == "bing" ? TETConfig.cDisplay = v.bing : cSel == "mymemory" || cSel == "mymemoryIT" ? TETConfig.cDisplay = v.mymemory : cSel == "translate" ? TETConfig.cDisplay = v.translate : cSel == "yandex" ? TETConfig.cDisplay = v.yandex : TETConfig.cDisplay = v.deepl,
-      disB = cSel == "lingvaIT" ? TETConfig.cDisplay = "Lingva Translate API" : cSel == "lingva" ? TETConfig.cDisplay = "Lingva Translate" : cSel == "libre" ? TETConfig.cDisplay = "LibreTranslate" : cSel == "mymemoryIT" ? TETConfig.cDisplay = "MyMemory API" : cSel == "bingIT" ? TETConfig.cDisplay = "Azure Cognitive Services" : cSel == "googleIT" ? TETConfig.cDisplay = "Google Cloud API" : cSel == "deeplIT" ? TETConfig.cDisplay = "DeepL API" : cSel == "bing" ? TETConfig.cDisplay = "Bing" : cSel == "google" ? TETConfig.cDisplay = "Google" : cSel == "mymemory" ? TETConfig.cDisplay = "MyMemory" : cSel == "translate" ? TETConfig.cDisplay = "Translate.com" : cSel == "yandex" ? TETConfig.cDisplay = "Yandex" : TETConfig.cDisplay = "DeepL",
-      disC = cSel == "lingvaIT" ? TETConfig.cDisplay = `Lingva Translate API ${v.lingva}` : cSel == "lingva" ? TETConfig.cDisplay = `Lingva Translate ${v.lingva}` : cSel == "libre" ? TETConfig.cDisplay = `LibreTranslate ${v.libre}` : cSel == "mymemoryIT" ? TETConfig.cDisplay = `MyMemory API ${v.mymemory}` : cSel == "bingIT" ? TETConfig.cDisplay = `Azure Cognitive Services ${v.azure}` : cSel == "googleIT" ? TETConfig.cDisplay = `Google Cloud API ${v.gCloud}` : cSel == "deeplIT" ? TETConfig.cDisplay = `DeepL API ${v.deepl}` : cSel == "bing" ? TETConfig.cDisplay = `Bing ${v.bing}` : cSel == "google" ? TETConfig.cDisplay = `Google ${v.google}` : cSel == "mymemory" ? TETConfig.cDisplay = `MyMemory ${v.mymemory}` : cSel == "translate" ? TETConfig.cDisplay = `Translate.com ${v.translate}` : cSel == "yandex" ? TETConfig.cDisplay = `Yandex ${v.yandex}` : TETConfig.cDisplay = `DeepL ${v.deepl}`;
-  TETConfig.cDisplay = TETConfig.display == "icon" ? disA : TETConfig.display == "text" ? disB : TETConfig.display == "text + icon" ? disC : log("Fuck Error", "error");
-  return mode == "demo" ? $('#tetDemo').html(`${TETConfig.cLang} ${TETConfig.cDisplay}`) : false;
+function configDisplay(mode = "") {
+  let cDisplay,
+      dis = TETConfig.display,
+      tra = TETConfig.translator,
+      v = icons.fn();
+
+  if (dis === "text + icon") {
+    tra == "lingvaIT" || tra == "lingva" ? cDisplay = `Lingva Translate ${v.lingva}` : tra == "libre" ? cDisplay = `LibreTranslate ${v.libre}` : tra == "bingIT" ? cDisplay = `Azure Cognitive Services ${v.azure}` : tra == "bing" ? cDisplay = `Bing ${v.bing}` : tra == "googleIT" ? cDisplay = `Google Cloud ${v.gCloud}` : tra == "google" ? cDisplay = `Google ${v.google}` : tra == "mymemory" || tra == "mymemoryIT" ? cDisplay = `MyMemory ${v.mymemory}` : tra == "translate" || tra == "translateIT" ? cDisplay = `Translate.com ${v.translate}` : tra == "yandex" || tra == "yandexIT" ? cDisplay = `Yandex ${v.yandex}` : cDisplay = `DeepL ${v.deepl}`;
+  } else if (dis === "icon") {
+    tra == "lingva" || tra == "lingvaIT" ? cDisplay = v.lingva : tra == "libre" ? cDisplay = v.libre : tra == "bingIT" ? cDisplay = v.azure : tra == "bing" ? cDisplay = v.bing : tra == "googleIT" ? cDisplay = v.gCloud : tra == "google" ? cDisplay = v.google : tra == "mymemory" || tra == "mymemoryIT" ? cDisplay = v.mymemory : tra == "translate" || tra == "translateIT" ? cDisplay = v.translate : tra == "yandex" || tra == "yandexIT" ? cDisplay = v.yandex : cDisplay = v.deepl;
+  } else {
+    tra == "lingva" || tra == "lingvaIT" ? cDisplay = "Lingva Translate" : tra == "libre" ? cDisplay = "LibreTranslate" : tra == "bingIT" ? cDisplay = "Azure Cognitive Services" : tra == "bing" ? cDisplay = "Bing" : tra == "googleIT" ? cDisplay = "Google Cloud" : tra == "google" ? cDisplay = "Google" : tra == "mymemory" || tra == "mymemoryIT" ? cDisplay = "MyMemory" : tra == "translate" || tra == "translateIT" ? cDisplay = "Translate.com" : tra == "yandex" || tra == "yandexIT" ? cDisplay = "Yandex" : cDisplay = "DeepL";
+  }
+
+  ;
+  TETConfig.cDisplay = cDisplay;
+
+  if (mode === "demo") {
+    $('#tetDemo').html(`${TETConfig.cLang} ${cDisplay}`);
+    $('.tet').length ? $('.tet').html(`${TETConfig.cLang} ${cDisplay}`) : false;
+  }
 }
 
 ;
 
-function site(btLang, content) {
-  return TETConfig.translator == 'lingva' ? `${TETConfig.url.lingva}/${btLang}/${TETConfig.lang}/${content}` : TETConfig.translator == 'yandex' ? `https://translate.yandex.com/?lang=${btLang}-${TETConfig.lang}&text=${content}` : TETConfig.translator == 'bing' ? `https://www.bing.com/translator/?text=${content}&from=${btLang}&to=${TETConfig.lang}` : TETConfig.translator == 'google' ? `https://translate.google.com/?q=${content}&sl=${btLang}&tl=${TETConfig.lang}` : TETConfig.translator == 'mymemory' ? `https://mymemory.translated.net/${TETConfig.lang}/${btLang}/${TETConfig.lang}/${content}` : TETConfig.translator == 'translate' ? `https://www.translate.com/machine-translation#${btLang}/${TETConfig.lang}/${content}` : `https://www.deepl.com/translator#${btLang}/${TETConfig.lang}/${content}`;
+function site(source, content, tr) {
+  let link;
+
+  if (tr == 'lingva') {
+    link = `${TETConfig.url[tr]}/${source}/${TETConfig.lang}/${content}`;
+  } else if (tr == 'yandex') {
+    link = `${TETConfig.url[tr]}/?lang=${source}-${TETConfig.lang}&text=${content}`;
+  } else if (tr == 'bing') {
+    link = `${TETConfig.url[tr]}/translator/?text=${content}&from=${source}&to=${TETConfig.lang}`;
+  } else if (tr == 'google') {
+    link = `${TETConfig.url[tr]}/?q=${content}&sl=${source}&tl=${TETConfig.lang}`;
+  } else if (tr == 'mymemory') {
+    link = `${TETConfig.url[tr]}/${TETConfig.lang}/${source}/${TETConfig.lang}/${content}`;
+  } else if (tr == 'translate') {
+    link = `${TETConfig.url[tr]}/machine-translation#${source}/${TETConfig.lang}/${content}`;
+  } else {
+    link = `${TETConfig.url[tr]}/translator#${source}/${TETConfig.lang}/${content}`;
+  }
+
+  return link;
 }
 
 ;
 
-function TETBtnClick(source, btLang, content, mode) {
+function TETBtnClick(source, src, content, mode) {
   mode = mode ?? "append";
-  btLang = btLang ?? "auto";
-  let tetBtn = $(`<div class="tet ${TETConfig.cSub} css-901oao" dir="auto" aria-expanded="false" role="button" tabindex="0">${TETConfig.cLang} ${TETConfig.cDisplay}</div>`);
+  src = src ?? "auto";
+  let tetBtn = $(`<div class="tet ${TETConfig.cSub} css-901oao">${TETConfig.cLang} ${TETConfig.cDisplay}</div>`),
+      inlineText = `<div class="css-901oao r-1qd0xha tetTextColor" id="tweet-text"><span class="css-901oao">`;
   mode === "append" ? tetBtn.appendTo(source) : mode === "prepend" ? tetBtn.prependTo(source) : mode === "td" ? source.after(tetBtn) : tetBtn.prependTo(mode);
-  tetBtn.on("click", async e => {
+  tetBtn.on("click", e => {
     e.preventDefault();
-    let vCheck = TETConfig.api.version == "api-pro" ? 'api' : 'api-free';
-    TETConfig.translator == 'lingvaIT' ? get(`${TETConfig.url.lingva}/api/v1/${btLang}/${TETConfig.lang}/${content}`).then(r => {
-      let res = r.translation,
-          inlineText = $(`<div class="css-1dbjc4n r-14gqq1x"><div dir="auto" class="css-901oao r-1fmj7o5 r-1qd0xha r-bnwqim" id="tweet-text"><span class="css-901oao r-poiln3">${res}</span></div></div>`);
-      inlineText.appendTo(source);
-    }) : TETConfig.translator == 'libre' ? fetchURL(TETConfig.url.libre, content, btLang).then(r => {
-      let res = r.translatedText,
-          inlineText = $(`<div class="css-1dbjc4n r-14gqq1x"><div dir="auto" class="css-901oao r-1fmj7o5 r-1qd0xha r-bnwqim" id="tweet-text"><span class="css-901oao r-poiln3">${res}</span></div></div>`);
-      inlineText.appendTo(source);
-    }) : TETConfig.translator == 'mymemoryIT' ? get(`https://api.mymemory.translated.net/get?q=${content}&langpair=${btLang}|${TETConfig.lang}`).then(r => {
-      let res = r.responseData.translatedText,
-          inlineText = $(`<div class="css-1dbjc4n r-14gqq1x"><div dir="auto" class="css-901oao r-1fmj7o5 r-1qd0xha r-bnwqim" id="tweet-text"><span class="css-901oao r-poiln3">${res}</span></div></div>`);
-      inlineText.appendTo(source);
-    }) : TETConfig.translator == 'googleIT' ? get(`https://translation.googleapis.com/language/translate/v2?q=${content}&target=${TETConfig.lang}&source=${btLang}&key=${TETConfig.api.google}`).then(r => {
-      let res = r.data.translations[0],
-          inlineText = $(`<div class="css-1dbjc4n r-14gqq1x"><div dir="auto" class="css-901oao r-1fmj7o5 r-1qd0xha r-bnwqim" id="tweet-text"><span class="css-901oao r-poiln3">${res.translatedText}</span></div></div>`);
-      inlineText.appendTo(source);
-    }) : TETConfig.translator == 'deeplIT' ? get(`https://${vCheck}.deepl.com/v2/translate?auth_key=${TETConfig.api.deepl}&text=${content}&target_lang=${TETConfig.lang}`).then(r => {
-      let res = r.translations[0],
-          inlineText = $(`<div class="css-1dbjc4n r-14gqq1x"><div dir="auto" class="css-901oao r-1fmj7o5 r-1qd0xha r-bnwqim" id="tweet-text"><span class="css-901oao r-poiln3">${res.text}</span></div></div>`);
-      inlineText.appendTo(source);
-    }) : window.open(site(btLang, content), '_blank');
+    let res,
+        tr = TETConfig.translator;
+
+    if (tr == 'lingvaIT') {
+      get(`${TETConfig.url.lingva}/api/v1/${src}/${TETConfig.lang}/${content}`).then(r => {
+        res = r.translation;
+        $(`${inlineText}${res}</span></div>`).appendTo(source).addClass(TETConfig.cText);
+      });
+    } else if (tr == 'libre') {
+      fetchURL(TETConfig.url.libre, content, src).then(r => {
+        res = r.translatedText;
+        $(`${inlineText}${res}</span></div>`).appendTo(source).addClass(TETConfig.cText);
+      });
+    } else if (tr == 'mymemoryIT') {
+      get(`${TETConfig.url[tr]}/get?q=${content}&langpair=${src}|${TETConfig.lang}`).then(r => {
+        res = r.responseData.translatedText;
+        $(`${inlineText}${res}</span></div>`).appendTo(source).addClass(TETConfig.cText);
+      });
+    } else if (tr == 'googleIT') {
+      get(`${TETConfig.url[tr]}/language/translate/v2?q=${content}&target=${TETConfig.lang}&source=${src}&key=${TETConfig.api.google}`).then(r => {
+        res = r.data.translations[0].translatedText;
+        $(`${inlineText}${res}</span></div>`).appendTo(source).addClass(TETConfig.cText);
+      });
+    } else if (tr == 'deeplIT') {
+      get(`${TETConfig.url[tr]}/v2/translate?auth_key=${TETConfig.api.deepl}&text=${content}&target_lang=${TETConfig.lang}`).then(r => {
+        res = r.translations[0].text;
+        $(`${inlineText}${res}</span></div>`).appendTo(source).addClass(TETConfig.cText);
+      });
+    } else {
+      window.open(site(src, content, tr), '_blank');
+    }
+
+    ;
   });
   tetBtn.on("mouseenter", e => {
     $(e.target).addClass("r-hover");
   }).on("mouseleave", e => {
     $(e.target).removeClass("r-hover");
   });
-  TETDisplayChange();
+  configDisplay();
 }
 
 ; //#endregion
@@ -1545,7 +1614,7 @@ function Menu() {
         tColor = $(".tetTextColor"),
         tBG = $(".tetBackground"),
         tDesc = $(".tet-demotext"),
-        v = en.fn();
+        v = languages.en.fn();
     selLG.value = TETConfig.lang;
     selCS.value = TETConfig.colors;
     selTH.value = TETConfig.theme;
@@ -1557,10 +1626,10 @@ function Menu() {
     lingva.value = TETConfig.url.lingva ?? DefaultConfig.url.lingva;
     goAPI.value = TETConfig.api.google ?? "";
     selAPI.value = TETConfig.api.version;
+    qs(".tet-url").value = TETConfig.url[selTR.value];
 
-    const TETLanguageChange = () => {
-      let TETSel = selLG.value;
-      TETSel == "en" ?? defaultLang == "en-US" ? v = en.fn() : TETSel == "bg" ? v = bg.fn() : TETSel == "cs" ? v = cs.fn() : TETSel == "da" ? v = da.fn() : TETSel == "et" ? v = et.fn() : TETSel == "fi" ? v = fi.fn() : TETSel == "el" ? v = el.fn() : TETSel == "hu" ? v = hu.fn() : TETSel == "lv" ? v = lv.fn() : TETSel == "lt" ? v = lt.fn() : TETSel == "ro" ? v = ro.fn() : TETSel == "sk" ? v = sk.fn() : TETSel == "sl" ? v = sl.fn() : TETSel == "sv" ? v = sv.fn() : TETSel == "zh" ?? defaultLang == "zh-TW" ?? defaultLang == "zh-CN" ?? defaultLang == "zh-Hant" ? v = zh.fn() : TETSel == "nl" ? v = nl.fn() : TETSel == "fr" ? v = fr.fn() : TETSel == "de" ? v = de.fn() : TETSel == "it" ? v = it.fn() : TETSel == "ja" ? v = ja.fn() : TETSel == "pl" ? v = pl.fn() : TETSel == "pt" ? v = pt.fn() : TETSel == "ru" ? v = ru.fn() : TETSel == "es" ? v = es.fn() : (v = en.fn(), TETSel = "en");
+    const TETLanguageChange = m => {
+      v = languages[m ?? TETConfig.lang].fn();
       TETConfig.cLang = v.tw;
       $('button#tetMenuButton').attr('title', v.menu);
       $('button#tetMenuButton > span').text(v.menu);
@@ -1585,16 +1654,8 @@ function Menu() {
       $('.tet-alert-head').text(v.head);
       $('.tet-alert-span').text(v.body);
       $('.tet-confirm').text(v.yes);
-      $('.tet-deny').text(v.no); // $('button#tetSave').text(v.s)
-      // $('button#tetReload').text(v.rel)
-      // $('option[value="tweetdeck"]').each(function () {
-      //   $(this).text(v.df)
-      // })
-      // $('option[value="nitter"]').each(function () {
-      //   $(this).text(v.df)
-      // })
-
-      TETDisplayChange("demo");
+      $('.tet-deny').text(v.no);
+      configDisplay("demo");
     },
           TETMenuUpdate = (cSel, type) => {
       if (type === "theme") {
@@ -1602,7 +1663,8 @@ function Menu() {
       } else if (type === "colors") {
         return cSel == "r-urgr8i" ? (TETConfig.cHover = "r-1q3imqu", TETConfig.cColor = "r-p1n3y5 r-1bih22f", TETConfig.cSub = "r-13gxpu9") : cSel == "nitter" ? (TETConfig.cHover = "tetNitterHover", TETConfig.cColor = "tetNitter", TETConfig.cSub = "tetNText") : cSel == "tweetdeck" ? (TETConfig.cHover = "r-hoverTD", TETConfig.cColor = "Button--primary", TETConfig.cSub = "tet-td") : cSel == "r-1vkxrha" ? (TETConfig.cHover = "r-1kplyi6", TETConfig.cColor = "r-v6khid r-cdj8wb", TETConfig.cSub = "r-61mi1v") : cSel == "r-1dgebii" ? (TETConfig.cHover = "r-1ucxkr8", TETConfig.cColor = "r-1iofnty r-jd07pc", TETConfig.cSub = "r-daml9f") : cSel == "r-168457u" ? (TETConfig.cHover = "r-njt2r9", TETConfig.cColor = "r-hy56xe r-11mmphe", TETConfig.cSub = "r-xfsgu1") : cSel == "r-18z3xeu" ? (TETConfig.cHover = "r-1kplyi6", TETConfig.cColor = "r-1xl5njo r-b8m25f", TETConfig.cSub = "r-1qkqhnw") : cSel == "r-b5skir" ? (TETConfig.cHover = "r-zx61xx", TETConfig.cColor = "r-5ctkeg r-1cqwhho", TETConfig.cSub = "r-nw8l94") : (TETConfig.cHover = "r-1q3imqu", TETConfig.cColor = "r-p1n3y5 r-1bih22f", TETConfig.cSub = "r-13gxpu9");
       } else if (type == "translator") {
-        return cSel == "bingIT" ? ($(".bing").show(), $(".deepl").hide(), $(".google").hide(), $(".libre").hide(), $(".lingva").hide()) : cSel == "googleIT" ? ($(".google").show(), $(".bing").hide(), $(".deepl").hide(), $(".libre").hide(), $(".lingva").hide()) : cSel == "deeplIT" ? ($(".deepl").show(), $(".bing").hide(), $(".google").hide(), $(".libre").hide(), $(".lingva").hide()) : cSel == "libre" ? ($(".libre").show(), $(".bing").hide(), $(".deepl").hide(), $(".google").hide(), $(".lingva").hide()) : cSel == "lingva" || cSel == "lingvaIT" ? ($(".lingva").show(), $(".bing").hide(), $(".deepl").hide(), $(".google").hide(), $(".libre").hide()) : $('.tetFields').hide();
+        $(".tet-url").show();
+        return cSel == "bingIT" ? ($(".bing").show(), $(".deepl").hide(), $(".google").hide(), $(".libre").hide(), $(".lingva").hide()) : cSel == "googleIT" ? ($(".google").show(), $(".bing").hide(), $(".deepl").hide(), $(".libre").hide(), $(".lingva").hide()) : cSel == "deeplIT" ? ($(".deepl").show(), $(".bing").hide(), $(".google").hide(), $(".libre").hide(), $(".lingva").hide()) : cSel == "libre" ? ($(".libre").show(), $(".bing").hide(), $(".deepl").hide(), $(".google").hide(), $(".lingva").hide(), $(".tet-url").hide()) : cSel == "lingva" || cSel == "lingvaIT" ? ($(".lingva").show(), $(".bing").hide(), $(".deepl").hide(), $(".google").hide(), $(".libre").hide(), $(".tet-url").hide()) : $('.tetFields').hide();
       }
     }; //#region Nitter/TweetDeck/Twitlonger
 
@@ -1650,7 +1712,6 @@ function Menu() {
       $('svg#tetSVG').show();
       menuBtn.attr("style", "");
       menuBtn.toggleClass("mini");
-      $('#tetDemo').toggleClass("rm");
       $(e.target).removeClass("warn").toggleClass("rm");
       selLG.value !== "en" ?? defaultLang !== "en" ?? defaultLang !== "en-US" ? tDesc.text("Hey look, I'm a foreign language!") : tDesc.text(defaultDesc);
       TETConfig.api.google = goAPI.value;
@@ -1658,6 +1719,7 @@ function Menu() {
       TETConfig.api.libre = libre[0].value;
       TETConfig.url.libre = libre[1].value;
       TETConfig.url.lingva = lingva.value;
+      TETConfig.url[selTR.value] = qs(".tet-url").value;
       TETSave();
       autoHide();
     }, qs('.navbackground'));
@@ -1703,18 +1765,19 @@ function Menu() {
       dColor.toggleClass(TETConfig.colors);
     }, selCS);
     ael("change", e => {
-      TETLanguageChange();
       TETConfig.lang = e.target.value;
+      TETLanguageChange(e.target.value);
     }, selLG);
     ael("change", e => {
       let cSel = e.target.value;
       TETConfig.translator = cSel;
+      qs(".tet-url").value = TETConfig.url[cSel];
       TETMenuUpdate(cSel, "translator");
-      TETDisplayChange("demo");
+      configDisplay("demo");
     }, selTR);
     ael("change", e => {
       TETConfig.display = e.target.value;
-      TETDisplayChange("demo");
+      configDisplay("demo");
     }, selDS);
     ael("change", e => {
       TETConfig.api.google = goAPI.value;
@@ -1750,7 +1813,8 @@ function Menu() {
       nav.removeClass("warn");
     }, qs('.tetAlertBtns.deny'));
     log("Checking for language changes");
-    TETConfig.lang !== DefaultConfig.lang || TETConfig.lang !== "en" || TETConfig.lang !== "en-US" ? TETLanguageChange() : false;
+    TETLanguageChange(); // (defaultLang !== "en" ?? defaultLang !== "en-US" ?? TETConfig.lang !== defaultLang) ? TETLanguageChange() : false;
+
     autoHide();
   } catch (e) {
     // We log the error and restore the config to default.
@@ -1762,7 +1826,7 @@ function Menu() {
 
 ; //#endregion
 //#region Initialize Userscript
-// Section taken from `AC-baidu-重定向优化百度搜狗谷歌必应搜索_favicon_双列`
+// Section from `AC-baidu-重定向优化百度搜狗谷歌必应搜索_favicon_双列`
 // Link: https://greasyfork.org/scripts/14178/code
 // Version: 25.01
 // Line: 674.

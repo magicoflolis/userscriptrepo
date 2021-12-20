@@ -2,22 +2,22 @@ $bg_hover: #1a1a1a;
 $bg_elements: #121212;
 $accent_border: #ff6c6091;
 $fg_color: #f8f8f2;
-$tetBlue: rgb(29, 161, 242);
+$tetBlue: rgb(29, 155, 240);
 $tetBlueH: rgb(26, 145, 218);
 $tetBlueB: rgb(29, 161, 242) 0px 0px 0px 1px;
-$tetYellow: rgb(255, 173, 31);
+$tetYellow: rgb(255, 212, 0);
 $tetYellowH: rgb(230, 156, 28);
 $tetYellowB: rgb(255, 173, 31) 0px 0px 0px 1px;
-$tetRed: rgb(224, 36, 94);
+$tetRed: rgb(249, 24, 128);
 $tetRedH: rgb(202, 32, 85);
 $tetRedB: rgb(224, 36, 94) 0px 0px 0px 1px;
-$tetPurple: #7856ff;
+$tetPurple: rgb(120, 86, 255);
 $tetPurpleH: rgb(134, 93, 202);
 $tetPurpleB: rgb(121, 75, 196) 0px 0px 0px 1px;
-$tetOrange: rgb(244, 93, 34);
+$tetOrange: rgb(255, 122, 0);
 $tetOrangeH: rgb(220, 84, 31);
 $tetOrangeB: rgb(244, 93, 34) 0px 0px 0px 1px;
-$tetGreen: rgb(23, 191, 99);
+$tetGreen: rgb(0, 186, 124);
 $tetGreenH: rgb(21, 172, 89);
 $tetGreenB: rgb(23, 191, 99) 0px 0px 0px 1px;
 $twBlack: rgb(0, 0, 0);
@@ -28,6 +28,7 @@ $fg_darkB: #FF6C60 0px 0px 0px 1px;
 $bg_panel: #161616;
 $bg_color: #0F0F0F;
 $td_color: #8899a6;
+$tdBlue: rgb(29, 161, 242);
 $td_b: #005fd1;
 $td_blue: #1da1f2;
 $td_blueB: #1da1f2 0px 0px 0px 1px;
@@ -179,7 +180,12 @@ svg.tetNTextColor {
   border-color: $tetBlue;
 }
 
-.tetBtn.tweetdeck,
+.tetBtn.tweetdeck {
+  color: $tdBlue;
+  &#tetName {
+    color: $tdBlue !important;
+  }
+}
 .r-13gxpu9 {
   color: $tetBlue;
   &#tetName {
