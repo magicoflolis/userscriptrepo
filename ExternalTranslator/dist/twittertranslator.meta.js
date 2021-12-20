@@ -9,7 +9,7 @@
 // @supportURL   https://github.com/magicoflolis/userscriptrepo/issues/new
 // @downloadURL  https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/dist/twittertranslator.user.js
 // @updateURL    https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/dist/twittertranslator.meta.js
-// @require      https://code.jquery.com/jquery-3.6.0.slim.min.js?_=1639963910355
+// @require      https://code.jquery.com/jquery-3.6.0.slim.min.js?_=1639963980193
 // @match        https://mobile.twitter.com/*
 // @match        https://twitter.com/*
 // @match        https://tweetdeck.twitter.com/*
