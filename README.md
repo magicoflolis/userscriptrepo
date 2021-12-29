@@ -12,7 +12,7 @@
 | Name | Direct Link | Description | Alternative |
 |:----------:|:----------:|:----------:|:----------:|
 [[AMD] Auto Expand Driver Option(s)](https://github.com/magicoflolis/userscriptrepo/tree/master/AMDAutoOpen#amd-auto-expand) | [Install](https://github.com/magicoflolis/userscriptrepo/raw/master/AMDAutoOpen/AMDAutoOpen.user.js) | Various tweaks to AMD Support Pages. | -
-[Twitter External Translator](https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator) | [Install](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/dist/twittertranslator.user.js) | Adds a "Translate with ..." button to Tweets and User Bios. | [Install [Legacy]](https://github.com/magicoflolis/userscriptrepo/raw/master/ExternalTranslator/dist/twittertranslatorlegacy.user.js)
+[Twitter External Translator](https://github.com/magicoflolis/twitter-translator#twitter-external-translator) | [Install](https://github.com/magicoflolis/twitter-translator/releases/latest/download/twittertranslator.user.js) | Adds a "Translate with ..." button to Tweets and User Bios. | [Install [Legacy]](https://github.com/magicoflolis/twitter-translator/raw/main/dist/twittertranslatorlegacy.user.js)
 [Realtek Autofill Email](https://github.com/magicoflolis/userscriptrepo/tree/master/RealtekAutofill#realtek-autofill-email-form) | [Install](https://github.com/magicoflolis/userscriptrepo/raw/master/RealtekAutofill/RealtekAutofill.user.js) | Will automatically fill and submit email form. | -
 
 ***

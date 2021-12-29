@@ -1,7 +1,7 @@
 {jshead}
 
 // Uncompressed source code:
-// https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator/src
+// https://github.com/magicoflolis/twitter-translator/src
 
 "use strict";
 

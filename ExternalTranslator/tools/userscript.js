@@ -39,9 +39,11 @@ renderOut = (outFile, jshead) => {
 time = +new Date(),
 jshead_common = `// @author       Magic <magicoflolis@tuta.io>
 // @icon         https://abs.twimg.com/favicons/twitter.ico
-// @namespace    https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
-// @homepageURL  https://github.com/magicoflolis/userscriptrepo/tree/master/ExternalTranslator#twitter-external-translator
-// @supportURL   https://github.com/magicoflolis/userscriptrepo/issues/new
+// @downloadURL  https://github.com/magicoflolis/twitter-translator/releases/latest/download/twitter-translator.user.js
+// @updateURL    https://github.com/magicoflolis/twitter-translator/releases/latest/download/twitter-translator.user.js
+// @namespace    https://github.com/magicoflolis/twitter-translator#twitter-external-translator
+// @homepageURL  https://github.com/magicoflolis/twitter-translator#twitter-external-translator
+// @supportURL   https://github.com/magicoflolis/twitter-translator/issues/new
 // @require      https://code.jquery.com/jquery-3.6.0.slim.min.js?_=${time}
 // @match        https://mobile.twitter.com/*
 // @match        https://twitter.com/*
@@ -68,7 +70,7 @@ jshead_common = `// @author       Magic <magicoflolis@tuta.io>
 // @grant        GM.deleteValue
 // @grant        GM_info
 // @grant        GM_xmlhttpRequest
-// @license      MIT
+// @license      GPL-3.0
 // ==/UserScript==`,
 jshead_prod = `// ==UserScript==
 // @name         Twitter External Translator
@@ -127,20 +129,20 @@ jshead_prod = `// ==UserScript==
 // @description:ru-RU   Добавляет сторонних переводчиков в Twitter
 // @description:ru      Добавляет сторонних переводчиков в Twitter
 // @description:es      Añade traductores de terceros a Twitter
-// @version      0.30
+// @version      0.31
 ${jshead_common}`,
 jshead_dev = `// ==UserScript==
 // @name         [Dev] Twitter External Translator
 // @description  Adds external & internal translators
-// @version      12.19.21
+// @version      12.20.21
 ${jshead_common}`;
   console.log('%s changed.', name);
   // Development version
-  renderHead("./dist/twittertranslator.dev.meta.js", jshead_dev);
-  renderOut("./dist/twittertranslator.dev.user.js", jshead_dev);
+  renderHead("./dist/twitter-translator.dev.meta.js", jshead_dev);
+  renderOut("./dist/twitter-translator.dev.user.js", jshead_dev);
   // Release version
-  renderHead("./dist/twittertranslator.meta.js", jshead_prod);
-  renderOut("./dist/twittertranslator.user.js", jshead_prod);
+  renderHead("./dist/twitter-translator.meta.js", jshead_prod);
+  renderOut("./dist/twitter-translator.user.js", jshead_prod);
 });
 
 // watcher.on('change', (evt, name) => {

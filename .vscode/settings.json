@@ -4,5 +4,6 @@
         "favicons",
         "fstyle",
         "tweetdeck"
-    ]
+    ],
+    "diffEditor.wordWrap": "off"
 }

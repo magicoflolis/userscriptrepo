@@ -34,5 +34,6 @@
       "**/src/sass/**",
     ],
     "local-history.path": "${workspaceFolder}/.vscode",
+    "diffEditor.wordWrap": "off",
 	}
 }
