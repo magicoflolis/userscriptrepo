@@ -12,11 +12,28 @@ Stable | [(GitHub) Install](https://github.com/magicoflolis/userscriptrepo/raw/m
 
 ## Features
 
-> Versions can be manually changed ( "Edit" userscript )
+> Settings can be manually changed [ "Edit" UserScript ]
 
-* Auto clicks download links ( "free" / "premium" )
-* To skip wait times, check out [https://universal-bypass.org](https://universal-bypass.org/) ( browser extension )
-* GitHub: [https://github.com/Sainan/Universal-Bypass](https://github.com/Sainan/Universal-Bypass)
+* Auto click download link version.
+
+```bash
+Version = "free", // free (default) / premium
+```
+
+* Auto click all download links.
+
+```bash
+fullAutoDownload = true, // true (default) / false
+```
+
+* Delay can be configured.
+
+```bash
+afterDelay = 0; // 0 (default) / any #
+```
+
+* To skip wait times, check out [https://fastforward.team](https://fastforward.team) ( browser extension )
+* GitHub: [https://github.com/FastForwardTeam/FastForward](https://github.com/FastForwardTeam/FastForward)
 
 ### Source Code
 
