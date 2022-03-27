@@ -4,21 +4,27 @@
 
 ***
 
-| Version | Direct Link | Note |
-|:----------:|:----------:|:----------:|
-GitHub | [Install](https://github.com/magicoflolis/userscriptrepo/raw/master/FextraLifeTweaks/FextraLifeTweaks.user.js) | Faster updates
-Greasy Fork | [Install](https://greasyfork.org/scripts/432905) | Stable updates
+| Version | Link | Alternative | Note |
+|:----------:|:----------:|:----------:|:----------:|
+Stable | [(GitHub) Install](https://github.com/magicoflolis/userscriptrepo/raw/master/FextraLifeTweaks/FextraLifeTweaks.user.js) | [Greasy Fork](https://greasyfork.org/scripts/432905) | Recommended version.
 
 ***
 
-## **Features:**
+## Features
 
-> Tweaks can be manually toggled (edit userscript)
+> Settings can be manually changed [ "Edit" UserScript ]
 
 * Reduces page clutter
-* Autoscroll on page load ( Set scroll_amount = 0 to disable )
-* Adds scroll to top button
-* Top button CSS can be customized
+* Disable/Enable comments
+* Automatically scrolls on page load
+* Scroll to "Top" button
+* Scroll to "Comments" button
+* Scroll amount for "Top" button is customizable
+* "Top" and "Comments" CSS are customizable
+
+## Bugs / Issues
+
+* Nothing may appear when searching in wiki(s)
 
 ### Source Code
 
