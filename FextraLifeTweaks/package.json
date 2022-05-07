@@ -1,0 +1,15 @@
+{
+  "name": "fextralife",
+  "productName": "FextraLife Tweaks",
+  "description": "Implements various tweaks to FextraLife wiki(s)",
+  "author": "Magic <magicoflolis@tuta.io>",
+  "version": "1.2",
+  "homepage": "https://github.com/magicoflolis/userscriptrepo/tree/master/FextraLifeTweaks",
+  "type": "module",
+  "scripts": {
+    "dev:Userscript": "node -r dotenv/config ./tools/userscript.js dotenv_config_path=./http-server/.env",
+    "dev:Sass": "sass -w --no-source-map ./src/sass/userscript.scss:./dist/css/fextralife.css -s compressed",
+    "dev:Server": "http-server ./http-server -c5",
+    "build:Userscript": "node -r dotenv/config ./tools/userscript.js dotenv_config_path=./dist/.env"
+  }
+}

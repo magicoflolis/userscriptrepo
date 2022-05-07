@@ -1,0 +1,59 @@
+@charset 'UTF-8';
+
+[id^="div-gpt-ad"],
+.ad-banner,
+#sidebar-wrapper,
+.wrap > #content-add-a,
+.section-heading,
+.collapse-com > #pmalerts,
+br {
+  content: "" !important;
+  display: none !important;
+  visibility: hidden !important;
+  margin: 0px 0px 0px 0px !important;
+  padding: 0px 0px 0px 0px !important;
+  width: 0px !important;
+  max-width: 0px !important;
+  min-width: 0px !important;
+  height: 0px !important;
+  max-height: 0px !important;
+  min-height: 0px !important;
+}
+
+#cmt-btn,
+#top-btn {
+  transition: top 100ms ease-in-out 100ms;
+  cursor: pointer;
+  top: 100%;
+  font-weight: bold;
+  font-family: inherit;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  height: auto;
+  border-radius: 16px;
+  margin: 0 3px;
+  line-height: 25px;
+  padding: 0 20px;
+  text-transform: uppercase;
+  text-align: center;
+  position: fixed;
+  z-index: 10000 !important;
+}
+#cmt-btn {
+  left: 1%;
+}
+#top-btn {
+  right: 1%;
+}
+
+.collapse-com {
+  cursor: default !important;
+}
+
+// #discussions-new > div:nth-child(1) > textarea:nth-child(1) {
+//   height: 25% !important;
+//   &.active {
+//     height: 120px !important;
+//   }
+// }
