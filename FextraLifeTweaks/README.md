@@ -1,12 +1,12 @@
 # FextraLife Tweaks
 
-> Various tweaks to FextraLife wiki(s).
+> Implements various tweaks to FextraLife wiki(s).
 
 ***
 
 | Version | Link | Alternative | Note |
 |:----------:|:----------:|:----------:|:----------:|
-Stable | [(GitHub) Install](https://github.com/magicoflolis/userscriptrepo/raw/master/FextraLifeTweaks/FextraLifeTweaks.user.js) | [Greasy Fork](https://greasyfork.org/scripts/432905) | Recommended version.
+Stable | [(GitHub) Install](https://github.com/magicoflolis/userscriptrepo/raw/master/FextraLifeTweaks/dist/FextraLifeTweaks.user.js) | [Greasy Fork](https://greasyfork.org/scripts/432905) | Recommended version.
 
 ***
 
@@ -20,11 +20,10 @@ Stable | [(GitHub) Install](https://github.com/magicoflolis/userscriptrepo/raw/m
 * Scroll to "Top" button
 * Scroll to "Comments" button
 * Scroll amount for "Top" button is customizable
-* "Top" and "Comments" CSS are customizable
 
 ## Bugs / Issues
 
-* Nothing may appear when searching in wiki(s)
+* "Comments" button appears while searching.
 
 ### Source Code
 
