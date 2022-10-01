@@ -6,18 +6,18 @@
 
 ***
 
-| Version | Direct Link | Note |
-|:----------:|:----------:|:----------:|
-GitHub | [Install](https://github.com/magicoflolis/userscriptrepo/raw/master/AMDAutoOpen/AMDAutoOpen.user.js) | Faster updates
-Greasy Fork | [Install](https://greasyfork.org/scripts/423087) | Stable updates
+| Version | Link | Alternative | Note |
+|:----------:|:----------:|:----------:|:----------:|
+Userscript | [Greasy Fork](https://greasyfork.org/scripts/423087) | [Install (GitHub)](https://cdn.jsdelivr.net/gh/magicoflolis/userscriptrepo@master/AMDAutoOpen/AMDAutoOpen.user.js) | -
 
 ***
 
-## **Features:**
+## Features
 
 > Tweaks can be manually toggled (edit userscript)
 
-* Auto expands driver options ( first | all | none )
+* Auto expands driver options ( first | all | none | windows or Windows 11 - 64-Bit Edition...etc )
+* Adds direct link to drivers download url.
 * Reduces page clutter
 * Autoscroll on page load ( Set scroll_amount = 0 to disable )
 * Adds scroll to top button
