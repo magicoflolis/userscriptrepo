@@ -5,8 +5,8 @@
 // @icon         https://www.amd.com/themes/custom/amd/favicon.ico
 // @version      1.0.4
 // @supportURL   https://github.com/magicoflolis/userscriptrepo/issues/new
-// @namespace    https://github.com/magicoflolis/userscriptrepo/tree/master/AMDAutoOpen
-// @homepageURL  https://github.com/magicoflolis/userscriptrepo/tree/master/AMDAutoOpen
+// @namespace    https://github.com/magicoflolis/userscriptrepo/tree/master/AMDAutoOpen#amd-auto-expand
+// @homepageURL  https://github.com/magicoflolis/userscriptrepo/tree/master/AMDAutoOpen#amd-auto-expand
 // @updateURL    https://cdn.jsdelivr.net/gh/magicoflolis/userscriptrepo@master/AMDAutoOpen/AMDAutoOpen.user.js
 // @downloadURL  https://cdn.jsdelivr.net/gh/magicoflolis/userscriptrepo@master/AMDAutoOpen/AMDAutoOpen.user.js
 // @match        https://www.amd.com/*/support/*
