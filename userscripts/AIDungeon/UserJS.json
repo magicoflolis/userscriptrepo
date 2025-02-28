@@ -1,0 +1,66 @@
+{
+  "version": "1.0.0",
+  "name": "Adventure + Scenario Exporter",
+  "description": "Export any adventure or scenario to a local file.",
+  "author": "Magic <magicoflolis@tuta.io>",
+  "bugs": "https://github.com/magicoflolis/userscriptrepo/issues",
+  "homepage": "https://github.com/magicoflolis/userscriptrepo/tree/master/AIDungeon",
+  "icon": "./src/img/icon_64.png",
+  "downloadURL": "https://github.com/magicoflolis/userscriptrepo/raw/master/userscripts/AIDungeon/dist/main-userjs.user.js",
+  "updateURL": "https://github.com/magicoflolis/userscriptrepo/raw/master/userscripts/AIDungeon/dist/main-userjs.meta.js",
+  "build": {
+    "source": {
+      "head": "./src/UserJS/header.js",
+      "body": "./src/UserJS/main.js",
+      "extras": {}
+    },
+    "watch": {
+      "files": [
+        "main.js",
+        "header.js",
+        "userjs.css"
+      ],
+      "dirs": [
+        "src/UserJS",
+        "build/css"
+      ]
+    },
+    "paths": {
+      "dev": {
+        "fileName": "main-userjs.dev",
+        "env": "./src/UserJS/.env",
+        "dir": "./web-server"
+      },
+      "public": {
+        "fileName": "main-userjs",
+        "env": "./dist/.env",
+        "dir": "./dist"
+      }
+    }
+  },
+  "metadata": {
+    "compatible": [
+      "chrome",
+      "firefox",
+      "edge",
+      "opera",
+      "safari"
+    ],
+    "connect": [
+      "play.aidungeon.com"
+    ],
+    "grant": [
+      "unsafeWindow"
+    ],
+    "exclude": [],
+    "include": [],
+    "exclude-match": [],
+    "match": [
+      "https://play.aidungeon.com/*"
+    ],
+    "noframes": true,
+    "resource": {},
+    "require": [],
+    "run-at": "document-start"
+  }
+}

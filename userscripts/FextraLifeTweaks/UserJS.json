@@ -1,0 +1,88 @@
+{
+  "version": "1.3.0",
+  "name": "FextraLife Tweaks",
+  "description": "Implements various tweaks to FextraLife wiki(s)",
+  "author": "Magic <magicoflolis@tuta.io>",
+  "bugs": "https://github.com/magicoflolis/userscriptrepo/issues",
+  "homepage": "https://github.com/magicoflolis/userscriptrepo/tree/master/FextraLifeTweaks",
+  "icon": "./src/img/icon_64.png",
+  "downloadURL": "https://github.com/magicoflolis/userscriptrepo/raw/master/userscripts/FextraLifeTweaks/dist/main-userjs.user.js",
+  "updateURL": "https://github.com/magicoflolis/userscriptrepo/raw/master/userscripts/FextraLifeTweaks/dist/main-userjs.meta.js",
+  "build": {
+    "source": {
+      "head": "./src/UserJS/header.js",
+      "body": "./src/UserJS/main.js",
+      "extras": {
+        "mainCSS": "./build/css/userjs.css"
+      }
+    },
+    "watch": {
+      "files": [
+        "main.js",
+        "header.js",
+        "userjs.css"
+      ],
+      "dirs": [
+        "src/UserJS",
+        "build/css"
+      ]
+    },
+    "paths": {
+      "dev": {
+        "fileName": "main-userjs.dev",
+        "env": "./src/UserJS/.env",
+        "dir": "./web-server"
+      },
+      "public": {
+        "fileName": "main-userjs",
+        "env": "./dist/.env",
+        "dir": "./dist"
+      }
+    }
+  },
+  "metadata": {
+    "compatible": [
+      "chrome",
+      "firefox",
+      "edge",
+      "opera",
+      "safari"
+    ],
+    "connect": [
+      "aidungeon.com"
+    ],
+    "grant": [
+      "unsafeWindow",
+      "GM_addValueChangeListener",
+      "GM_addElement",
+      "GM_info",
+      "GM_getValue",
+      "GM_openInTab",
+      "GM_setValue",
+      "GM_registerMenuCommand",
+      "GM_removeValueChangeListener",
+      "GM_xmlhttpRequest",
+      "GM.addValueChangeListener",
+      "GM.addElement",
+      "GM.info",
+      "GM.getValue",
+      "GM.openInTab",
+      "GM.setValue",
+      "GM.registerMenuCommand",
+      "GM.removeValueChangeListener",
+      "GM.xmlHttpRequest"
+    ],
+    "exclude": [],
+    "include": [],
+    "exclude-match": [
+      "https://www.wiki.fextralife.com/*"
+    ],
+    "match": [
+      "https://*.wiki.fextralife.com/*"
+    ],
+    "noframes": true,
+    "resource": {},
+    "require": [],
+    "run-at": "document-start"
+  }
+}

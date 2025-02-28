@@ -3,27 +3,41 @@
   "version": "0.0.1",
   "description": "A collection of userscript I've made/modified ",
   "author": "Magic <magicoflolis@tuta.io>",
-  "license": "GPL-3.0-only",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/magicoflolis/userscriptrepo/issues"
   },
   "homepage": "https://github.com/magicoflolis/userscriptrepo",
+  "private": true,
+  "type": "module",
   "devDependencies": {
-    "@babel/cli": "^7.16.0",
-    "@babel/core": "^7.16.5",
-    "@babel/eslint-parser": "^7.16.5",
-    "@babel/preset-env": "^7.16.5",
-    "@types/babel__core": "^7.1.17",
-    "@types/jquery": "^3.5.10",
-    "@types/sass": "^1.43.1",
-    "babel-loader": "^8.2.3",
-    "http-server": "^14.0.0"
-  },
-  "dependencies": {
-    "babel-plugin-transform-scss": "^1.1.0",
-    "js-beautify": "^1.14.0",
-    "node-watch": "^0.7.2",
-    "sass": "^1.45.0"
+    "@dotenvx/dotenvx": "^1.38.3",
+    "@eslint/js": "^9.20.0",
+    "@types/chrome": "0.0.304",
+    "@types/eslint-config-prettier": "^6.11.3",
+    "@types/firefox-webext-browser": "120.0.4",
+    "@types/greasemonkey": "4.0.7",
+    "@types/node": "^22.13.4",
+    "@types/tampermonkey": "^5.0.4",
+    "@types/trusted-types": "^2.0.7",
+    "@types/watchpack": "^2.4.4",
+    "@types/webpack": "^5.28.5",
+    "@userjs/builder": "workspace:*",
+    "@violentmonkey/types": "0.2.0",
+    "browserslist": "^4.24.4",
+    "concurrently": "^9.1.2",
+    "crx3": "^1.1.3",
+    "dotenv": "^16.4.7",
+    "eslint": "^9.20.1",
+    "eslint-config-prettier": "^10.0.1",
+    "globals": "^15.15.0",
+    "http-server": "^14.1.1",
+    "path-browserify": "^1.0.1",
+    "prettier": "^3.5.1",
+    "sass-embedded": "^1.85.0",
+    "typescript": "^5.7.3",
+    "watchpack": "^2.4.2",
+    "web-ext": "^8.4.0"
   },
   "repository": {
     "type": "git",
@@ -37,5 +51,15 @@
     "javascript",
     "browser"
   ],
-  "private": true
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@10.4.1+sha512.c753b6c3ad7afa13af388fa6d808035a008e30ea9993f58c6663e2bc5ff21679aa834db094987129aa4d488b86df57f7b634981b2f827cdcacc698cc0cfb88af",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@swc/core",
+      "spawn-sync"
+    ]
+  }
 }

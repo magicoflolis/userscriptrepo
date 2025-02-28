@@ -1,6 +1,28 @@
-*.bak
-/.vscode/
-/notes/
-/ExternalTranslator/devbuild/
-/node_modules/
-*/node_modules/
+# ignore haters
+haters/
+
+build
+node_modules
+
+Notes
+.history
+web-ext
+web-ext-artifacts
+web-server
+
+*.ini
+
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+*.tsbuildinfo
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
