@@ -4,10 +4,11 @@
   "description": "Export any adventure or scenario to a local file.",
   "author": "Magic <magicoflolis@tuta.io>",
   "bugs": "https://github.com/magicoflolis/userscriptrepo/issues",
-  "homepage": "https://github.com/magicoflolis/userscriptrepo/tree/master/AIDungeon",
+  "homepage": "https://github.com/magicoflolis/userscriptrepo/tree/master/userscripts/AIDungeon",
   "icon": "./src/img/icon_64.png",
-  "downloadURL": "https://github.com/magicoflolis/userscriptrepo/raw/master/userscripts/AIDungeon/dist/main-userjs.user.js",
-  "updateURL": "https://github.com/magicoflolis/userscriptrepo/raw/master/userscripts/AIDungeon/dist/main-userjs.meta.js",
+  "downloadURL": "https://github.com/magicoflolis/userscriptrepo/tree/master/userscripts/AIDungeon/dist/main-userjs.user.js",
+  "updateURL": "https://github.com/magicoflolis/userscriptrepo/tree/master/userscripts/AIDungeon/dist/main-userjs.meta.js",
+  "license": "MIT",
   "build": {
     "source": {
       "head": "./src/UserJS/header.js",

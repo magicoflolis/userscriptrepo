@@ -304,22 +304,22 @@ async function build() {
               addTo(k, v);
             }
           }
-          for (const [k, v] of Object.entries(jsonRecords[0] ?? {})) {
-            if (typeof v !== 'string') {
-              continue;
-            }
-            if (!filterData.includes(k)) {
-              continue;
-            }
-            if (dataMap.has(k)) {
-              continue;
-            }
-            if (k === 'license') {
-              addTo(k, `// @${k}      ${v}`);
-            } else if (k === 'author') {
-              addTo(k, `// @${k}       ${v}`);
-            }
-          }
+          // for (const [k, v] of Object.entries(jsonRecords[0] ?? {})) {
+          //   if (typeof v !== 'string') {
+          //     continue;
+          //   }
+          //   if (!filterData.includes(k)) {
+          //     continue;
+          //   }
+          //   if (dataMap.has(k)) {
+          //     continue;
+          //   }
+          //   if (k === 'license') {
+          //     addTo(k, `// @${k}      ${v}`);
+          //   } else if (k === 'author') {
+          //     addTo(k, `// @${k}       ${v}`);
+          //   }
+          // }
           if (userJS.metadata) {
             addTo('metaData', compileMetadata());
           }
