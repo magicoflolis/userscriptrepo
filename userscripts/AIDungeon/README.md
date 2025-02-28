@@ -12,7 +12,7 @@ Export any adventure or scenario to a local file.
 **UserScript:**
 
 * [Greasy Fork](https://greasyfork.org/scripts/528397)
-* [GitHub Repo](https://github.com/magicoflolis/userscriptrepo/tree/master/userscripts/AIDungeon/dist/main-userjs.js?raw=1)
+* [GitHub Repo](https://github.com/magicoflolis/userscriptrepo/raw/refs/heads/master/userscripts/AIDungeon/dist/main-userjs.user.js)
 
 **(Not Recommended) Bookmarklet:**
 
