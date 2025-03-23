@@ -1,8 +1,5 @@
 {
   "type": "module",
-  "dependencies": {
-    "@userjs/builder": "workspace:*"
-  },
   "scripts": {
     "dev:UserJS": "concurrently \"dotenvx run -f .env --quiet -- node index.js\" \"pnpm run dev:Webserver\" \"sass --no-source-map -s expanded -w ./src/sass:./build/css\" ",
     "dev:Webserver": "http-server ./web-server -p 9090 -s --no-dotfiles -c-1",

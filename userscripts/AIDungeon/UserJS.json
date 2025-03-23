@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "Adventure + Scenario Exporter",
   "description": "Export any adventure or scenario to a local file.",
   "author": "Magic <magicoflolis@tuta.io>",
@@ -11,9 +11,8 @@
   "license": "MIT",
   "build": {
     "source": {
-      "head": "./src/UserJS/header.js",
-      "body": "./src/UserJS/main.js",
-      "extras": {}
+      "metadata": "./src/header.js",
+      "code": "./src/main.js"
     },
     "watch": {
       "files": [
@@ -22,20 +21,16 @@
         "userjs.css"
       ],
       "dirs": [
-        "src/UserJS",
+        "src",
         "build/css"
       ]
     },
     "paths": {
+      "fileName": "main-userjs",
+      "dir": "./dist",
       "dev": {
         "fileName": "main-userjs.dev",
-        "env": "./src/UserJS/.env",
         "dir": "./web-server"
-      },
-      "public": {
-        "fileName": "main-userjs",
-        "env": "./dist/.env",
-        "dir": "./dist"
       }
     }
   },
@@ -48,16 +43,20 @@
       "safari"
     ],
     "connect": [
-      "play.aidungeon.com"
+      "play.aidungeon.com",
+      "beta.aidungeon.com"
     ],
     "grant": [
-      "unsafeWindow"
+      "unsafeWindow",
+      "GM_registerMenuCommand",
+      "GM.registerMenuCommand"
     ],
     "exclude": [],
     "include": [],
     "exclude-match": [],
     "match": [
-      "https://play.aidungeon.com/*"
+      "https://play.aidungeon.com/*",
+      "https://beta.aidungeon.com/*"
     ],
     "noframes": true,
     "resource": {},

@@ -1,4 +1,4 @@
 'use strict';
-import build from '@userjs/builder';
+import build from 'user.js';
 
 build();
