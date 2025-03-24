@@ -342,7 +342,7 @@ class dataStructure {
   format() {
     return {
       headers: this.headers,
-      referrer: 'https://play.aidungeon.com/',
+      referrer: location.origin,
       body: this.body
     };
   }

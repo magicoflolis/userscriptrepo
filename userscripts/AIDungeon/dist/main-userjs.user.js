@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      1.0.1
+// @version      1.0.2
 // @name         Adventure + Scenario Exporter
 // @description  Export any adventure or scenario to a local file.
 // @author       Magic <magicoflolis@tuta.io>
@@ -402,7 +402,7 @@ class dataStructure {
   format() {
     return {
       headers: this.headers,
-      referrer: 'https://play.aidungeon.com/',
+      referrer: location.origin,
       body: this.body
     };
   }
