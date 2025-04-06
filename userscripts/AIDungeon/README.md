@@ -27,6 +27,7 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/userscriptrepo
 <p>
   <img src="https://raw.githubusercontent.com/magicoflolis/userscriptrepo/refs/heads/master/userscripts/AIDungeon/assets/preview-a.png">
   <img src="https://raw.githubusercontent.com/magicoflolis/userscriptrepo/refs/heads/master/userscripts/AIDungeon/assets/preview-b.png">
+	<img src="https://raw.githubusercontent.com/magicoflolis/userscriptrepo/refs/heads/master/userscripts/AIDungeon/assets/preview-c.png">
 </p>
 
 ### Source Code
