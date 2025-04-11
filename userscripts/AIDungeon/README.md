@@ -52,4 +52,4 @@ javascript:(function(){['https://cdn.jsdelivr.net/gh/magicoflolis/userscriptrepo
 
 ### Source Code
 
-- [https://github.com/magicoflolis/userscriptrepo/tree/master/userscripts/AIDungeon](https://github.com/magicoflolis/userscriptrepo/tree/master/userscripts/AIDungeon)
+- <https://github.com/magicoflolis/userscriptrepo/tree/master/userscripts/AIDungeon>
