@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      1.1.0
+// @version      1.1.1
 // @name         Adventure + Scenario Exporter
 // @description  Export any adventure or scenario to a local file.
 // @author       Magic <magicoflolis@tuta.io>
@@ -427,7 +427,7 @@ const fromGraphQL = async (type, shortId) => {
         },
         body: {
           operationName: 'GetGameplayAdventure',
-          variables: { shortId, limit: 10000, desc: true },
+          variables: { shortId, limit: 1000000, desc: true },
           query:
             'query GetGameplayAdventure($shortId: String, $limit: Int, $offset: Int, $desc: Boolean) {\n  adventure(shortId: $shortId) {\n    id\n    publicId\n    shortId\n    scenarioId\n    instructions\n    title\n    description\n    tags\n    nsfw\n    isOwner\n    userJoined\n    gameState\n    actionCount\n    contentType\n    createdAt\n    showComments\n    commentCount\n    allowComments\n    voteCount\n    userVote\n    editedAt\n    published\n    unlisted\n    deletedAt\n    saveCount\n    isSaved\n    user {\n      id\n      isCurrentUser\n      isMember\n      profile {\n        id\n        title\n        thumbImageUrl\n        __typename\n      }\n      __typename\n    }\n    shortCode\n    thirdPerson\n    imageStyle\n    memory\n    authorsNote\n    image\n    actionWindow(limit: $limit, offset: $offset, desc: $desc) {\n      id\n      imageText\n      ...ActionSubscriptionAction\n      __typename\n    }\n    allPlayers {\n      ...PlayerSubscriptionPlayer\n      __typename\n    }\n    storyCards {\n      id\n      ...StoryCard\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment ActionSubscriptionAction on Action {\n  id\n  text\n  type\n  imageUrl\n  shareUrl\n  imageText\n  adventureId\n  decisionId\n  undoneAt\n  deletedAt\n  createdAt\n  logId\n  __typename\n}\n\nfragment PlayerSubscriptionPlayer on Player {\n  id\n  userId\n  characterName\n  isTypingAt\n  user {\n    id\n    isMember\n    profile {\n      id\n      title\n      thumbImageUrl\n      __typename\n    }\n    __typename\n  }\n  createdAt\n  deletedAt\n  blockedAt\n  __typename\n}\n\nfragment StoryCard on StoryCard {\n  id\n  type\n  keys\n  value\n  title\n  useForCharacterCreation\n  description\n  updatedAt\n  deletedAt\n  __typename\n}'
         }
@@ -447,6 +447,7 @@ const fromGraphQL = async (type, shortId) => {
         body: {
           operationName: 'GetScenario',
           variables: { shortId },
+          //query: 'query GetScenario($shortId: String) {\n  scenario(shortId: $shortId) {\n    id\n    contentType\n    createdAt\n    editedAt\n    publicId\n    shortId\n    title\n    description\n    prompt\n    memory\n    authorsNote\n    image\n    isOwner\n    published\n    unlisted\n    allowComments\n    showComments\n    commentCount\n    voteCount\n    userVote\n    saveCount\n    storyCardCount\n    isSaved\n    tags\n    adventuresPlayed\n    thirdPerson\n    nsfw\n    contentRating\n    contentRatingLockedAt\n    contentRatingLockedMessage\n    tags\n    type\n    details\n    parentScenario {\n      id\n      shortId\n      title\n      __typename\n    }\n    user {\n      isCurrentUser\n      isMember\n      profile {\n        title\n        thumbImageUrl\n        __typename\n      }\n      __typename\n    }\n    options {\n      id\n      userId\n      shortId\n      title\n      prompt\n      gameCodeSharedLibrary\n    gameCodeOnInput\n    gameCodeOnOutput\n    gameCodeOnModelContext\n    recentScriptLogs\n    lastModelContext\n  parentScenarioId\n      deletedAt\n      __typename\n    }\n    storyCards {\n      id\n      ...StoryCard\n      __typename\n    }\n    ...CardSearchable\n    __typename\n  }\n}\n\nfragment CardSearchable on Searchable {\n  id\n  contentType\n  publicId\n  shortId\n  title\n  description\n  image\n  tags\n  userVote\n  voteCount\n  published\n  unlisted\n  publishedAt\n  createdAt\n  isOwner\n  editedAt\n  deletedAt\n  blockedAt\n  isSaved\n  saveCount\n  commentCount\n  userId\n  contentRating\n  user {\n    id\n    isMember\n    profile {\n      id\n      title\n      thumbImageUrl\n      __typename\n    }\n    __typename\n  }\n  ... on Adventure {\n    actionCount\n    userJoined\n    playPublicId\n    unlisted\n    playerCount\n    __typename\n  }\n  ... on Scenario {\n    adventuresPlayed\n    __typename\n  }\n  __typename\n}\n\nfragment StoryCard on StoryCard {\n  id\n  type\n  keys\n  value\n  title\n  useForCharacterCreation\n  description\n  updatedAt\n  deletedAt\n  __typename\n}'
           query:
             'query GetScenario($shortId: String) {\n  scenario(shortId: $shortId) {\n    id\n    contentType\n    createdAt\n    editedAt\n    publicId\n    shortId\n    title\n    description\n    prompt\n    memory\n    authorsNote\n    image\n    isOwner\n    published\n    unlisted\n    allowComments\n    showComments\n    commentCount\n    voteCount\n    userVote\n    saveCount\n    storyCardCount\n    isSaved\n    tags\n    adventuresPlayed\n    thirdPerson\n    nsfw\n    contentRating\n    contentRatingLockedAt\n    contentRatingLockedMessage\n    tags\n    type\n    details\n    parentScenario {\n      id\n      shortId\n      title\n      __typename\n    }\n    user {\n      isCurrentUser\n      isMember\n      profile {\n        title\n        thumbImageUrl\n        __typename\n      }\n      __typename\n    }\n    options {\n      id\n      userId\n      shortId\n      title\n      prompt\n      parentScenarioId\n      deletedAt\n      __typename\n    }\n    storyCards {\n      id\n      ...StoryCard\n      __typename\n    }\n    ...CardSearchable\n    __typename\n  }\n}\n\nfragment CardSearchable on Searchable {\n  id\n  contentType\n  publicId\n  shortId\n  title\n  description\n  image\n  tags\n  userVote\n  voteCount\n  published\n  unlisted\n  publishedAt\n  createdAt\n  isOwner\n  editedAt\n  deletedAt\n  blockedAt\n  isSaved\n  saveCount\n  commentCount\n  userId\n  contentRating\n  user {\n    id\n    isMember\n    profile {\n      id\n      title\n      thumbImageUrl\n      __typename\n    }\n    __typename\n  }\n  ... on Adventure {\n    actionCount\n    userJoined\n    playPublicId\n    unlisted\n    playerCount\n    __typename\n  }\n  ... on Scenario {\n    adventuresPlayed\n    __typename\n  }\n  __typename\n}\n\nfragment StoryCard on StoryCard {\n  id\n  type\n  keys\n  value\n  title\n  useForCharacterCreation\n  description\n  updatedAt\n  deletedAt\n  __typename\n}'
         }
@@ -455,7 +456,7 @@ const fromGraphQL = async (type, shortId) => {
         operationName: 'GetScenarioScripting',
         variables: { shortId },
         query:
-          'query GetScenarioScripting($shortId: String) {\n  scenario(shortId: $shortId) {\n    id\n    shortId\n    title\n    image\n    gameCodeSharedLibrary\n    gameCodeOnInput\n    gameCodeOnOutput\n    gameCodeOnModelContext\n    recentScriptLogs\n    lastModelContext\n    __typename\n  }\n}'
+          'query GetScenarioScripting($shortId: String) {\n  scenario(shortId: $shortId) {\n    gameCodeSharedLibrary\n    gameCodeOnInput\n    gameCodeOnOutput\n    gameCodeOnModelContext\n    recentScriptLogs\n    lastModelContext\n  }\n}'
       },
       aiVersions: {
         headers: {
@@ -480,6 +481,56 @@ const fromGraphQL = async (type, shortId) => {
           query:
             'mutation ImportStoryCards($input: ImportStoryCardsInput!) {  importStoryCards(input: $input) {    success    message    storyCards {      keys      value      type      __typename    }    __typename  }}'
         }
+      },
+      UpdateScenario: {
+        headers: {
+          'x-gql-operation-name': 'UpdateScenario'
+        },
+        body: {
+          operationName: 'UpdateScenario',
+          variables: {
+            input: shortId
+          },
+          query:
+            'mutation UpdateScenario($input: ScenarioInput) {  updateScenario(input: $input) {    scenario {      id      title      description      prompt      memory      authorsNote      tags      nsfw      contentRating      contentRatingLockedAt      contentRatingLockedMessage      published      thirdPerson      allowComments      unlisted      image      uploadId      type      details      editedAt      __typename    }    message    success    __typename  }}'
+        }
+      },
+      UpdateScenarioScripts: {
+        headers: {
+          'x-gql-operation-name': 'UpdateScenarioScripts'
+        },
+        body: {
+          operationName: 'UpdateScenarioScripts',
+          variables: shortId,
+          query:
+            'mutation UpdateScenarioScripts($shortId: String, $gameCode: JSONObject) {  updateScenarioScripts(shortId: $shortId, gameCode: $gameCode) {    success    message    scenario {      id      gameCodeSharedLibrary      gameCodeOnInput      gameCodeOnOutput      gameCodeOnModelContext      __typename    }    __typename  }}'
+        }
+      },
+      UpdateAdventureState: {
+        headers: {
+          'x-gql-operation-name': 'UpdateAdventureState'
+        },
+        body: {
+          operationName: 'UpdateAdventureState',
+          variables: {
+            input: shortId
+          },
+          query:
+            'mutation UpdateAdventureState($input: AdventureStateInput) {  updateAdventureState(input: $input) {    adventure {      id      details      editedAt      __typename    }    message    success    __typename  }}'
+        }
+      },
+      UpdateAdventurePlot: {
+        headers: {
+          'x-gql-operation-name': 'UpdateAdventurePlot'
+        },
+        body: {
+          operationName: 'UpdateAdventurePlot',
+          variables: {
+            input: shortId
+          },
+          query:
+            'mutation UpdateAdventurePlot($input: AdventurePlotInput) {  updateAdventurePlot(input: $input) {    adventure {      id      thirdPerson      memory      authorsNote      editedAt      __typename    }    message    success    __typename  }}'
+        }
       }
     };
     const sel = template[type];
@@ -503,15 +554,7 @@ const fromGraphQL = async (type, shortId) => {
       );
       Object.assign(resp.data, { ...req.data, ...state.data });
       return resp;
-    } else if (/scenario/.test(type) && isNull(req.data.scenario.parentScenario)) {
-      if (Array.isArray(req.data.scenario.options)) {
-        resp.data.choices = [];
-        for (const opt of req.data.scenario.options.filter((o) => o.shortId !== shortId)) {
-          const r = await fromGraphQL(type, opt.shortId);
-          resp.data.choices.push({ ...r.data.scenario });
-        }
-        con.log(resp);
-      }
+    } else if (/scenario/.test(type)) {
       ds.body = template['scenarioScripting'];
       const state = await Network.req(
         'https://api.aidungeon.com/graphql',
@@ -552,15 +595,112 @@ const add = (s = '', l = 50, template = '-') => {
   }
   return base;
 };
-const startDownload = async (fileFormat = 'json') => {
+/**
+ * @param {string} fileFormat
+ * @param {'Export'|'Import'} type
+ * @param {import("../typings/types.d.ts").fromPath} content
+ */
+const startDownload = async (fileFormat = 'json', type = 'Export', content = {}) => {
   const p = /\/(adventure|scenario)\/([\w-]+)\/.+(\/)?/.exec(location.pathname);
   if (p === null)
     throw new Error('Navigate to an adventure or scenario first!', { cause: 'startDownload' });
+  const contentType = p[1];
+  const shortId = p[2];
+  if (type === 'Import') {
+    if (isEmpty(content)) throw new Error('"content" field is empty', { cause: 'startDownload' });
+    const r = content.data.adventure ?? content.data.scenario;
+    const fetchRecords = [];
+
+    const update = {
+      adventureState: {
+        shortId,
+        details: r.details
+      },
+      adventurePlot: {
+        shortId,
+        memory: r.memory,
+        authorsNote: r.authorsNote,
+        thirdPerson: r.thirdPerson
+      },
+      scenario: {
+        shortId,
+        title: r.title,
+        description: r.description,
+        prompt: r.prompt,
+        memory: r.memory,
+        authorsNote: r.authorsNote,
+        tags: r.tags,
+        contentRating: r.contentRating,
+        thirdPerson: r.thirdPerson,
+        allowComments: r.allowComments,
+        image: r.image,
+        type: r.type,
+        details: r.details
+      },
+      scripting: {
+        shortId,
+        gameCode: {
+          onInput: r.gameCodeOnInput,
+          onModelContext: r.gameCodeOnModelContext,
+          onOutput: r.gameCodeOnOutput,
+          sharedLibrary: r.gameCodeSharedLibrary
+        }
+      },
+      storyCards: {
+        contentType,
+        shortId,
+        storyCards:
+          Array.isArray(r.storyCards) &&
+          r.storyCards.map(({ type, keys, value, title, description, useForCharacterCreation }) => {
+            return {
+              type,
+              keys,
+              value,
+              title,
+              description,
+              useForCharacterCreation
+            };
+          })
+      }
+    };
+    if (contentType === 'scenario' && content.data.scenario) {
+      fetchRecords.push(
+        fromGraphQL('UpdateScenario', update.scenario).catch(err),
+        fromGraphQL('UpdateScenarioScripts', update.scripting).catch(err)
+      );
+    } else if (contentType === 'adventure') {
+      if (r.details) {
+        fetchRecords.push(fromGraphQL('UpdateAdventureState', update.adventureState).catch(err));
+      }
+      fetchRecords.push(fromGraphQL('UpdateAdventurePlot', update.adventurePlot).catch(err));
+    }
+    if (Array.isArray(r.storyCards)) {
+      fetchRecords.push(fromGraphQL('importStoryCards', update.storyCards));
+    }
+    const records = await Promise.allSettled(fetchRecords);
+    const msgs = ['Page reload required!'];
+    for (const r of records) {
+      const data = r.value.data;
+      const key = Object.keys(data)[0];
+      const resp = data[key];
+      if (resp.success === false)
+        throw new Error(`Failed to import "${key}"`, { cause: 'startDownload' });
+      msgs.push(`${resp.message} - ${key}`);
+    }
+    alert(msgs.join('\n\n'));
+    return;
+  }
   /**
    * @type { import("../typings/types.d.ts").fromPath }
    */
-  const obj = await fromGraphQL(p[1], p[2]);
+  const obj = await fromGraphQL(contentType, shortId);
   const root = obj.data.adventure ?? obj.data.scenario;
+  if (obj.data.scenario && Array.isArray(obj.data.scenario.options)) {
+    for (const opt of root.options.filter((o) => o.shortId !== shortId)) {
+      const r = await fromGraphQL(contentType, opt.shortId).catch(err);
+      if (r.data) opt.data = r.data.scenario;
+    }
+  }
   const arr = [];
   let str;
   if (fileFormat === 'txt') {
@@ -706,20 +846,37 @@ const startDownload = async (fileFormat = 'json') => {
 };
 /**
  * @param {HTMLElement} parent
- * @param {string} type
+ * @param {string} section
+ * @param {string} fileFormat
+ * @param {'Export'|'Import'} type
  */
-const inject = (parent, type = 'play', fileFormat = 'json') => {
+const inject = (parent, section = 'play', fileFormat = 'json', type = 'Export') => {
   if (!parent) return;
-  if (qs(`.mujs-btn[data-file-format="${fileFormat}"]`)) return;
+  const cursor = section === 'preview' ? 'cursor: pointer;' : '';
+  const o = {
+    Export: {
+      class: 'mujs-btn',
+      color: 't_coreA1',
+      text: 'w_export',
+      style: cursor
+    },
+    Import: {
+      class: 'mujs-inp',
+      color: 't_redA',
+      text: 'w_import',
+      style: `border-width: 0px;${cursor}`
+    }
+  };
+  if (qs(`.${o[type].class}[data-file-format="${fileFormat}"]`)) return;
   const parts = /\/(adventure|scenario)\/([\w-]+)\/.+(\/)?/.exec(location.pathname);
   const rootType = parts && parts[1];
   const cl = {
-    play: 'mujs-btn is_Button _bg-0hover-513675900 _btc-0hover-1394778429 _brc-0hover-1394778429 _bbc-0hover-1394778429 _blc-0hover-1394778429 _bxsh-0hover-448821143 _bg-0active-744986709 _btc-0active-1163467620 _brc-0active-1163467620 _bbc-0active-1163467620 _blc-0active-1163467620 _bxsh-0active-680131952 _bg-0focus-455866976 _btc-0focus-1452587353 _brc-0focus-1452587353 _bbc-0focus-1452587353 _blc-0focus-1452587353 _bxsh-0focus-391012219 _dsp-flex _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-1 _cur-pointer _ox-hidden _oy-hidden _jc-center _ai-center _h-606181790 _btlr-1307609905 _btrr-1307609905 _bbrr-1307609905 _bblr-1307609905 _pr-1481558338 _pl-1481558338 _fd-row _bg-1633501478 _btc-2122800589 _brc-2122800589 _bbc-2122800589 _blc-2122800589 _btw-1px _brw-1px _bbw-1px _blw-1px _gap-1481558369 _outlineColor-43811550 _fg-1 _bbs-solid _bts-solid _bls-solid _brs-solid _bxsh-1445571361',
-    preview:
-      'mujs-btn is_Row _dsp-flex _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-1 _fd-row _ai-center _gap-1481558369 _w-5037 _pt-1481558338 _pb-1481558338 _fg-1'
+    play: `${o[type].class} is_Button _bg-0hover-513675900 _btc-0hover-1394778429 _brc-0hover-1394778429 _bbc-0hover-1394778429 _blc-0hover-1394778429 _bxsh-0hover-448821143 _bg-0active-744986709 _btc-0active-1163467620 _brc-0active-1163467620 _bbc-0active-1163467620 _blc-0active-1163467620 _bxsh-0active-680131952 _bg-0focus-455866976 _btc-0focus-1452587353 _brc-0focus-1452587353 _bbc-0focus-1452587353 _blc-0focus-1452587353 _bxsh-0focus-391012219 _dsp-flex _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-1 _cur-pointer _ox-hidden _oy-hidden _jc-center _ai-center _h-606181790 _btlr-1307609905 _btrr-1307609905 _bbrr-1307609905 _bblr-1307609905 _pr-1481558338 _pl-1481558338 _fd-row _bg-1633501478 _btc-2122800589 _brc-2122800589 _bbc-2122800589 _blc-2122800589 _btw-1px _brw-1px _bbw-1px _blw-1px _gap-1481558369 _outlineColor-43811550 _fg-1 _bbs-solid _bts-solid _bls-solid _brs-solid _bxsh-1445571361`,
+    preview: `${o[type].class} is_Row _dsp-flex _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-1 _fd-row _ai-center _gap-1481558369 _w-5037 _pt-1481558338 _pb-1481558338 _fg-1`
   };
-  const btn = make('div', cl[type], {
+  const btn = make('div', cl[section], {
     id: 'game-blur-button',
+    style: o[type].style,
     dataset: {
       fileFormat
     }
@@ -728,136 +885,61 @@ const inject = (parent, type = 'play', fileFormat = 'json') => {
     'span',
     'is_ButtonText font_body _ff-299667014 _dsp-inline _bxs-border-box _ww-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _col-675002279 _fos-229441189 _lh-222976573 _tt-uppercase _mah-606181790 _pe-none _zi-1',
     {
-      textContent: `Export ${rootType} (${fileFormat.toUpperCase()})`
+      textContent: `${type} ${rootType} (${fileFormat.toUpperCase()})`
     }
   );
   const ico = make(
     'p',
     'is_Paragraph font_icons _dsp-inline _bxs-border-box _ww-break-word _mt-0px _mr-0px _mb-0px _ml-0px _col-675002279 _ff-299667014 _fow-233016109 _ls-167744028 _fos-229441158 _lh-222976511 _ussel-auto _whiteSpace-1357640891 _pe-none _pt-1316335105 _pb-1316335105',
     {
-      textContent: 'w_export'
+      textContent: o[type].text
     }
   );
+  let inpJSON;
   let span;
   ico.importantforaccessibility = 'no';
   ico['aria-hidden'] = true;
   btn.append(ico, txt);
   ael(btn, 'click', async (evt) => {
     evt.preventDefault();
-    await startDownload(fileFormat).catch(err);
+    if (type === 'Export') {
+      await startDownload(fileFormat, type).catch(err);
+    } else if (type === 'Import' && inpJSON) {
+      inpJSON.click();
+    }
   });
-  if (type === 'play') {
-    span = make('span', 't_sub_theme t_coreA1 _dsp_contents is_Theme', {
+  if (section === 'play') {
+    span = make('span', `t_sub_theme ${o[type].color} _dsp_contents is_Theme`, {
       style: 'color: var(--color);'
     });
-  } else if (type === 'preview') {
+  } else if (section === 'preview') {
     span = make(
       'div',
       'is_Row _dsp-flex _fb-auto _bxs-border-box _pos-relative _miw-0px _fs-0 _fd-row _pe-auto _jc-441309761 _ai-center _gap-1481558307 _btw-1px _btc-43811426 _mt--1px _mih-606181883 _bts-solid'
     );
-    btn.style = 'cursor: pointer;';
   }
   span.append(btn);
   parent.appendChild(span);
-};
-/**
- * @param {HTMLElement} parent
- * @param {string} type
- */
-const _inject = (parent, type = 'play') => {
-  if (!parent) return;
-  if (qs('.mujs-imp')) return;
-  const parts = /\/(adventure|scenario)\/([\w-]+)\/.+(\/)?/.exec(location.pathname);
-  const rootType = parts && parts[1];
-  const cl = {
-    play: 'mujs-imp is_Button _bg-0hover-513675900 _btc-0hover-1394778429 _brc-0hover-1394778429 _bbc-0hover-1394778429 _blc-0hover-1394778429 _bxsh-0hover-448821143 _bg-0active-744986709 _btc-0active-1163467620 _brc-0active-1163467620 _bbc-0active-1163467620 _blc-0active-1163467620 _bxsh-0active-680131952 _bg-0focus-455866976 _btc-0focus-1452587353 _brc-0focus-1452587353 _bbc-0focus-1452587353 _blc-0focus-1452587353 _bxsh-0focus-391012219 _dsp-flex _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-1 _cur-pointer _ox-hidden _oy-hidden _jc-center _ai-center _h-606181790 _btlr-1307609905 _btrr-1307609905 _bbrr-1307609905 _bblr-1307609905 _pr-1481558338 _pl-1481558338 _fd-row _bg-1633501478 _btc-2122800589 _brc-2122800589 _bbc-2122800589 _blc-2122800589 _btw-1px _brw-1px _bbw-1px _blw-1px _gap-1481558369 _outlineColor-43811550 _fg-1 _bbs-solid _bts-solid _bls-solid _brs-solid _bxsh-1445571361',
-    preview:
-      'mujs-imp is_Row _dsp-flex _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-1 _fd-row _ai-center _gap-1481558369 _w-5037 _pt-1481558338 _pb-1481558338 _fg-1'
-  };
-  const btn = make('div', cl[type], {
-    id: 'game-blur-button'
-  });
-  const txt = make(
-    'span',
-    'is_ButtonText font_body _ff-299667014 _dsp-inline _bxs-border-box _ww-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _col-675002279 _fos-229441189 _lh-222976573 _tt-uppercase _mah-606181790 _pe-none _zi-1',
-    {
-      textContent: `Import ${rootType} (JSON)`
-    }
-  );
-  const ico = make(
-    'p',
-    'is_Paragraph font_icons _dsp-inline _bxs-border-box _ww-break-word _mt-0px _mr-0px _mb-0px _ml-0px _col-675002279 _ff-299667014 _fow-233016109 _ls-167744028 _fos-229441158 _lh-222976511 _ussel-auto _whiteSpace-1357640891 _pe-none _pt-1316335105 _pb-1316335105',
-    {
-      textContent: 'w_import'
-    }
-  );
-  let span;
-  ico.importantforaccessibility = 'no';
-  ico['aria-hidden'] = true;
-  btn.append(ico, txt);
-  const inpJSON = make('input', {
-    type: 'file',
-    accept: '.json',
-    style: 'display: none;',
-    onchange(evt) {
-      const file = evt.target.files[0];
-      if (file === undefined || file.name === '') {
-        return;
+  if (type === 'Import') {
+    inpJSON = make('input', {
+      type: 'file',
+      accept: '.json',
+      style: 'display: none;',
+      onchange(evt) {
+        const file = evt.target.files[0];
+        if (file === undefined || file.name === '') return;
+        const fr = new FileReader();
+        fr.onload = function () {
+          if (typeof fr.result !== 'string') return;
+          const content = JSON.parse(fr.result);
+          startDownload(fileFormat, type, content).catch(err);
+        };
+        fr.readAsText(file);
       }
-      const fr = new FileReader();
-      fr.onload = function () {
-        if (typeof fr.result !== 'string') {
-          return;
-        }
-        /**
-         * @type { import("../typings/types.d.ts").fromPath }
-         */
-        const content = JSON.parse(fr.result);
-        const r = content.data.adventure ?? content.data.scenario;
-        if (r.storyCards) {
-          const storyCards = r.storyCards.map(({ type, keys, value, title, description, useForCharacterCreation }) => {
-            return {
-              type,
-              keys,
-              value,
-              title,
-              description,
-              useForCharacterCreation
-            };
-          });
-          fromGraphQL('importStoryCards', {
-            contentType: rootType,
-            shortId: parts[2],
-            storyCards
-          }).then((resp) => {
-            const a = typeof alert !== 'undefined' && alert;
-            a(`${resp.data.importStoryCards.message} (page reload required)`);
-          });
-        }
-        inpJSON.remove();
-      };
-      fr.readAsText(file);
-    }
-  });
-  ael(btn, 'click', (evt) => {
-    evt.preventDefault();
-    inpJSON.click();
-  });
-  if (type === 'play') {
-    span = make('span', 't_sub_theme t_redA _dsp_contents is_Theme', {
-      style: 'color: var(--color);'
     });
-  } else if (type === 'preview') {
-    span = make(
-      'div',
-      'is_Row _dsp-flex _fb-auto _bxs-border-box _pos-relative _miw-0px _fs-0 _fd-row _pe-auto _jc-441309761 _ai-center _gap-1481558307 _btw-1px _btc-43811426 _mt--1px _mih-606181883 _bts-solid'
-    );
-    btn.style = 'cursor: pointer;';
+    parent.appendChild(inpJSON);
   }
-  span.append(btn);
-  parent.appendChild(span);
-  parent.appendChild(inpJSON);
-}
+};
 
 /**
  * @template { Function } F
@@ -897,14 +979,14 @@ loadDOM((doc) => {
           if (node.parentElement === null) continue;
           if (!(node instanceof HTMLElement)) continue;
           if (qs('div._pt-1481558307._btrr-1881205710', node)) {
-            for (const f of fileFormats)
-              inject(qs('div._pt-1481558307._btrr-1881205710', node), 'play', f);
-            _inject(qs('div._pt-1481558307._btrr-1881205710', node), 'play');
+            const n = qs('div._pt-1481558307._btrr-1881205710', node);
+            for (const f of fileFormats) inject(n, 'play', f);
+            inject(n, 'play', 'json', 'Import');
           }
           if (qs('div.is_Column._pt-1481558400[role="list"]', node)) {
-            for (const f of fileFormats)
-              inject(qs('div.is_Column._pt-1481558400[role="list"]', node), 'preview', f);
-            _inject(qs('div.is_Column._pt-1481558400[role="list"]', node), 'preview');
+            const n = qs('div.is_Column._pt-1481558400[role="list"]', node);
+            for (const f of fileFormats) inject(n, 'preview', f);
+            inject(n, 'preview', 'json', 'Import');
           }
         }
       }

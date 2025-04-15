@@ -26,6 +26,11 @@ export interface Templates {
   scenario: template<'GetScenario'>;
   scenarioScripting: template<'GetScenarioScripting'>;
   aiVersions: template<'GetAiVersions'>;
+  importStoryCards: template<'importStoryCards'>;
+  UpdateScenario: template<'UpdateScenario'>;
+  UpdateScenarioScripts: template<'UpdateScenarioScripts'>;
+  UpdateAdventureState: template<'updateAdventureState'>;
+  UpdateAdventurePlot: template<'UpdateAdventurePlot'>;
   // [key: string]: template<string>;
 }
 export interface aidDataList {
@@ -552,6 +557,98 @@ export interface aidDataList {
       __typename: 'AiVisibleVersionResponse';
     };
   };
+  importStoryCards: {
+    importStoryCards: {
+      success?: boolean;
+      message?: string;
+      storyCards?: {
+        keys: string;
+        value: string;
+        type: string;
+        __typename: 'StoryCard';
+      }[];
+      __typename?: 'ImportStoryCardsResponse';
+    };
+  };
+  UpdateScenario: {
+    UpdateScenario: {
+      success?: boolean;
+      message?: string;
+      scenario?: {
+        id: string;
+        title: string;
+        description: string;
+        prompt: string;
+        memory: string;
+        authorsNote: string;
+        tags: string[];
+        nsfw: null | boolean;
+        contentRating: string;
+        contentRatingLockedAt: null | string;
+        contentRatingLockedMessage: null | string;
+        published: boolean;
+        thirdPerson: boolean;
+        allowComments: boolean;
+        unlisted: boolean;
+        uploadId: string;
+        type: 'simple';
+        details: {
+          instructions: {
+            type: 'scenario';
+            custom: null | string;
+            scenario: string;
+          };
+          storySummary: string;
+          storyCardInstructions: string;
+          storyCardStoryInformation: string;
+        };
+        editedAt: string;
+        __typename: 'Scenario';
+        image: string;
+      };
+      __typename?: 'UpdateScenarioResponse';
+    };
+  };
+  UpdateScenarioScripts: {
+    UpdateScenarioScripts: {
+      success?: boolean;
+      message?: string;
+      scenario?: {
+        id: string;
+        onInput: string | null;
+        onModelContext: string | null;
+        onOutput: string | null;
+        sharedLibrary: string | null;
+        __typename: 'Scenario';
+      };
+      __typename?: 'UpdateScenarioScriptsResponse';
+    };
+  };
+  UpdateAdventureState: {
+    updateAdventureState: {
+      success?: boolean;
+      message?: string;
+      adventure?: {
+        id: string;
+        details: {
+          instructions: {
+            type: string;
+            custom: null | string;
+            scenario: string;
+          };
+          storySummary: string;
+          storyCardInstructions: string;
+          storyCardStoryInformation: string;
+        };
+        editedAt: string;
+        __typename: 'Adventure';
+      };
+      __typename?: 'UpdateAdventureStateResponse';
+    };
+  };
+  UpdateAdventurePlot: {
+    updateAdventurePlot: {}
+  }
 }
 export declare function fromGraphQL<S extends keyof Templates>(
   type: S,
