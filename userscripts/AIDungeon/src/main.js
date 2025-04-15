@@ -239,6 +239,9 @@ const Network = {
         .catch(reject);
     });
   },
+  prog(evt) {
+    return Object.is(evt.total, 0) ? '0%' : `${+((evt.loaded / evt.total) * 100).toFixed(2)}%`;
+  },
   bscStr(str = '', lowerCase = true) {
     return str[lowerCase ? 'toLowerCase' : 'toUpperCase']().replaceAll(/\W/g, '');
   }
@@ -277,9 +280,9 @@ const Command = {
 /**
  * @returns {Promise<string>}
  */
-const getToken = () => {
+const getToken = (clear = false) => {
   return new Promise((resolve, reject) => {
-    if (userjs.accessToken !== undefined) resolve(userjs.accessToken);
+    if (!clear && userjs.accessToken !== undefined) resolve(userjs.accessToken);
     const dbReq = win.indexedDB.open('firebaseLocalStorageDb');
     dbReq.onerror = reject;
     dbReq.onsuccess = (event) => {
@@ -387,6 +390,12 @@ const fromGraphQL = async (type, shortId) => {
             'query GetScenario($shortId: String) {\n  scenario(shortId: $shortId) {\n    id\n    contentType\n    createdAt\n    editedAt\n    publicId\n    shortId\n    title\n    description\n    prompt\n    memory\n    authorsNote\n    image\n    isOwner\n    published\n    unlisted\n    allowComments\n    showComments\n    commentCount\n    voteCount\n    userVote\n    saveCount\n    storyCardCount\n    isSaved\n    tags\n    adventuresPlayed\n    thirdPerson\n    nsfw\n    contentRating\n    contentRatingLockedAt\n    contentRatingLockedMessage\n    tags\n    type\n    details\n    parentScenario {\n      id\n      shortId\n      title\n      __typename\n    }\n    user {\n      isCurrentUser\n      isMember\n      profile {\n        title\n        thumbImageUrl\n        __typename\n      }\n      __typename\n    }\n    options {\n      id\n      userId\n      shortId\n      title\n      prompt\n      parentScenarioId\n      deletedAt\n      __typename\n    }\n    storyCards {\n      id\n      ...StoryCard\n      __typename\n    }\n    ...CardSearchable\n    __typename\n  }\n}\n\nfragment CardSearchable on Searchable {\n  id\n  contentType\n  publicId\n  shortId\n  title\n  description\n  image\n  tags\n  userVote\n  voteCount\n  published\n  unlisted\n  publishedAt\n  createdAt\n  isOwner\n  editedAt\n  deletedAt\n  blockedAt\n  isSaved\n  saveCount\n  commentCount\n  userId\n  contentRating\n  user {\n    id\n    isMember\n    profile {\n      id\n      title\n      thumbImageUrl\n      __typename\n    }\n    __typename\n  }\n  ... on Adventure {\n    actionCount\n    userJoined\n    playPublicId\n    unlisted\n    playerCount\n    __typename\n  }\n  ... on Scenario {\n    adventuresPlayed\n    __typename\n  }\n  __typename\n}\n\nfragment StoryCard on StoryCard {\n  id\n  type\n  keys\n  value\n  title\n  useForCharacterCreation\n  description\n  updatedAt\n  deletedAt\n  __typename\n}'
         }
       },
+      scenarioScripting: {
+        operationName: 'GetScenarioScripting',
+        variables: { shortId },
+        query:
+          'query GetScenarioScripting($shortId: String) {\n  scenario(shortId: $shortId) {\n    id\n    shortId\n    title\n    image\n    gameCodeSharedLibrary\n    gameCodeOnInput\n    gameCodeOnOutput\n    gameCodeOnModelContext\n    recentScriptLogs\n    lastModelContext\n    __typename\n  }\n}'
+      },
       aiVersions: {
         headers: {
           'x-gql-operation-name': 'GetAiVersions'
@@ -396,6 +405,19 @@ const fromGraphQL = async (type, shortId) => {
           variables: {},
           query:
             'query GetAiVersions {\n  aiVisibleVersions {\n    success\n    message\n    aiVisibleVersions {\n      id\n      type\n      versionName\n      aiDetails\n      aiSettings\n      access\n      release\n      available\n      instructions\n      engineNameEngine {\n        engineName\n        available\n        availableSettings\n        __typename\n      }\n      __typename\n    }\n    visibleTextVersions {\n      id\n      type\n      versionName\n      aiDetails\n      aiSettings\n      access\n      release\n      available\n      instructions\n      engineNameEngine {\n        engineName\n        available\n        availableSettings\n        __typename\n      }\n      __typename\n    }\n    visibleImageVersions {\n      id\n      type\n      versionName\n      aiDetails\n      aiSettings\n      access\n      release\n      available\n      instructions\n      engineNameEngine {\n        engineName\n        available\n        availableSettings\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}'
+        }
+      },
+      importStoryCards: {
+        headers: {
+          'x-gql-operation-name': 'ImportStoryCards'
+        },
+        body: {
+          operationName: 'ImportStoryCards',
+          variables: {
+            input: shortId
+          },
+          query:
+            'mutation ImportStoryCards($input: ImportStoryCardsInput!) {  importStoryCards(input: $input) {    success    message    storyCards {      keys      value      type      __typename    }    __typename  }}'
         }
       }
     };
@@ -419,9 +441,34 @@ const fromGraphQL = async (type, shortId) => {
         ds.format()
       );
       Object.assign(resp.data, { ...req.data, ...state.data });
-    } else {
-      Object.assign(resp, req);
+      return resp;
+    } else if (/scenario/.test(type) && isNull(req.data.scenario.parentScenario)) {
+      if (Array.isArray(req.data.scenario.options)) {
+        resp.data.choices = [];
+        for (const opt of req.data.scenario.options.filter((o) => o.shortId !== shortId)) {
+          const r = await fromGraphQL(type, opt.shortId);
+          resp.data.choices.push({ ...r.data.scenario });
+        }
+        con.log(resp);
+      }
+      ds.body = template['scenarioScripting'];
+      const state = await Network.req(
+        'https://api.aidungeon.com/graphql',
+        'POST',
+        'json',
+        ds.format()
+      );
+      if (state.data && state.data.scenario) {
+        const { scenario } = state.data;
+        for (const [k, v] of Object.entries(scenario)) {
+          if (k in req.data.scenario) continue;
+          Object.assign(req.data.scenario, { [k]: v });
+        }
+        Object.assign(resp.data, { ...req.data });
+        return resp;
+      }
     }
+    Object.assign(resp, req);
     return resp;
   } catch (ex) {
     err(ex);
@@ -446,7 +493,8 @@ const add = (s = '', l = 50, template = '-') => {
 };
 const startDownload = async (fileFormat = 'json') => {
   const p = /\/(adventure|scenario)\/([\w-]+)\/.+(\/)?/.exec(location.pathname);
-  if (p === null) throw new Error('Navigate to an adventure or scenario first!', { cause: 'startDownload' });
+  if (p === null)
+    throw new Error('Navigate to an adventure or scenario first!', { cause: 'startDownload' });
   /**
    * @type { import("../typings/types.d.ts").fromPath }
    */
@@ -456,11 +504,15 @@ const startDownload = async (fileFormat = 'json') => {
   let str;
   if (fileFormat === 'txt') {
     /**
-     * @param { import("../typings/types.d.ts").storyCard[] } cards
+     * @param { import("../typings/types.d.ts").storyCard[] } storyCard
      */
-    const storycards = (cards) => {
+    const storycards = (storyCard) => {
       const a = [];
-      for (const card of cards) {
+      const count = {
+        loaded: 0,
+        total: storyCard.length * 1000
+      };
+      for (const card of storyCard) {
         const c = [];
         let title = '';
         for (const [k, v] of Object.entries(card)) {
@@ -468,7 +520,12 @@ const startDownload = async (fileFormat = 'json') => {
           if (k === 'keys') {
             c.push(`TRIGGERS: ${v}`);
           } else if (k === 'value') {
-            c.push(`ENTRY (${v.length}/1000): ${v}`);
+            count.loaded += v.length;
+            const p = Network.prog({
+              loaded: v.length,
+              total: 1000
+            });
+            c.push(`ENTRY (${v.length}/1000=${p}): ${v}`);
           } else if (k === 'description') {
             c.push(`NOTES: ${v}`);
           } else if (k === 'type') {
@@ -481,7 +538,11 @@ const startDownload = async (fileFormat = 'json') => {
         }
         a.push(`${title ? `${title} ` : ''}[\n  ${c.join('\n  ')}\n]`);
       }
-      return a.join('\n');
+      return {
+        ...count,
+        percent: Network.prog(count),
+        cards: a.join('\n')
+      };
     };
     /**
      * @param { import("../typings/types.d.ts").actionWindow[] } actions
@@ -511,11 +572,14 @@ const startDownload = async (fileFormat = 'json') => {
       } else if (/authorsNote/.test(k)) {
         arr.push(`${add("AUTHOR'S NOTE")}\n${v}`);
       } else if (/storyCards/.test(k)) {
-        arr.push(`${add('STORY CARDS')}\n${storycards(v)}`);
+        const sc = storycards(v);
+        arr.push(
+          `${add(`STORY CARDS [${v.length} cards | ${sc.loaded}/${sc.total}=${sc.percent}]`)}\n${sc.cards}`
+        );
       } else if (/actionWindow/.test(k)) {
         arr.push(`${add('ACTIONS')}\n${actionWindow(v)}`);
       } else if (/options/.test(k)) {
-        arr.push(`${add('OPTIONS')}\n${storycards(v)}`);
+        arr.push(`${add('OPTIONS')}\n${storycards(v).cards}`);
       } else if (/details/.test(k)) {
         for (const [key, value] of Object.entries(v)) {
           if (isEmpty(value)) continue;
@@ -525,6 +589,18 @@ const startDownload = async (fileFormat = 'json') => {
             arr.push(`${add(key.toUpperCase())}\n${value}`);
           }
         }
+      } else if (/gameCodeSharedLibrary/.test(k)) {
+        arr.push(`${add('SCRIPTING LIBRARY')}\n${v}`);
+      } else if (/gameCodeOnInput/.test(k)) {
+        arr.push(`${add('SCRIPTS INPUT')}\n${v}`);
+      } else if (/gameCodeOnOutput/.test(k)) {
+        arr.push(`${add('SCRIPTS OUTPUT')}\n${v}`);
+      } else if (/gameCodeOnModelContext/.test(k)) {
+        arr.push(`${add('SCRIPTS CONTEXT')}\n${v}`);
+      } else if (/lastModelContext/.test(k)) {
+        arr.push(`${add('SCRIPTS MODEL CONTEXT')}\n${v}`);
+      } else if (/recentScriptLogs/.test(k)) {
+        arr.push(`${add('SCRIPT LOGS')}\n${v.join('\n')}`);
       }
     }
     str = arr.join('\n');
@@ -572,12 +648,8 @@ const startDownload = async (fileFormat = 'json') => {
  * @param {string} type
  */
 const inject = (parent, type = 'play', fileFormat = 'json') => {
-  if (!parent) {
-    return;
-  }
-  if (qs(`.mujs-btn[data-file-format="${fileFormat}"]`)) {
-    return;
-  }
+  if (!parent) return;
+  if (qs(`.mujs-btn[data-file-format="${fileFormat}"]`)) return;
   const parts = /\/(adventure|scenario)\/([\w-]+)\/.+(\/)?/.exec(location.pathname);
   const rootType = parts && parts[1];
   const cl = {
@@ -627,6 +699,104 @@ const inject = (parent, type = 'play', fileFormat = 'json') => {
   span.append(btn);
   parent.appendChild(span);
 };
+/**
+ * @param {HTMLElement} parent
+ * @param {string} type
+ */
+const _inject = (parent, type = 'play') => {
+  if (!parent) return;
+  if (qs('.mujs-imp')) return;
+  const parts = /\/(adventure|scenario)\/([\w-]+)\/.+(\/)?/.exec(location.pathname);
+  const rootType = parts && parts[1];
+  const cl = {
+    play: 'mujs-imp is_Button _bg-0hover-513675900 _btc-0hover-1394778429 _brc-0hover-1394778429 _bbc-0hover-1394778429 _blc-0hover-1394778429 _bxsh-0hover-448821143 _bg-0active-744986709 _btc-0active-1163467620 _brc-0active-1163467620 _bbc-0active-1163467620 _blc-0active-1163467620 _bxsh-0active-680131952 _bg-0focus-455866976 _btc-0focus-1452587353 _brc-0focus-1452587353 _bbc-0focus-1452587353 _blc-0focus-1452587353 _bxsh-0focus-391012219 _dsp-flex _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-1 _cur-pointer _ox-hidden _oy-hidden _jc-center _ai-center _h-606181790 _btlr-1307609905 _btrr-1307609905 _bbrr-1307609905 _bblr-1307609905 _pr-1481558338 _pl-1481558338 _fd-row _bg-1633501478 _btc-2122800589 _brc-2122800589 _bbc-2122800589 _blc-2122800589 _btw-1px _brw-1px _bbw-1px _blw-1px _gap-1481558369 _outlineColor-43811550 _fg-1 _bbs-solid _bts-solid _bls-solid _brs-solid _bxsh-1445571361',
+    preview:
+      'mujs-imp is_Row _dsp-flex _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-1 _fd-row _ai-center _gap-1481558369 _w-5037 _pt-1481558338 _pb-1481558338 _fg-1'
+  };
+  const btn = make('div', cl[type], {
+    id: 'game-blur-button'
+  });
+  const txt = make(
+    'span',
+    'is_ButtonText font_body _ff-299667014 _dsp-inline _bxs-border-box _ww-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _col-675002279 _fos-229441189 _lh-222976573 _tt-uppercase _mah-606181790 _pe-none _zi-1',
+    {
+      textContent: `Import ${rootType} (JSON)`
+    }
+  );
+  const ico = make(
+    'p',
+    'is_Paragraph font_icons _dsp-inline _bxs-border-box _ww-break-word _mt-0px _mr-0px _mb-0px _ml-0px _col-675002279 _ff-299667014 _fow-233016109 _ls-167744028 _fos-229441158 _lh-222976511 _ussel-auto _whiteSpace-1357640891 _pe-none _pt-1316335105 _pb-1316335105',
+    {
+      textContent: 'w_import'
+    }
+  );
+  let span;
+  ico.importantforaccessibility = 'no';
+  ico['aria-hidden'] = true;
+  btn.append(ico, txt);
+  const inpJSON = make('input', {
+    type: 'file',
+    accept: '.json',
+    style: 'display: none;',
+    onchange(evt) {
+      const file = evt.target.files[0];
+      if (file === undefined || file.name === '') {
+        return;
+      }
+      const fr = new FileReader();
+      fr.onload = function () {
+        if (typeof fr.result !== 'string') {
+          return;
+        }
+        /**
+         * @type { import("../typings/types.d.ts").fromPath }
+         */
+        const content = JSON.parse(fr.result);
+        const r = content.data.adventure ?? content.data.scenario;
+        if (r.storyCards) {
+          const storyCards = r.storyCards.map(({ type, keys, value, title, description, useForCharacterCreation }) => {
+            return {
+              type,
+              keys,
+              value,
+              title,
+              description,
+              useForCharacterCreation
+            };
+          });
+          fromGraphQL('importStoryCards', {
+            contentType: rootType,
+            shortId: parts[2],
+            storyCards
+          }).then((resp) => {
+            const a = typeof alert !== 'undefined' && alert;
+            a(`${resp.data.importStoryCards.message} (page reload required)`);
+          });
+        }
+        inpJSON.remove();
+      };
+      fr.readAsText(file);
+    }
+  });
+  ael(btn, 'click', (evt) => {
+    evt.preventDefault();
+    inpJSON.click();
+  });
+  if (type === 'play') {
+    span = make('span', 't_sub_theme t_redA _dsp_contents is_Theme', {
+      style: 'color: var(--color);'
+    });
+  } else if (type === 'preview') {
+    span = make(
+      'div',
+      'is_Row _dsp-flex _fb-auto _bxs-border-box _pos-relative _miw-0px _fs-0 _fd-row _pe-auto _jc-441309761 _ai-center _gap-1481558307 _btw-1px _btc-43811426 _mt--1px _mih-606181883 _bts-solid'
+    );
+    btn.style = 'cursor: pointer;';
+  }
+  span.append(btn);
+  parent.appendChild(span);
+  parent.appendChild(inpJSON);
+}
 
 /**
  * @template { Function } F
@@ -661,25 +831,19 @@ loadDOM((doc) => {
     observe(doc, (mutations) => {
       for (const mutation of mutations) {
         for (const node of mutation.addedNodes) {
-          if (node.nodeType !== 1) {
-            continue;
-          }
-          if (ignoreTags.has(node.localName)) {
-            continue;
-          }
-          if (node.parentElement === null) {
-            continue;
-          }
-          if (!(node instanceof HTMLElement)) {
-            continue;
-          }
+          if (node.nodeType !== 1) continue;
+          if (ignoreTags.has(node.localName)) continue;
+          if (node.parentElement === null) continue;
+          if (!(node instanceof HTMLElement)) continue;
           if (qs('div._pt-1481558307._btrr-1881205710', node)) {
             for (const f of fileFormats)
               inject(qs('div._pt-1481558307._btrr-1881205710', node), 'play', f);
+            _inject(qs('div._pt-1481558307._btrr-1881205710', node), 'play');
           }
           if (qs('div.is_Column._pt-1481558400[role="list"]', node)) {
             for (const f of fileFormats)
               inject(qs('div.is_Column._pt-1481558400[role="list"]', node), 'preview', f);
+            _inject(qs('div.is_Column._pt-1481558400[role="list"]', node), 'preview');
           }
         }
       }

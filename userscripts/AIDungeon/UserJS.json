@@ -1,5 +1,5 @@
 {
-  "version": "1.0.2",
+  "version": "1.1.0",
   "name": "Adventure + Scenario Exporter",
   "description": "Export any adventure or scenario to a local file.",
   "author": "Magic <magicoflolis@tuta.io>",
@@ -43,6 +43,7 @@
       "safari"
     ],
     "connect": [
+      "api-beta.aidungeon.com",
       "play.aidungeon.com",
       "beta.aidungeon.com"
     ],

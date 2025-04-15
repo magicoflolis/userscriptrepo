@@ -60,6 +60,7 @@ export interface Network {
     responseType: ResponseType,
     data: RequestInit
   ): Promise<T>;
+  prog<E extends { loaded: number; total: number; }>(evt: E): string;
   bscStr<S extends string>(str: S, lowerCase: boolean): S;
 }
 

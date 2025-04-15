@@ -24,6 +24,7 @@ export interface Templates {
   adventure: template<'GetGameplayAdventure'>;
   adventureDetails: template<'GetAdventureDetails'>;
   scenario: template<'GetScenario'>;
+  scenarioScripting: template<'GetScenarioScripting'>;
   aiVersions: template<'GetAiVersions'>;
   // [key: string]: template<string>;
 }
