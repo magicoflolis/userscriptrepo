@@ -1,5 +1,5 @@
 export interface dataStructure<accessToken extends string> {
-  _headers: {
+  headers: {
     authorization: `firebase ${accessToken}`;
     'content-type': 'application/json';
     'x-gql-operation-name': string;
@@ -591,7 +591,7 @@ export interface aidDataList {
         allowComments: boolean;
         unlisted: boolean;
         uploadId: string;
-        type: 'simple';
+        type: 'simple' | 'multipleChoice' | 'characterCreator';
         details: {
           instructions: {
             type: 'scenario';

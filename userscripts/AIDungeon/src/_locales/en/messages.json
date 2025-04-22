@@ -1,0 +1,17 @@
+{
+  "aiVersionsJSON": {
+    "message": "Export Instructions (JSON)"
+  },
+  "aiVersionsTXT": {
+    "message": "Export Text Instructions (TXT)"
+  },
+  "export_in": {
+    "message": "Export in"
+  },
+  "Export": {
+    "message": "Export"
+  },
+  "Import": {
+    "message": "Import"
+  }
+}

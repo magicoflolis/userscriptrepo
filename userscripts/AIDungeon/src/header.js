@@ -31,6 +31,8 @@ if (
 if (!(typeof userjs === 'object' && userjs.UserJS)) {
   return;
 }
+const translations = [[languageList]];
+const main_css = `[[mainCSS]]`;
 /******************************************************************************/
 [[code]]
 })();

@@ -1,5 +1,5 @@
 {
-  "version": "1.1.1",
+  "version": "1.1.2",
   "name": "Adventure + Scenario Exporter",
   "description": "Export any adventure or scenario to a local file.",
   "author": "Magic <magicoflolis@tuta.io>",
@@ -12,22 +12,20 @@
   "build": {
     "source": {
       "metadata": "./src/header.js",
-      "code": "./src/main.js"
+      "code": "./src/main.js",
+      "mainCSS": "./src/sass/userstyle.scss"
     },
     "watch": {
-      "files": [
-        "main.js",
-        "header.js",
-        "userjs.css"
-      ],
-      "dirs": [
-        "src",
-        "build/css"
-      ]
+      "files": ["main.js", "header.js", "_main.scss"],
+      "dirs": ["src", "src/sass"]
     },
     "paths": {
       "fileName": "main-userjs",
       "dir": "./dist",
+      "i18n": {
+				"default": "en",
+				"dir": "../../../userscripts/AIDungeon/src/_locales"
+			},
       "dev": {
         "fileName": "main-userjs.dev",
         "dir": "./web-server"
@@ -49,7 +47,11 @@
     ],
     "grant": [
       "unsafeWindow",
+      "GM_addElement",
+      "GM_info",
       "GM_registerMenuCommand",
+      "GM.addElement",
+      "GM.info",
       "GM.registerMenuCommand"
     ],
     "exclude": [],

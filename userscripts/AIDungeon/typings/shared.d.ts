@@ -60,42 +60,43 @@ export interface Network {
     responseType: ResponseType,
     data: RequestInit
   ): Promise<T>;
-  prog<E extends { loaded: number; total: number; }>(evt: E): string;
+  prog<E extends { loaded: number; total: number }>(evt: E): string;
   bscStr<S extends string>(str: S, lowerCase: boolean): S;
 }
 
-export declare function objToStr<O>(obj: O): string;
-
+/**
+ * Object to `[object *]`
+ */
+export declare function objToStr(obj: any): string;
 /**
  * Object is typeof `RegExp`
  */
-export declare function isRegExp<O>(obj: O): boolean;
-
+export declare function isRegExp(obj: any): obj is RegExp;
+/**
+ * Object is typeof `HTMLElement`
+ */
+export declare function isHTML(obj: any): obj is HTMLElement;
 /**
  * Object is typeof `Element`
  */
-export declare function isElem<O>(obj: O): boolean;
-
+export declare function isElem(obj: any): obj is Element;
 /**
  * Object is typeof `object` / JSON Object
  */
-export declare function isObj<O>(obj: O): boolean;
-
+export declare function isObj(obj: any): obj is Object;
 /**
  * Object is typeof `Function`
  */
-export declare function isFN<O>(obj: O): boolean;
-
+export declare function isFN(obj: any): obj is Function;
 /**
  * Object is `null` or `undefined`
  */
-export declare function isNull<O>(obj: O): boolean;
-
+export declare function isNull(obj: any): obj is undefined;
+// export declare function isNull<O>(obj: O): boolean;
 /**
  * Object is Blank
  */
 export declare function isBlank<O>(obj: O): boolean;
-
 /**
  * Object is Empty
  */
@@ -125,7 +126,10 @@ export declare function ael<E extends HTMLElement, K extends keyof HTMLElementEv
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Document/querySelector)
  */
-export declare function qs<E extends HTMLElement, S extends string>(selector: S, root: E): E | null;
+export declare function qs<E extends HTMLElement, S extends string>(
+  selectors: S,
+  root: E
+): E | null;
 
 /**
  * Returns all element descendants of node that match selectors.
@@ -143,7 +147,6 @@ export declare function qsA<E extends HTMLElement, S extends string>(
  * @param attr Set attributes for the element
  */
 export declare function formAttrs<E extends HTMLElement>(elem: E, attr?: E[keyof E]): E;
-// export declare function formAttrs<E extends HTMLElement>(elem: E, attr: keyof E): E;
 
 /**
  * Creates an instance of the element for the specified tag.
@@ -163,7 +166,9 @@ export declare function make<
     | {
         [key in A]: Record<string, unknown>;
       },
-  attrs?: {
-    [key in A]: Record<string, unknown>;
-  }
+  attrs?:
+    | string
+    | {
+        [key in A]: Record<string, unknown>;
+      }
 ): HTMLElementTagNameMap[K];
