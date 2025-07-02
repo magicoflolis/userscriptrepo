@@ -10,6 +10,9 @@ export interface dataStructure<accessToken extends string> {
     Priority: 'u=4';
   };
 }
+// type TemplateMap<K extends string, T> = {
+//   [P in K]: T
+// };
 type template<H extends string> = {
   headers: {
     'x-gql-operation-name': H;
@@ -24,7 +27,7 @@ export interface Templates {
   adventure: template<'GetGameplayAdventure'>;
   adventureDetails: template<'GetAdventureDetails'>;
   scenario: template<'GetScenario'>;
-  scenarioScripting: template<'GetScenarioScripting'>;
+  GetScenarioScripting: template<'GetScenarioScripting'>;
   aiVersions: template<'GetAiVersions'>;
   importStoryCards: template<'importStoryCards'>;
   UpdateScenario: template<'UpdateScenario'>;
@@ -255,7 +258,7 @@ export interface aidDataList {
         aiSettings: {
           numSamplesPerCall: number;
           maxNumSamplesPerCall: number;
-          numSamplesLowerBounds: {};
+          numSamplesLowerBounds: object;
           isSafeModel: boolean;
           isPromoModel: boolean;
           shouldInjectNewLines: boolean;
@@ -379,7 +382,7 @@ export interface aidDataList {
         aiSettings: {
           numSamplesPerCall: number;
           maxNumSamplesPerCall: number;
-          numSamplesLowerBounds: {};
+          numSamplesLowerBounds: object;
           isSafeModel: boolean;
           isPromoModel: boolean;
           shouldInjectNewLines: boolean;
@@ -647,13 +650,17 @@ export interface aidDataList {
     };
   };
   UpdateAdventurePlot: {
-    updateAdventurePlot: {}
+    updateAdventurePlot: object
   }
 }
-export declare function fromGraphQL<S extends keyof Templates>(
-  type: S,
+export declare function fromGraphQL<L extends aidDataList, T extends keyof L>(
+  type: T,
   shortId?: string
-): Promise<{ data: aidDataList[S] }>;
+): Promise<{ data: Record<T, L[T]> }>;
+// export declare function fromGraphQL<S extends keyof Templates>(
+//   type: S,
+//   shortId?: string
+// ): Promise<{ data: aidDataList[S] }>;
 export type storyCard = {
   id: string;
   type: string;

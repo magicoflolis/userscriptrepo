@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      1.1.2
+// @version      1.1.3
 // @name         Adventure + Scenario Exporter
 // @description  Export any adventure or scenario to a local file.
 // @author       Magic <magicoflolis@tuta.io>
@@ -36,7 +36,7 @@
 const inIframe = (() => {
   try {
     return window.self !== window.top;
-  } catch (e) {
+  } catch {
     return true;
   }
 })();
@@ -228,17 +228,17 @@ const isArr = (obj) => Array.isArray(obj);
  */
 const objToStr = (obj) => Object.prototype.toString.call(obj).match(/\[object (.*)\]/)[1];
 /**
- * @type { import("../typings/shared.d.ts").isHTML }
- */
-const isHTML = (obj) => /HTML/.test(objToStr(obj));
-/**
  * @type { import("../typings/shared.d.ts").isObj }
  */
-const isObj = (obj) => /Object/.test(objToStr(obj));
+const isObj = (obj) => objToStr(obj) === 'Object';
 /**
  * @type { import("../typings/shared.d.ts").isFN }
  */
-const isFN = (obj) => /Function/.test(objToStr(obj));
+const isFN = (obj) => objToStr(obj) === 'Function';
+/**
+ * @type { import("../typings/shared.d.ts").isHTML }
+ */
+const isHTML = (obj) => objToStr(obj) === 'HTML';
 /**
  * @type { import("../typings/shared.d.ts").isNull }
  */
@@ -252,7 +252,7 @@ const isBlank = (obj) => {
   return (
     (typeof obj === 'string' && Object.is(obj.trim(), '')) ||
     ((obj instanceof Set || obj instanceof Map) && Object.is(obj.size, 0)) ||
-    (isArr(obj) && Object.is(obj.length, 0)) ||
+    (Array.isArray(obj) && Object.is(obj.length, 0)) ||
     (isObj(obj) && Object.is(Object.keys(obj).length, 0))
   );
 };
@@ -279,7 +279,7 @@ const qs = (selectors, root) => {
  * @type { import("../typings/shared.d.ts").normalizeTarget }
  */
 const normalizeTarget = (target, toQuery = true, root) => {
-  if (Object.is(target, null) || Object.is(target, undefined)) {
+  if (isNull(target)) {
     return [];
   }
   if (Array.isArray(target)) {
@@ -288,7 +288,7 @@ const normalizeTarget = (target, toQuery = true, root) => {
   if (typeof target === 'string') {
     return toQuery ? Array.from((root || document).querySelectorAll(target)) : Array.of(target);
   }
-  if (/object HTML/.test(Object.prototype.toString.call(target))) {
+  if (isHTML(target)) {
     return Array.of(target);
   }
   return Array.from(target);
@@ -397,10 +397,11 @@ const Language = class {
    */
   static i18n$(key) {
     try {
-      return Language.i18nMap.get(Language.current)?.[key] ?? 'Invalid Key';
+      const c = Language.i18nMap.get(Language.current) ?? Language.i18nMap.get('en');
+      return c?.[key] ?? 'Invalid Key';
     } catch (e) {
       err(e);
-      return 'error';
+      return 'ERROR';
     }
   }
   static get current() {
@@ -534,18 +535,18 @@ const Network = {
   }
 };
 /**
- * @template { {url: string | {}; filename?: string; type?: string} } D
+ * @template U
+ * @template { {url: U; filename?: string; type?: string} } D
  * @param {D} details
  */
 const doDownloadProcess = (details) => {
   if (!isObj(details) || !details.url) return;
   details.url = `data:text/plain;charset=utf-8,${encodeURIComponent(isObj(details.url) ? JSON.stringify(details.url, null, ' ') : details.url)}`;
-  const a = make('a', {
+  make('a', {
     download: details.filename || 'file',
     href: details.url,
     type: details.type || 'text/plain'
-  });
-  a.dispatchEvent(new MouseEvent('click'));
+  }).dispatchEvent(new MouseEvent('click'));
 };
 const Command = {
   cmds: new Set(),
@@ -575,7 +576,7 @@ const Command = {
 const getToken = (clear = false) => {
   return new Promise((resolve, reject) => {
     if (!clear && userjs.accessToken !== undefined) resolve(userjs.accessToken);
-    const win = typeof unsafeWindow !== 'undefined' && unsafeWindow || window;
+    const win = (typeof unsafeWindow !== 'undefined' && unsafeWindow) || window;
     const dbReq = win.indexedDB.open('firebaseLocalStorageDb');
     dbReq.onerror = reject;
     dbReq.onsuccess = (event) => {
@@ -594,60 +595,6 @@ const getToken = (clear = false) => {
     };
   });
 };
-const dataStructure = class {
-  /** @type { import("../typings/types.d.ts").dataStructure<this["token"]>["headers"] } */
-  #_;
-  /** @type {string} */
-  token;
-  /** @type {string} */
-  operationName;
-  /** @type {{[key: string]: any}} */
-  variables;
-  /** @type {string} */
-  query;
-  constructor(accessToken) {
-    this.token = accessToken;
-  }
-  get headers() {
-    return this.#_;
-  }
-  set headers(data) {
-    this.#_ = {
-      authorization: `firebase ${this.token}`,
-      'content-type': 'application/json',
-      'x-gql-operation-name': data,
-      'Sec-GPC': '1',
-      'Sec-Fetch-Dest': 'empty',
-      'Sec-Fetch-Mode': 'cors',
-      'Sec-Fetch-Site': 'same-site',
-      Priority: 'u=4'
-    };
-  }
-  get body() {
-    return JSON.stringify(this);
-  }
-  set body(data) {
-    this.operationName = data.operationName;
-    this.variables = data.variables ?? {};
-    this.query = data.query;
-  }
-  format() {
-    const { headers, body } = this;
-    return {
-      headers,
-      body,
-      referrer: location.origin
-    };
-  }
-  toJSON() {
-    const { operationName, variables, query } = this;
-    return {
-      operationName,
-      variables,
-      query
-    };
-  }
-};
 /**
  * @type { import("../typings/types.d.ts").fromGraphQL }
  */
@@ -656,8 +603,23 @@ const fromGraphQL = async (type, shortId) => {
     data: {}
   };
   try {
-    /** @type { import("../typings/types.d.ts").Templates } */
+    /**
+     * @template { import("../typings/types.d.ts").Templates } T
+     * @type { T }
+     */
     const template = {
+      GetAdventure: {
+        body: {
+          operationName: 'GetGameplayAdventure',
+          variables: { shortId, limit: 1000000, desc: true },
+          query: 'query GetGameplayAdventure($shortId: String, $limit: Int, $offset: Int, $desc: Boolean) {\n adventureState(shortId: $shortId) {\n details\n }\n adventure(shortId: $shortId) {\n id\n publicId\n shortId\n scenarioId\n instructions\n title\n description\n tags\n nsfw\n isOwner\n userJoined\n gameState\n actionCount\n contentType\n createdAt\n showComments\n commentCount\n allowComments\n voteCount\n userVote\n editedAt\n published\n unlisted\n deletedAt\n saveCount\n isSaved\n user {\n id\n isCurrentUser\n isMember\n profile {\n id\n title\n thumbImageUrl\n __typename\n }\n __typename\n }\n shortCode\n thirdPerson\n imageStyle\n memory\n authorsNote\n image\n actionWindow(limit: $limit, offset: $offset, desc: $desc) {\n id\n imageText\n ... on Action {\n id\n text\n type\n imageUrl\n shareUrl\n imageText\n adventureId\n decisionId\n undoneAt\n deletedAt\n createdAt\n logId\n __typename\n }\n __typename\n }\n allPlayers {\n ... on Player {\n id\n userId\n characterName\n isTypingAt\n user {\n id\n isMember\n profile {\n id\n title\n thumbImageUrl\n __typename\n }\n __typename\n }\n createdAt\n deletedAt\n blockedAt\n __typename\n }\n __typename\n }\n storyCards {\n id\n ... on StoryCard {\n id\n type\n keys\n value\n title\n useForCharacterCreation\n description\n updatedAt\n deletedAt\n __typename\n }\n __typename\n }\n __typename\n }\n}'
+        }
+      },
+      GetScenario: {
+        body: {
+          query: '{\n scenario(shortId: "{{shortId}}") {\n id\n contentType\n createdAt\n editedAt\n publicId\n shortId\n title\n description\n prompt\n memory\n authorsNote\n image\n isOwner\n published\n unlisted\n allowComments\n showComments\n commentCount\n voteCount\n userVote\n saveCount\n storyCardCount\n isSaved\n tags\n adventuresPlayed\n thirdPerson\n nsfw\n contentRating\n contentRatingLockedAt\n contentRatingLockedMessage\n type\n details\n parentScenario {\n id\n shortId\n title\n __typename\n }\n user {\n isCurrentUser\n isMember\n profile {\n title\n thumbImageUrl\n __typename\n }\n __typename\n }\n options {\n id\n userId\n shortId\n title\n prompt\n parentScenarioId\n deletedAt\n __typename\n }\n gameCodeSharedLibrary\n gameCodeOnInput\n gameCodeOnOutput\n gameCodeOnModelContext\n recentScriptLogs\n lastModelContext\n storyCards {\n id\n ... on StoryCard {\n id\n type\n keys\n value\n title\n useForCharacterCreation\n description\n updatedAt\n deletedAt\n __typename\n }\n __typename\n }\n ... on Searchable {\n id\n contentType\n publicId\n shortId\n title\n description\n image\n tags\n userVote\n voteCount\n published\n unlisted\n publishedAt\n createdAt\n isOwner\n editedAt\n deletedAt\n blockedAt\n isSaved\n saveCount\n commentCount\n userId\n contentRating\n user {\n id\n isMember\n profile {\n id\n title\n thumbImageUrl\n __typename\n }\n __typename\n }\n ... on Adventure {\n actionCount\n userJoined\n playPublicId\n unlisted\n playerCount\n __typename\n }\n ... on Scenario {\n adventuresPlayed\n __typename\n }\n __typename\n }\n __typename\n }\n}'
+        }
+      },
       adventure: {
         headers: {
           'x-gql-operation-name': 'GetGameplayAdventure'
@@ -666,7 +628,7 @@ const fromGraphQL = async (type, shortId) => {
           operationName: 'GetGameplayAdventure',
           variables: { shortId, limit: 1000000, desc: true },
           query:
-            'query GetGameplayAdventure($shortId: String, $limit: Int, $offset: Int, $desc: Boolean) {\n  adventure(shortId: $shortId) {\n    id\n    publicId\n    shortId\n    scenarioId\n    instructions\n    title\n    description\n    tags\n    nsfw\n    isOwner\n    userJoined\n    gameState\n    actionCount\n    contentType\n    createdAt\n    showComments\n    commentCount\n    allowComments\n    voteCount\n    userVote\n    editedAt\n    published\n    unlisted\n    deletedAt\n    saveCount\n    isSaved\n    user {\n      id\n      isCurrentUser\n      isMember\n      profile {\n        id\n        title\n        thumbImageUrl\n        __typename\n      }\n      __typename\n    }\n    shortCode\n    thirdPerson\n    imageStyle\n    memory\n    authorsNote\n    image\n    actionWindow(limit: $limit, offset: $offset, desc: $desc) {\n      id\n      imageText\n      ...ActionSubscriptionAction\n      __typename\n    }\n    allPlayers {\n      ...PlayerSubscriptionPlayer\n      __typename\n    }\n    storyCards {\n      id\n      ...StoryCard\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment ActionSubscriptionAction on Action {\n  id\n  text\n  type\n  imageUrl\n  shareUrl\n  imageText\n  adventureId\n  decisionId\n  undoneAt\n  deletedAt\n  createdAt\n  logId\n  __typename\n}\n\nfragment PlayerSubscriptionPlayer on Player {\n  id\n  userId\n  characterName\n  isTypingAt\n  user {\n    id\n    isMember\n    profile {\n      id\n      title\n      thumbImageUrl\n      __typename\n    }\n    __typename\n  }\n  createdAt\n  deletedAt\n  blockedAt\n  __typename\n}\n\nfragment StoryCard on StoryCard {\n  id\n  type\n  keys\n  value\n  title\n  useForCharacterCreation\n  description\n  updatedAt\n  deletedAt\n  __typename\n}'
+            'query GetGameplayAdventure($shortId: String, $limit: Int, $offset: Int, $desc: Boolean) {\n  adventure(shortId: $shortId) {\n id\n publicId\n shortId\n scenarioId\n instructions\n title\n description\n tags\n nsfw\n isOwner\n userJoined\n gameState\n actionCount\n contentType\n createdAt\n showComments\n commentCount\n allowComments\n voteCount\n userVote\n editedAt\n published\n unlisted\n deletedAt\n saveCount\n isSaved\n user {\n id\n isCurrentUser\n isMember\n profile {\n   id\n   title\n   thumbImageUrl\n   __typename\n }\n __typename\n }\n shortCode\n thirdPerson\n imageStyle\n memory\n authorsNote\n image\n actionWindow(limit: $limit, offset: $offset, desc: $desc) {\n id\n imageText\n ...ActionSubscriptionAction\n __typename\n }\n allPlayers {\n ...PlayerSubscriptionPlayer\n __typename\n }\n storyCards {\n id\n ...StoryCard\n __typename\n }\n __typename\n  }\n}\n\nfragment ActionSubscriptionAction on Action {\n  id\n  text\n  type\n  imageUrl\n  shareUrl\n  imageText\n  adventureId\n  decisionId\n  undoneAt\n  deletedAt\n  createdAt\n  logId\n  __typename\n}\n\nfragment PlayerSubscriptionPlayer on Player {\n  id\n  userId\n  characterName\n  isTypingAt\n  user {\n id\n isMember\n profile {\n id\n title\n thumbImageUrl\n __typename\n }\n __typename\n  }\n  createdAt\n  deletedAt\n  blockedAt\n  __typename\n}\n\nfragment StoryCard on StoryCard {\n  id\n  type\n  keys\n  value\n  title\n  useForCharacterCreation\n  description\n  updatedAt\n  deletedAt\n  __typename\n}'
         }
       },
       adventureDetails: {
@@ -674,7 +636,7 @@ const fromGraphQL = async (type, shortId) => {
           operationName: 'GetAdventureDetails',
           variables: { shortId },
           query:
-            'query GetAdventureDetails($shortId: String) {\n  adventureState(shortId: $shortId) {\n    id\n    details\n    __typename\n  }\n}'
+            'query GetAdventureDetails($shortId: String) {\n adventureState(shortId: $shortId) {\n id\n details\n __typename\n }\n}'
         }
       },
       scenario: {
@@ -685,14 +647,14 @@ const fromGraphQL = async (type, shortId) => {
           operationName: 'GetScenario',
           variables: { shortId },
           query:
-            'query GetScenario($shortId: String) {\n  scenario(shortId: $shortId) {\n    id\n    contentType\n    createdAt\n    editedAt\n    publicId\n    shortId\n    title\n    description\n    prompt\n    memory\n    authorsNote\n    image\n    isOwner\n    published\n    unlisted\n    allowComments\n    showComments\n    commentCount\n    voteCount\n    userVote\n    saveCount\n    storyCardCount\n    isSaved\n    tags\n    adventuresPlayed\n    thirdPerson\n    nsfw\n    contentRating\n    contentRatingLockedAt\n    contentRatingLockedMessage\n    tags\n    type\n    details\n    parentScenario {\n      id\n      shortId\n      title\n      __typename\n    }\n    user {\n      isCurrentUser\n      isMember\n      profile {\n        title\n        thumbImageUrl\n        __typename\n      }\n      __typename\n    }\n    options {\n      id\n      userId\n      shortId\n      title\n      prompt\n      parentScenarioId\n      deletedAt\n      __typename\n    }\n    storyCards {\n      id\n      ...StoryCard\n      __typename\n    }\n    ...CardSearchable\n    __typename\n  }\n}\n\nfragment CardSearchable on Searchable {\n  id\n  contentType\n  publicId\n  shortId\n  title\n  description\n  image\n  tags\n  userVote\n  voteCount\n  published\n  unlisted\n  publishedAt\n  createdAt\n  isOwner\n  editedAt\n  deletedAt\n  blockedAt\n  isSaved\n  saveCount\n  commentCount\n  userId\n  contentRating\n  user {\n    id\n    isMember\n    profile {\n      id\n      title\n      thumbImageUrl\n      __typename\n    }\n    __typename\n  }\n  ... on Adventure {\n    actionCount\n    userJoined\n    playPublicId\n    unlisted\n    playerCount\n    __typename\n  }\n  ... on Scenario {\n    adventuresPlayed\n    __typename\n  }\n  __typename\n}\n\nfragment StoryCard on StoryCard {\n  id\n  type\n  keys\n  value\n  title\n  useForCharacterCreation\n  description\n  updatedAt\n  deletedAt\n  __typename\n}'
+            'query GetScenario($shortId: String) {\n scenario(shortId: $shortId) {\n id\n contentType\n createdAt\n editedAt\n publicId\n shortId\n title\n description\n prompt\n memory\n authorsNote\n image\n isOwner\n published\n unlisted\n allowComments\n showComments\n commentCount\n voteCount\n userVote\n saveCount\n storyCardCount\n isSaved\n tags\n adventuresPlayed\n thirdPerson\n nsfw\n contentRating\n contentRatingLockedAt\n contentRatingLockedMessage\n tags\n type\n details\n parentScenario {\n id\n shortId\n title\n __typename\n }\n user {\n isCurrentUser\n isMember\n profile {\n title\n thumbImageUrl\n __typename\n }\n __typename\n }\n options {\n id\n userId\n shortId\n title\n prompt\n parentScenarioId\n deletedAt\n __typename\n }\n storyCards {\n id\n ...StoryCard\n __typename\n }\n ...CardSearchable\n __typename\n }\n}\n\nfragment CardSearchable on Searchable {\n id\n contentType\n publicId\n shortId\n title\n description\n image\n tags\n userVote\n voteCount\n published\n unlisted\n publishedAt\n createdAt\n isOwner\n editedAt\n deletedAt\n blockedAt\n isSaved\n saveCount\n commentCount\n userId\n contentRating\n user {\n id\n isMember\n profile {\n id\n title\n thumbImageUrl\n __typename\n }\n __typename\n }\n ... on Adventure {\n actionCount\n userJoined\n playPublicId\n unlisted\n playerCount\n __typename\n }\n ... on Scenario {\n adventuresPlayed\n __typename\n }\n __typename\n}\n\nfragment StoryCard on StoryCard {\n id\n type\n keys\n value\n title\n useForCharacterCreation\n description\n updatedAt\n deletedAt\n __typename\n}'
         }
       },
-      scenarioScripting: {
-        operationName: 'GetScenarioScripting',
-        variables: { shortId },
-        query:
-          'query GetScenarioScripting($shortId: String) {\n  scenario(shortId: $shortId) {\n    gameCodeSharedLibrary\n    gameCodeOnInput\n    gameCodeOnOutput\n    gameCodeOnModelContext\n    recentScriptLogs\n    lastModelContext\n  }\n}'
+      GetScenarioScripting: {
+        body: {
+          query:
+            '{\n scenario(shortId: "{{shortId}}") {\n id\n shortId\n title\n description\n image\n gameCodeSharedLibrary\n gameCodeOnInput\n gameCodeOnOutput\n gameCodeOnModelContext\n recentScriptLogs\n lastModelContext\n }}'
+        }
       },
       aiVersions: {
         headers: {
@@ -702,7 +664,7 @@ const fromGraphQL = async (type, shortId) => {
           operationName: 'GetAiVersions',
           variables: {},
           query:
-            'query GetAiVersions {\n  aiVisibleVersions {\n    success\n    message\n    aiVisibleVersions {\n      id\n      type\n      versionName\n      aiDetails\n      aiSettings\n      access\n      release\n      available\n      instructions\n      engineNameEngine {\n        engineName\n        available\n        availableSettings\n        __typename\n      }\n      __typename\n    }\n    visibleTextVersions {\n      id\n      type\n      versionName\n      aiDetails\n      aiSettings\n      access\n      release\n      available\n      instructions\n      engineNameEngine {\n        engineName\n        available\n        availableSettings\n        __typename\n      }\n      __typename\n    }\n    visibleImageVersions {\n      id\n      type\n      versionName\n      aiDetails\n      aiSettings\n      access\n      release\n      available\n      instructions\n      engineNameEngine {\n        engineName\n        available\n        availableSettings\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}'
+            'query GetAiVersions {\n aiVisibleVersions {\n success\n message\n aiVisibleVersions {\n id\n type\n versionName\n aiDetails\n aiSettings\n access\n release\n available\n instructions\n engineNameEngine {\n engineName\n available\n availableSettings\n __typename\n }\n __typename\n }\n visibleTextVersions {\n id\n type\n versionName\n aiDetails\n aiSettings\n access\n release\n available\n instructions\n engineNameEngine {\n engineName\n available\n availableSettings\n __typename\n }\n __typename\n }\n visibleImageVersions {\n id\n type\n versionName\n aiDetails\n aiSettings\n access\n release\n available\n instructions\n engineNameEngine {\n engineName\n available\n availableSettings\n __typename\n }\n __typename\n }\n __typename\n }\n}'
         }
       },
       importStoryCards: {
@@ -715,7 +677,7 @@ const fromGraphQL = async (type, shortId) => {
             input: shortId
           },
           query:
-            'mutation ImportStoryCards($input: ImportStoryCardsInput!) {  importStoryCards(input: $input) {    success    message    storyCards {      keys      value      type      __typename    }    __typename  }}'
+            'mutation ImportStoryCards($input: ImportStoryCardsInput!) {\n importStoryCards(input: $input) {\n success\n message\n storyCards {\n keys\n value\n type\n __typename\n }\n __typename\n }}'
         }
       },
       UpdateScenario: {
@@ -728,7 +690,7 @@ const fromGraphQL = async (type, shortId) => {
             input: shortId
           },
           query:
-            'mutation UpdateScenario($input: ScenarioInput) {  updateScenario(input: $input) {    scenario {      id      title      description      prompt      memory      authorsNote      tags      nsfw      contentRating      contentRatingLockedAt      contentRatingLockedMessage      published      thirdPerson      allowComments      unlisted      image      uploadId      type      details      editedAt      __typename    }    message    success    __typename  }}'
+            'mutation UpdateScenario($input: ScenarioInput) {\n updateScenario(input: $input) {\n scenario {\n id\n title\n description\n prompt\n memory\n authorsNote\n tags\n nsfw\n contentRating\n contentRatingLockedAt\n contentRatingLockedMessage\n published\n thirdPerson\n allowComments\n unlisted\n image\n uploadId\n type\n details\n editedAt\n __typename\n }\n message\n success\n __typename\n }}'
         }
       },
       UpdateScenarioScripts: {
@@ -739,7 +701,7 @@ const fromGraphQL = async (type, shortId) => {
           operationName: 'UpdateScenarioScripts',
           variables: shortId,
           query:
-            'mutation UpdateScenarioScripts($shortId: String, $gameCode: JSONObject) {  updateScenarioScripts(shortId: $shortId, gameCode: $gameCode) {    success    message    scenario {      id      gameCodeSharedLibrary      gameCodeOnInput      gameCodeOnOutput      gameCodeOnModelContext      __typename    }    __typename  }}'
+            'mutation UpdateScenarioScripts($shortId: String, $gameCode: JSONObject) {\n updateScenarioScripts(shortId: $shortId, gameCode: $gameCode) {\n success\n message\n scenario {\n id\n gameCodeSharedLibrary\n gameCodeOnInput\n gameCodeOnOutput\n gameCodeOnModelContext\n __typename\n }\n __typename\n }}'
         }
       },
       UpdateOptionTitle: {
@@ -752,7 +714,7 @@ const fromGraphQL = async (type, shortId) => {
             input: shortId
           },
           query:
-            'mutation UpdateOptionTitle($input: ScenarioInput) {  updateScenario(input: $input) {    scenario {      id      shortId      title      prompt      parentScenarioId      deletedAt      __typename    }    message    success    __typename  }}'
+            'mutation UpdateOptionTitle($input: ScenarioInput) {\n updateScenario(input: $input) {\n scenario {\n id\n shortId\n title\n prompt\n parentScenarioId\n deletedAt\n __typename\n }\n message\n success\n __typename\n }}'
         }
       },
       UpdateAdventureState: {
@@ -765,7 +727,7 @@ const fromGraphQL = async (type, shortId) => {
             input: shortId
           },
           query:
-            'mutation UpdateAdventureState($input: AdventureStateInput) {  updateAdventureState(input: $input) {    adventure {      id      details      editedAt      __typename    }    message    success    __typename  }}'
+            'mutation UpdateAdventureState($input: AdventureStateInput) {\n updateAdventureState(input: $input) {\n adventure {\n id\n details\n editedAt\n __typename\n }\n message\n success\n __typename\n }}'
         }
       },
       UpdateAdventurePlot: {
@@ -778,48 +740,86 @@ const fromGraphQL = async (type, shortId) => {
             input: shortId
           },
           query:
-            'mutation UpdateAdventurePlot($input: AdventurePlotInput) {  updateAdventurePlot(input: $input) {    adventure {      id      thirdPerson      memory      authorsNote      editedAt      __typename    }    message    success    __typename  }}'
+            'mutation UpdateAdventurePlot($input: AdventurePlotInput) {\n updateAdventurePlot(input: $input) {\n adventure {\n id\n thirdPerson\n memory\n authorsNote\n editedAt\n __typename\n }\n message\n success\n __typename\n }}'
+        }
+      },
+      UpdateAdventureDetails: {
+        body: {
+          operationName: 'UpdateAdventureDetails',
+          variables: {
+            input: shortId
+          },
+          query:
+            'mutation UpdateAdventureDetails($input: AdventureDetailsInput) {\n updateAdventureDetails(input: $input) {\n adventure {\n id\n title\n description\n image\n uploadId\n tags\n nsfw\n contentRating\n contentRatingLockedAt\n contentRatingLockedMessage\n allowComments\n editedAt\n __typename\n }\n message\n success\n __typename\n }\n}'
         }
       }
     };
-    const sel = template[type];
-    if (!sel) {
-      return resp;
+    if (/scenario/.test(type)) {
+      type = 'GetScenario';
+    } else if (/adventure/.test(type)) {
+      type = 'GetAdventure';
     }
-    const accessToken = await getToken();
-    const ds = new dataStructure(accessToken);
-    ds.headers = sel.headers;
-    ds.body = sel.body;
-
-    const req = await Network.req('https://api.aidungeon.com/graphql', 'POST', 'json', ds.format());
-    if (/adventure/.test(type)) {
-      ds.body = template['adventureDetails'];
-      const state = await Network.req(
-        'https://api.aidungeon.com/graphql',
-        'POST',
-        'json',
-        ds.format()
-      );
-      Object.assign(resp.data, { ...req.data, ...state.data });
-      return resp;
-    } else if (/scenario/.test(type)) {
-      ds.body = template['scenarioScripting'];
-      const state = await Network.req(
-        'https://api.aidungeon.com/graphql',
-        'POST',
-        'json',
-        ds.format()
-      );
-      if (state.data && state.data.scenario) {
-        const { scenario } = state.data;
-        for (const [k, v] of Object.entries(scenario)) {
-          if (k in req.data.scenario) continue;
-          Object.assign(req.data.scenario, { [k]: v });
+    if (!template[type]) return resp;
+    for (const v of Object.values(template)) {
+      v.load = () => {
+        template[type].headers ??= {};
+        template[type].body ??= {};
+        const { headers, body } = v;
+        if (body.operationName) {
+          template[type].body.variables ??= {};
         }
-        Object.assign(resp.data, { ...req.data });
-        return resp;
-      }
+        v.body.query = v.body.query.replace(/\{\{shortId\}\}/g, shortId);
+        return { headers, body: JSON.stringify(body) };
+      };
     }
+    const sel = template[type].load();
+    const accessToken = await getToken();
+    const headers = {
+      Accept: 'application/graphql-response+json, application/json, multipart/mixed',
+      authorization: `firebase ${accessToken}`,
+      'content-type': 'application/json',
+      'Sec-GPC': '1',
+      'Sec-Fetch-Dest': 'empty',
+      'Sec-Fetch-Mode': 'cors',
+      'Sec-Fetch-Site': 'same-site'
+    };
+    const req = await Network.req('https://api.aidungeon.com/graphql', 'POST', 'json', {
+      headers: {
+        ...headers,
+        ...sel.headers
+      },
+      body: sel.body
+    });
+    // if (/adventure/.test(type)) {
+    //   const $sel = template['adventureDetails'].load();
+    //   const state = await Network.req('https://api.aidungeon.com/graphql', 'POST', 'json', {
+    //     headers: {
+    //       ...headers,
+    //       ...$sel.headers
+    //     },
+    //     body: $sel.body
+    //   });
+    //   Object.assign(resp.data, { ...req.data, ...state.data });
+    //   return resp;
+    // } else if (/scenario/.test(type)) {
+    //   const $sel = template['GetScenarioScripting'].load();
+    //   const state = await Network.req('https://api.aidungeon.com/graphql', 'POST', 'json', {
+    //     headers: {
+    //       ...headers,
+    //       ...$sel.headers
+    //     },
+    //     body: $sel.body
+    //   });
+    //   if (state.data && state.data.scenario) {
+    //     const { scenario } = state.data;
+    //     for (const [k, v] of Object.entries(scenario)) {
+    //       if (k in req.data.scenario) continue;
+    //       Object.assign(req.data.scenario, { [k]: v });
+    //     }
+    //     Object.assign(resp.data, { ...req.data });
+    //     return resp;
+    //   }
+    // }
     Object.assign(resp, req);
     return resp;
   } catch (ex) {
@@ -849,7 +849,8 @@ const add = (s = '', l = 50, template = '-') => {
  * @param {import("../typings/types.d.ts").fromPath} content
  */
 const startDownload = async (fileFormat = 'json', type = 'Export', content = {}) => {
-  const [,contentType, shortId] = /\/(adventure|scenario)\/([\w-]+)\/.+(\/)?/.exec(location.pathname) ?? [];
+  const [, contentType, shortId] =
+    /\/(adventure|scenario)\/([\w-]+)\/.+(\/)?/.exec(location.pathname) ?? [];
   if (!contentType)
     throw new Error('Navigate to an adventure or scenario first!', { cause: 'startDownload' });
   if (type === 'Import') {
@@ -859,7 +860,16 @@ const startDownload = async (fileFormat = 'json', type = 'Export', content = {})
     const update = {
       adventureState: {
         shortId,
-        details: r.details
+        details: r.details ?? content.data.adventureState?.details
+      },
+      adventureDetails: {
+        shortId,
+        allowComments: r.allowComments,
+        contentRating: r.contentRating,
+        description: r.description,
+        image: r.image,
+        tags: r.tags,
+        title: r.title
       },
       adventurePlot: {
         shortId,
@@ -908,16 +918,17 @@ const startDownload = async (fileFormat = 'json', type = 'Export', content = {})
           })
       }
     };
-    if (contentType === 'scenario' && content.data.scenario) {
+    if (contentType === 'scenario') {
       fetchRecords.push(
         fromGraphQL('UpdateScenario', update.scenario).catch(err),
         fromGraphQL('UpdateScenarioScripts', update.scripting).catch(err)
       );
     } else if (contentType === 'adventure') {
-      if (r.details) {
+      if (r.details || content.data.adventureState) {
         fetchRecords.push(fromGraphQL('UpdateAdventureState', update.adventureState).catch(err));
       }
       fetchRecords.push(fromGraphQL('UpdateAdventurePlot', update.adventurePlot).catch(err));
+      fetchRecords.push(fromGraphQL('UpdateAdventureDetails', update.adventureDetails).catch(err));
     }
     if (isArr(r.storyCards)) {
       fetchRecords.push(fromGraphQL('importStoryCards', update.storyCards));
@@ -1112,16 +1123,20 @@ const inject = (parent, section = 'play', fileFormat = 'json', type = 'Export') 
     }
   };
   if (qs(`.${o[type].class}[data-file-format="${fileFormat}"]`)) return;
-  const parts = /\/(adventure|scenario)\/([\w-]+)\/.+(\/)?/.exec(location.pathname);
-  const rootType = parts && parts[1];
+  /**
+   * @type { HTMLInputElement }
+   */
+  let inpJSON;
+  const [, contentType] = /\/(adventure|scenario)\/([\w-]+)\/.+(\/)?/.exec(location.pathname) ?? [];
   const btn = make('mujs-elem', o[type].class, {
     dataset: {
       fileFormat,
       section
     }
   });
+  const textContent = `${i18n$(type)} ${contentType} (${fileFormat.toUpperCase()})`;
   const txt = make('span', {
-    textContent: `${i18n$(type)} ${rootType} (${fileFormat.toUpperCase()})`,
+    textContent,
     dataset: {
       section
     }
@@ -1129,8 +1144,7 @@ const inject = (parent, section = 'play', fileFormat = 'json', type = 'Export') 
   const ico = make('p', {
     textContent: o[type].text
   });
-  let inpJSON;
-  const span = make('mujs-main', {
+  const s = make('mujs-main', {
     dataset: {
       section
     }
@@ -1138,33 +1152,52 @@ const inject = (parent, section = 'play', fileFormat = 'json', type = 'Export') 
   ico.importantforaccessibility = 'no';
   ico['aria-hidden'] = true;
   btn.append(ico, txt);
-  ael(btn, 'click', async (evt) => {
+  btn.onclick = async (evt) => {
     evt.preventDefault();
     if (type === 'Export') {
+      txt.textContent = `Exporting (${fileFormat.toUpperCase()})...`;
       await startDownload(fileFormat, type).catch(err);
+      txt.textContent = textContent;
     } else if (type === 'Import' && inpJSON) {
+      txt.textContent = `Importing ${contentType}...`;
       inpJSON.click();
     }
-  });
-  span.append(btn);
-  parent.appendChild(span);
+  };
+  s.append(btn);
+  parent.appendChild(s);
   if (type === 'Import') {
     inpJSON = make('input', {
       type: 'file',
       accept: '.json',
-      style: 'display: none;',
-      onchange(evt) {
-        const [file] = evt.target.files;
-        if (file === undefined || file.name === '') return;
-        const fr = new FileReader();
-        fr.onload = function () {
-          if (typeof fr.result !== 'string') return;
-          const content = JSON.parse(fr.result);
-          startDownload(fileFormat, type, content).catch(err);
-        };
-        fr.readAsText(file);
-      }
+      style: 'display: none;'
     });
+    inpJSON.oncancel = function () {
+      txt.textContent = textContent;
+    };
+    inpJSON.onchange = function () {
+      const [file] = this.files;
+      if (file === undefined || file.name === '') {
+        txt.textContent = textContent;
+        return;
+      }
+      const fr = new FileReader();
+      fr.onload = function () {
+        if (typeof fr.result === 'string') {
+          const content = JSON.parse(fr.result);
+          startDownload(fileFormat, type, content)
+            .catch(err)
+            .finally(() => {
+              txt.textContent = textContent;
+            });
+        } else {
+          txt.textContent = textContent;
+        }
+      };
+      fr.onerror = function () {
+        txt.textContent = textContent;
+      };
+      fr.readAsText(file);
+    };
     parent.appendChild(inpJSON);
   }
 };
@@ -1174,7 +1207,7 @@ const inject = (parent, section = 'play', fileFormat = 'json', type = 'Export') 
  * @param { (this: F, doc: Document) => * } onDomReady
  */
 const loadDOM = (onDomReady) => {
-  if (isFN(onDomReady)) {
+  if (typeof onDomReady === 'function') {
     if (document.readyState === 'interactive' || document.readyState === 'complete') {
       onDomReady(document);
     } else {
@@ -1219,7 +1252,10 @@ loadDOM((doc) => {
             for (const f of fileFormats) inject(n, 'play', f);
             inject(n, 'play', 'json', 'Import');
           }
-          n = qs('div.css-175oi2r > div.is_Column > div.is_Column > div.is_Column > div.is_Row:nth-child(3)', node);
+          n = qs(
+            'div.css-175oi2r > div.is_Column > div.is_Column > div.is_Column > div.is_Row:nth-child(3)',
+            node
+          );
           if (n) {
             for (const f of fileFormats) inject(n, 'play', f);
             inject(n, 'play', 'json', 'Import');

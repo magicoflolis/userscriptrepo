@@ -64,44 +64,44 @@ export interface Network {
   bscStr<S extends string>(str: S, lowerCase: boolean): S;
 }
 
+//#region Utilites
 /**
  * Object to `[object *]`
  */
-export declare function objToStr(obj: any): string;
+export declare function objToStr<O>(obj: O): string;
 /**
  * Object is typeof `RegExp`
  */
-export declare function isRegExp(obj: any): obj is RegExp;
+export declare function isRegExp(obj: unknown): obj is RegExp;
 /**
  * Object is typeof `HTMLElement`
  */
-export declare function isHTML(obj: any): obj is HTMLElement;
+export declare function isHTML(obj: unknown): obj is HTMLElement;
 /**
  * Object is typeof `Element`
  */
-export declare function isElem(obj: any): obj is Element;
+export declare function isElem(obj: unknown): obj is Element;
 /**
  * Object is typeof `object` / JSON Object
  */
-export declare function isObj(obj: any): obj is Object;
+export declare function isObj(obj: unknown): obj is object;
 /**
  * Object is typeof `Function`
  */
-export declare function isFN(obj: any): obj is Function;
+export declare function isFN(obj: unknown): obj is () => void;
 /**
  * Object is `null` or `undefined`
  */
-export declare function isNull(obj: any): obj is undefined;
-// export declare function isNull<O>(obj: O): boolean;
+export declare function isNull(obj: unknown): obj is null;
+export declare function isNull(obj: unknown): obj is undefined;
 /**
- * Object is Blank
+ * Object is blank
  */
 export declare function isBlank<O>(obj: O): boolean;
 /**
- * Object is Empty
+ * Object is empty
  */
 export declare function isEmpty<O>(obj: O): boolean;
-
 /**
  * Type is not 100% accurate
  */
@@ -110,6 +110,7 @@ export declare function normalizeTarget<T>(
   toQuery?: boolean,
   root?: Document | Element
 ): T[];
+//#endregion
 
 /**
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/EventTarget/addEventListener)
@@ -117,7 +118,7 @@ export declare function normalizeTarget<T>(
 export declare function ael<E extends HTMLElement, K extends keyof HTMLElementEventMap>(
   el: E,
   type: K,
-  listener: (this: E, ev: HTMLElementEventMap[K]) => any | EventListenerOrEventListenerObject,
+  listener: (this: E, ev: HTMLElementEventMap[K]) => unknown | EventListenerOrEventListenerObject,
   options?: AddEventListenerOptions | boolean
 ): void;
 
