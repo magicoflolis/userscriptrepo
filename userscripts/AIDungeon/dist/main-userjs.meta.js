@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      1.1.3
+// @version      1.1.4
 // @name         Adventure + Scenario Exporter
 // @description  Export any adventure or scenario to a local file.
 // @author       Magic <magicoflolis@tuta.io>
@@ -16,6 +16,7 @@
 // @compatible     opera
 // @compatible     safari
 // @connect     api-beta.aidungeon.com
+// @connect     api.aidungeon.com
 // @connect     play.aidungeon.com
 // @connect     beta.aidungeon.com
 // @grant     unsafeWindow

@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      1.1.3
+// @version      1.1.4
 // @name         Adventure + Scenario Exporter
 // @description  Export any adventure or scenario to a local file.
 // @author       Magic <magicoflolis@tuta.io>
@@ -16,6 +16,7 @@
 // @compatible     opera
 // @compatible     safari
 // @connect     api-beta.aidungeon.com
+// @connect     api.aidungeon.com
 // @connect     play.aidungeon.com
 // @connect     beta.aidungeon.com
 // @grant     unsafeWindow
@@ -569,6 +570,7 @@ const Command = {
     }
   }
 };
+const win = (typeof unsafeWindow !== 'undefined' && unsafeWindow) || window;
 /**
  * @param {boolean} clear
  * @returns {Promise<string>}
@@ -576,7 +578,6 @@ const Command = {
 const getToken = (clear = false) => {
   return new Promise((resolve, reject) => {
     if (!clear && userjs.accessToken !== undefined) resolve(userjs.accessToken);
-    const win = (typeof unsafeWindow !== 'undefined' && unsafeWindow) || window;
     const dbReq = win.indexedDB.open('firebaseLocalStorageDb');
     dbReq.onerror = reject;
     dbReq.onsuccess = (event) => {
@@ -783,43 +784,14 @@ const fromGraphQL = async (type, shortId) => {
       'Sec-Fetch-Mode': 'cors',
       'Sec-Fetch-Site': 'same-site'
     };
-    const req = await Network.req('https://api.aidungeon.com/graphql', 'POST', 'json', {
+    const GRAPHQL_HOST = win?.__NEXT_DATA__?.runtimeConfig?.GRAPHQL_HOST || 'api.aidungeon.com';
+    const req = await Network.req(`https://${GRAPHQL_HOST}/graphql`, 'POST', 'json', {
       headers: {
         ...headers,
         ...sel.headers
       },
       body: sel.body
     });
-    // if (/adventure/.test(type)) {
-    //   const $sel = template['adventureDetails'].load();
-    //   const state = await Network.req('https://api.aidungeon.com/graphql', 'POST', 'json', {
-    //     headers: {
-    //       ...headers,
-    //       ...$sel.headers
-    //     },
-    //     body: $sel.body
-    //   });
-    //   Object.assign(resp.data, { ...req.data, ...state.data });
-    //   return resp;
-    // } else if (/scenario/.test(type)) {
-    //   const $sel = template['GetScenarioScripting'].load();
-    //   const state = await Network.req('https://api.aidungeon.com/graphql', 'POST', 'json', {
-    //     headers: {
-    //       ...headers,
-    //       ...$sel.headers
-    //     },
-    //     body: $sel.body
-    //   });
-    //   if (state.data && state.data.scenario) {
-    //     const { scenario } = state.data;
-    //     for (const [k, v] of Object.entries(scenario)) {
-    //       if (k in req.data.scenario) continue;
-    //       Object.assign(req.data.scenario, { [k]: v });
-    //     }
-    //     Object.assign(resp.data, { ...req.data });
-    //     return resp;
-    //   }
-    // }
     Object.assign(resp, req);
     return resp;
   } catch (ex) {
