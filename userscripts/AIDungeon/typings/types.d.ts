@@ -650,8 +650,8 @@ export interface aidDataList {
     };
   };
   UpdateAdventurePlot: {
-    updateAdventurePlot: object
-  }
+    updateAdventurePlot: object;
+  };
 }
 export declare function fromGraphQL<L extends aidDataList, T extends keyof L>(
   type: T,

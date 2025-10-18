@@ -1,13 +1,22 @@
 # Changelog
 
+**TODO:**
+
+* Fully support "Multiple Choice" sub-scenarios
+
+## v1.2.0
+
+* Fixed buttons not being injected into the Story Card Management section.
+* During an export, added text of which sub-scenario is currently being exported.
+* During an import, added support for multiple choice sub-scenarios, **only up to one layer deep.**
+  * **Reload the page after importing.**
+
+---
+
 ## v1.1.2
 
 * Fixed buttons not injecting
 * Reworked backend code
-
-**TODO:**
-
-* Add "Multiple Choice" support to scenarios, currently will only export top-level scenarios
 
 ---
 

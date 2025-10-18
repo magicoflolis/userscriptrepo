@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      1.1.5
+// @version      1.2.0
 // @name         Adventure + Scenario Exporter
 // @description  Export any adventure or scenario to a local file.
 // @author       Magic <magicoflolis@tuta.io>

@@ -49,6 +49,9 @@ export interface Network {
   /**
    * Fetch a URL with fetch API as fallback
    *
+   * When GM is supported, makes a request like XMLHttpRequest, with some special capabilities, not restricted by same-origin policy
+   *
+   * [ViolentMonkey Reference](https://violentmonkey.github.io/api/gm/#gm_xmlhttprequest)
    *
    * [XMLHttpRequest MDN Reference](https://developer.mozilla.org/docs/Web/API/XMLHttpRequest)
    *
@@ -57,8 +60,8 @@ export interface Network {
   req<T = string | Blob | ArrayBuffer | Document | object | Response>(
     url: RequestInfo | URL,
     method: Request['method'],
-    responseType: ResponseType,
-    data: RequestInit
+    responseType: VMScriptResponseType,
+    data: VMScriptGMXHRDetails<T> | RequestInit
   ): Promise<T>;
   prog<E extends { loaded: number; total: number }>(evt: E): string;
   bscStr<S extends string>(str: S, lowerCase: boolean): S;
@@ -115,11 +118,11 @@ export declare function normalizeTarget<T>(
 /**
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/EventTarget/addEventListener)
  */
-export declare function ael<E extends HTMLElement, K extends keyof HTMLElementEventMap>(
+export declare function ael<E extends Element, K extends keyof HTMLElementEventMap>(
   el: E,
   type: K,
-  listener: (this: E, ev: HTMLElementEventMap[K]) => unknown | EventListenerOrEventListenerObject,
-  options?: AddEventListenerOptions | boolean
+  listener: (this: E, event: HTMLElementEventMap[K]) => unknown | EventListenerOrEventListenerObject,
+  options: AddEventListenerOptions | boolean
 ): void;
 
 /**

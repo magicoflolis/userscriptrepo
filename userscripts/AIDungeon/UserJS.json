@@ -1,5 +1,5 @@
 {
-  "version": "1.1.4",
+  "version": "1.2.0",
   "name": "Adventure + Scenario Exporter",
   "description": "Export any adventure or scenario to a local file.",
   "author": "Magic <magicoflolis@tuta.io>",
@@ -41,10 +41,14 @@
       "safari"
     ],
     "connect": [
-      "api-beta.aidungeon.com",
       "api.aidungeon.com",
+      "api-beta.aidungeon.com",
+      "api-alpha.aidungeon.com",
+      "api-internal.aidungeon.com",
       "play.aidungeon.com",
-      "beta.aidungeon.com"
+      "beta.aidungeon.com",
+      "alpha.aidungeon.com",
+      "internal.aidungeon.com"
     ],
     "grant": [
       "unsafeWindow",
@@ -60,7 +64,9 @@
     "exclude-match": [],
     "match": [
       "https://play.aidungeon.com/*",
-      "https://beta.aidungeon.com/*"
+      "https://beta.aidungeon.com/*",
+      "https://alpha.aidungeon.com/*",
+      "https://internal.aidungeon.com/*"
     ],
     "noframes": true,
     "resource": {},

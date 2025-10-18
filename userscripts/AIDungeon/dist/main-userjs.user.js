@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      1.1.5
+// @version      1.2.0
 // @name         Adventure + Scenario Exporter
 // @description  Export any adventure or scenario to a local file.
 // @author       Magic <magicoflolis@tuta.io>
@@ -175,40 +175,38 @@ mujs-elem span[data-section] {
 }`;
 /******************************************************************************/
 // #region Console
-const con = {
-  title: '[%cAID Script%c]',
-  color: 'color: rgb(69, 91, 106);',
-  dbg(...msg) {
+class con extends null {
+  static #title = '[%cAID Script%c]';
+  static #color = 'color: rgb(69, 91, 106);';
+  static dbg(...msg) {
     const dt = new Date();
     console.debug(
-      `${con.title} %cDBG`,
-      con.color,
+      `${con.#title} %cDBG`,
+      con.#color,
       '',
       'color: rgb(255, 212, 0);',
       `[${dt.getHours()}:${('0' + dt.getMinutes()).slice(-2)}:${('0' + dt.getSeconds()).slice(-2)}]`,
       ...msg
     );
-  },
-  err(...msg) {
-    console.error(`${con.title} %cERROR`, con.color, '', 'color: rgb(249, 24, 128);', ...msg);
-    const a = typeof alert !== 'undefined' && alert;
-    const t = con.title.replace(/%c/g, '');
-    for (const ex of msg) {
-      if (typeof ex === 'object' && 'cause' in ex && a) {
-        a(`${t} (${ex.cause}) ${ex.message}`);
-      }
-    }
-  },
-  info(...msg) {
-    console.info(`${con.title} %cINF`, con.color, '', 'color: rgb(0, 186, 124);', ...msg);
-  },
-  log(...msg) {
-    console.log(`${con.title} %cLOG`, con.color, '', 'color: rgb(219, 160, 73);', ...msg);
   }
-};
+  static err(...msg) {
+    console.error(`${con.#title} %cERROR`, con.#color, '', 'color: rgb(249, 24, 128);', ...msg);
+    const t = con.#title.replace(/%c/g, '');
+    const a = typeof alert !== 'undefined' && alert;
+    for (const ex of msg) {
+      if (typeof ex === 'object' && 'cause' in ex && a) a(`${t} (${ex.cause}) ${ex.message}`);
+    }
+  }
+  static info(...msg) {
+    console.info(`${con.#title} %cINF`, con.#color, '', 'color: rgb(0, 186, 124);', ...msg);
+  }
+  static log(...msg) {
+    console.log(`${con.#title} %cLOG`, con.#color, '', 'color: rgb(219, 160, 73);', ...msg);
+  }
+}
 const { err } = con;
 // #endregion
-// #region Constants
+// #region Utilities
 const isMobile = (() => {
   try {
     if (navigator) {
@@ -221,56 +219,120 @@ const isMobile = (() => {
       );
     }
   } catch (ex) {
-    ex.cause = 'getUAData';
+    if (ex instanceof Error) ex.cause = 'getUAData';
     err(ex);
   }
   return false;
 })();
 const isGM = typeof GM !== 'undefined';
-// #endregion
-// #region Validators
-const isArr = (obj) => Array.isArray(obj);
 /**
- * @type { import("../typings/shared.d.ts").objToStr }
+ * @template I
+ * @param { I } items
+ * @param { () => ? } keySelector
  */
-const objToStr = (obj) => Object.prototype.toString.call(obj).match(/\[object (.*)\]/)[1];
+const groupBy = function (items, keySelector) {
+  if ('groupBy' in Object) {
+    return Object.groupBy(items, keySelector);
+  }
+  /** [Object.groupBy polyfill](https://gist.github.com/gtrabanco/7c97bd41aa74af974fa935bfb5044b6e) */
+  return items.reduce((acc = {}, ...args) => {
+    const key = keySelector(...args);
+    acc[key] ??= [];
+    acc[key].push(args[0]);
+    return acc;
+  }, {});
+};
 /**
- * @type { import("../typings/shared.d.ts").isObj }
+ * @param {?} obj
+ * @returns {string}
  */
-const isObj = (obj) => objToStr(obj) === 'Object';
+const objToStr = (obj) => {
+  try {
+    return Object.prototype.toString.call(obj).match(/\[object (.*)\]/)?.[1] || '';
+  } catch {
+    return '';
+  }
+};
 /**
  * @type { import("../typings/shared.d.ts").isFN }
  */
-const isFN = (obj) => objToStr(obj) === 'Function';
+const isFN = (obj) => /Function/.test(objToStr(obj));
 /**
- * @type { import("../typings/shared.d.ts").isHTML }
+ * @param {?} obj
+ * @returns {obj is HTMLElement}
  */
-const isHTML = (obj) => objToStr(obj) === 'HTML';
+const isHTML = (obj) => /HTML/.test(objToStr(obj));
 /**
- * @type { import("../typings/shared.d.ts").isNull }
+ * @param {?} obj
+ * @returns {obj is Document | Element | HTMLElement}
  */
-const isNull = (obj) => {
-  return Object.is(obj, null) || Object.is(obj, undefined);
+const isDOM = (obj) => /Document|Element|HTML/.test(objToStr(obj));
+/**
+ * @template T
+ * @template {Record<string, boolean>} A
+ * @param {T | null | undefined} target - The target to normalize into an array
+ * @param {A} [args={}]
+ * @param {Document | Element | HTMLElement | null | undefined} [root]
+ * @returns {T extends null | undefined ? [] : T extends readonly unknown[] ? T : T extends Document | Element | HTMLElement ? [T] : T extends string ? A extends { split: true } ? string[] : typeof root extends Document | Element | HTMLElement ? Element[] : [T] : A extends { entries: true } ? T extends Record<infer K, infer V> ? Array<[K extends string ? K : string, V]> : Array<[string, unknown]> : A extends { keys: true } ? T extends Record<infer K, unknown> ? Array<K extends string ? K : string> : T extends Set<unknown> | Map<infer K, unknown> ? K[] : string[] : A extends { values: true } ? T extends Record<string, infer V> ? V[] : T extends Set<infer V> | Map<unknown, infer V> ? V[] : unknown[] : T extends Iterable<infer U> ? U[] : unknown[]}
+ */
+const toArray = (target, args = {}, root) => {
+  if (target == null) return [];
+  if (Array.isArray(target)) return target;
+  if (isDOM(target)) return Array.of(target);
+  /** @type {keyof typeof args | undefined} */
+  const method = ['split', 'entries', 'keys', 'values'].find((key) => args[key]);
+  if (typeof target === 'string') {
+    if (isDOM(root)) return Array.from(root.querySelectorAll(target));
+    return method === 'split' ? [...target] : [target];
+  }
+  if (method != null) {
+    const s = objToStr(target);
+    const m = method === 'split' ? 'keys' : method;
+    if (/Object/.test(s)) {
+      if (Object[m]) return Array.from(Object[m](target));
+    } else if (/Set|Map/.test(s)) {
+      /** @type {Set<unknown> | Map<unknown, unknown>} */
+      const prim = target;
+      if (prim[m]) return Array.from(prim[m]());
+    }
+  }
+  return Array.from(target);
 };
 /**
- * @type { import("../typings/shared.d.ts").isBlank }
+ * @param {?} obj
+ * @returns {obj is Record<PropertyKey, unknown>}
+ */
+const isObj = (obj) => /Object/.test(objToStr(obj));
+/**
+ * @param {?} obj
+ * @returns {obj is (null | undefined)}
+ */
+const isNull = (obj) => Object.is(obj, null) || Object.is(obj, undefined);
+/**
+ * Object is Blank
+ * @template O
+ * @param {O} obj
+ * @returns {boolean}
  */
 const isBlank = (obj) => {
-  return (
-    (typeof obj === 'string' && Object.is(obj.trim(), '')) ||
-    ((obj instanceof Set || obj instanceof Map) && Object.is(obj.size, 0)) ||
-    (Array.isArray(obj) && Object.is(obj.length, 0)) ||
-    (isObj(obj) && Object.is(Object.keys(obj).length, 0))
-  );
+  if (typeof obj === 'string') return Object.is(obj.replaceAll('\0', '').trim(), '');
+  return Object.is(toArray(obj, { split: true }).length, 0);
 };
 /**
- * @type { import("../typings/shared.d.ts").isEmpty }
+ * Object is Empty
+ * @template O
+ * @param {O} obj
+ * @returns {boolean}
  */
-const isEmpty = (obj) => {
-  return isNull(obj) || isBlank(obj);
-};
-// #endregion
-// #region Utilities
+const isEmpty = (obj) => isNull(obj) || isBlank(obj);
+/**
+ * Object is Array
+ * @template O
+ * @param {O} obj
+ * @returns {obj is any[]}
+ */
+const isArr = (obj) => Array.isArray(obj);
+const getUrlInfo = (str = location.pathname) => /(adventure|scenario)\/([^/]+)/.exec(str) ?? [];
 /**
  * @type { import("../typings/shared.d.ts").qs }
  */
@@ -281,24 +343,6 @@ const qs = (selectors, root) => {
     err(ex);
   }
   return null;
-};
-/**
- * @type { import("../typings/shared.d.ts").normalizeTarget }
- */
-const normalizeTarget = (target, toQuery = true, root) => {
-  if (isNull(target)) {
-    return [];
-  }
-  if (Array.isArray(target)) {
-    return target;
-  }
-  if (typeof target === 'string') {
-    return toQuery ? Array.from((root || document).querySelectorAll(target)) : Array.of(target);
-  }
-  if (isHTML(target)) {
-    return Array.of(target);
-  }
-  return Array.from(target);
 };
 /**
  * @type { import("../typings/shared.d.ts").observe }
@@ -314,7 +358,7 @@ const observe = (element, listener, options = { subtree: true, childList: true }
  */
 const ael = (el, type, listener, options = {}) => {
   try {
-    for (const elem of normalizeTarget(el).filter(isHTML)) {
+    for (const elem of toArray(el).filter(isHTML)) {
       if (isMobile && type === 'click') {
         elem.addEventListener('touchstart', listener, options);
         continue;
@@ -322,7 +366,7 @@ const ael = (el, type, listener, options = {}) => {
       elem.addEventListener(type, listener, options);
     }
   } catch (ex) {
-    ex.cause = 'ael';
+    if (ex instanceof Error) ex.cause = 'ael';
     err(ex);
   }
 };
@@ -333,17 +377,21 @@ const make = (tagName, cname, attrs) => {
   let el;
   try {
     /**
-     * @param {HTMLElement} elem
-     * @param {string|string[]} str
+     * @template {Element} E
+     * @param {E} elem - HTMLElement
+     * @param {string|string[]} str - Class string(s)
      */
     const addClass = (elem, str) => {
-      const arr = (isArr(str) ? str : typeof str === 'string' ? str.split(' ') : []).filter(
+      const arr = (Array.isArray(str) ? str : typeof str === 'string' ? str.split(' ') : []).filter(
         (s) => !isEmpty(s)
       );
       return !isEmpty(arr) && elem.classList.add(...arr);
     };
     /**
-     * @type { import("../typings/shared.d.ts").formAttrs }
+     * Set attributes for an element
+     * @template {Element} E
+     * @param {E} elem - HTMLElement
+     * @param {E[keyof E]} attr - Attributes for this HTMLElement
      */
     const formAttrs = (elem, attr = {}) => {
       if (!elem) return elem;
@@ -367,37 +415,34 @@ const make = (tagName, cname, attrs) => {
       return elem;
     };
     el = document.createElement(tagName);
-    if ((typeof cname === 'string' || isArr(cname)) && !isEmpty(cname)) addClass(el, cname);
+    if ((typeof cname === 'string' || Array.isArray(cname)) && !isEmpty(cname)) addClass(el, cname);
     if (typeof attrs === 'string' && !isEmpty(attrs)) el.textContent = attrs;
     formAttrs(el, (isObj(cname) && cname) || (isObj(attrs) && attrs) || {});
   } catch (ex) {
-    if (ex instanceof DOMException) throw new Error(`${ex.name}: ${ex.message}`, { cause: 'make' });
-    ex.cause = 'make';
+    if (ex instanceof Error) ex.cause = 'make';
+    if (ex instanceof DOMException)
+      throw new Error(`${ex.name}: ${ex.message}`, { cause: ex.cause });
     err(ex);
   }
   return el;
 };
-//#endregion
+// #endregion
 // #region i18n
 const Language = class {
   static i18nMap = new Map(Object.entries(translations));
   /**
-   * @param {string | Date | number} str
+   * @param { string | Date | number } str
    */
-  static toDate(str = '') {
-    const {
-      navigator: { language }
-    } = window;
-    return new Intl.DateTimeFormat(language).format(typeof str === 'string' ? new Date(str) : str);
+  static toDate(str) {
+    return new Intl.DateTimeFormat(navigator.language).format(
+      typeof str === 'string' ? new Date(str) : str
+    );
   }
   /**
-   * @param {number | bigint} number
+   * @param { number | bigint } number
    */
   static toNumber(number) {
-    const {
-      navigator: { language }
-    } = window;
-    return new Intl.NumberFormat(language).format(number);
+    return new Intl.NumberFormat(navigator.language).format(number);
   }
   /**
    * @type { import("../typings/UserJS.d.ts").i18n$ }
@@ -405,17 +450,15 @@ const Language = class {
   static i18n$(key) {
     try {
       const c = Language.i18nMap.get(Language.current) ?? Language.i18nMap.get('en');
-      return c?.[key] ?? 'Invalid Key';
+      return c?.[key] ?? 'INVALID KEY';
     } catch (e) {
       err(e);
       return 'ERROR';
     }
   }
   static get current() {
-    const {
-      navigator: { language }
-    } = window;
-    const [current = 'en'] = language.split('-');
+    const [current = 'en'] = navigator.language.split('-');
+    if (!Language.i18nMap.has(current)) return 'en';
     return current;
   }
 };
@@ -503,19 +546,19 @@ const Network = {
           const check = (str_2 = 'text') => {
             return isFN(response_1[str_2]) ? response_1[str_2]() : response_1;
           };
-          if (responseType.match(/buffer/)) {
+          if (/arraybuffer/.test(responseType)) {
             resolve(check('arrayBuffer'));
-          } else if (responseType.match(/json/)) {
+          } else if (/json/.test(responseType)) {
             resolve(check('json'));
-          } else if (responseType.match(/text/)) {
+          } else if (/text/.test(responseType)) {
             resolve(check('text'));
-          } else if (responseType.match(/blob/)) {
+          } else if (/blob/.test(responseType)) {
             resolve(check('blob'));
-          } else if (responseType.match(/formdata/)) {
+          } else if (/formdata/.test(responseType)) {
             resolve(check('formData'));
-          } else if (responseType.match(/clone/)) {
+          } else if (/clone/.test(responseType)) {
             resolve(check('clone'));
-          } else if (responseType.match(/document/)) {
+          } else if (/document/.test(responseType)) {
             const respTxt = check('text');
             const domParser = new DOMParser();
             if (respTxt instanceof Promise) {
@@ -619,12 +662,15 @@ const fromGraphQL = async (type, shortId) => {
         body: {
           operationName: 'GetGameplayAdventure',
           variables: { shortId, limit: 1000000, desc: true },
-          query: 'query GetGameplayAdventure($shortId: String, $limit: Int, $offset: Int, $desc: Boolean) {\n adventureState(shortId: $shortId) {\n details\n }\n adventure(shortId: $shortId) {\n id\n publicId\n shortId\n scenarioId\n instructions\n title\n description\n tags\n nsfw\n isOwner\n userJoined\n gameState\n actionCount\n contentType\n createdAt\n showComments\n commentCount\n allowComments\n voteCount\n userVote\n editedAt\n published\n unlisted\n deletedAt\n saveCount\n isSaved\n user {\n id\n isCurrentUser\n isMember\n profile {\n id\n title\n thumbImageUrl\n __typename\n }\n __typename\n }\n shortCode\n thirdPerson\n imageStyle\n memory\n authorsNote\n image\n actionWindow(limit: $limit, offset: $offset, desc: $desc) {\n id\n imageText\n ... on Action {\n id\n text\n type\n imageUrl\n shareUrl\n imageText\n adventureId\n decisionId\n undoneAt\n deletedAt\n createdAt\n logId\n __typename\n }\n __typename\n }\n allPlayers {\n ... on Player {\n id\n userId\n characterName\n isTypingAt\n user {\n id\n isMember\n profile {\n id\n title\n thumbImageUrl\n __typename\n }\n __typename\n }\n createdAt\n deletedAt\n blockedAt\n __typename\n }\n __typename\n }\n storyCards {\n id\n ... on StoryCard {\n id\n type\n keys\n value\n title\n useForCharacterCreation\n description\n updatedAt\n deletedAt\n __typename\n }\n __typename\n }\n __typename\n }\n}'
+          query:
+            'query GetGameplayAdventure($shortId: String, $limit: Int, $offset: Int, $desc: Boolean) {\n adventureState(shortId: $shortId) {\n details\n }\n adventure(shortId: $shortId) {\n id\n publicId\n shortId\n scenarioId\n instructions\n title\n description\n tags\n nsfw\n isOwner\n userJoined\n gameState\n actionCount\n contentType\n createdAt\n showComments\n commentCount\n allowComments\n voteCount\n userVote\n editedAt\n published\n unlisted\n deletedAt\n saveCount\n isSaved\n user {\n id\n isCurrentUser\n isMember\n profile {\n id\n title\n thumbImageUrl\n __typename\n }\n __typename\n }\n shortCode\n thirdPerson\n imageStyle\n memory\n authorsNote\n image\n actionWindow(limit: $limit, offset: $offset, desc: $desc) {\n id\n imageText\n ... on Action {\n id\n text\n type\n imageUrl\n shareUrl\n imageText\n adventureId\n decisionId\n undoneAt\n deletedAt\n createdAt\n logId\n __typename\n }\n __typename\n }\n allPlayers {\n ... on Player {\n id\n userId\n characterName\n isTypingAt\n user {\n id\n isMember\n profile {\n id\n title\n thumbImageUrl\n __typename\n }\n __typename\n }\n createdAt\n deletedAt\n blockedAt\n __typename\n }\n __typename\n }\n storyCards {\n id\n ... on StoryCard {\n id\n type\n keys\n value\n title\n useForCharacterCreation\n description\n updatedAt\n deletedAt\n __typename\n }\n __typename\n }\n __typename\n }\n}'
         }
       },
+      // query GetScenarioState($shortId: String!) {  scenario(shortId: $shortId) {    id    ...ScenarioState    __typename  }}fragment ScenarioState on Scenario {  state(viewPublished: false) {    scenarioId    type    storyCards {      id      updatedAt      keys      value      type      title      description      useForCharacterCreation      __typename    }    instructions    storySummary    storyCardInstructions    storyCardStoryInformation    scenarioStateVersion    __typename  }  __typename}
       GetScenario: {
         body: {
-          query: '{\n scenario(shortId: "{{shortId}}") {\n id\n contentType\n createdAt\n editedAt\n publicId\n shortId\n title\n description\n prompt\n memory\n authorsNote\n image\n isOwner\n published\n unlisted\n allowComments\n showComments\n commentCount\n voteCount\n userVote\n saveCount\n storyCardCount\n isSaved\n tags\n adventuresPlayed\n thirdPerson\n nsfw\n contentRating\n contentRatingLockedAt\n contentRatingLockedMessage\n type\n details\n parentScenario {\n id\n shortId\n title\n __typename\n }\n user {\n isCurrentUser\n isMember\n profile {\n title\n thumbImageUrl\n __typename\n }\n __typename\n }\n options {\n id\n userId\n shortId\n title\n prompt\n parentScenarioId\n deletedAt\n __typename\n }\n gameCodeSharedLibrary\n gameCodeOnInput\n gameCodeOnOutput\n gameCodeOnModelContext\n recentScriptLogs\n lastModelContext\n storyCards {\n id\n ... on StoryCard {\n id\n type\n keys\n value\n title\n useForCharacterCreation\n description\n updatedAt\n deletedAt\n __typename\n }\n __typename\n }\n ... on Searchable {\n id\n contentType\n publicId\n shortId\n title\n description\n image\n tags\n userVote\n voteCount\n published\n unlisted\n publishedAt\n createdAt\n isOwner\n editedAt\n deletedAt\n blockedAt\n isSaved\n saveCount\n commentCount\n userId\n contentRating\n user {\n id\n isMember\n profile {\n id\n title\n thumbImageUrl\n __typename\n }\n __typename\n }\n ... on Adventure {\n actionCount\n userJoined\n playPublicId\n unlisted\n playerCount\n __typename\n }\n ... on Scenario {\n adventuresPlayed\n __typename\n }\n __typename\n }\n __typename\n }\n}'
+          query:
+            '{\n scenario(shortId: "{{shortId}}") {\n id\n contentType\n createdAt\n editedAt\n publicId\n shortId\n title\n description\n prompt\n memory\n authorsNote\n image\n isOwner\n published\n unlisted\n allowComments\n showComments\n commentCount\n voteCount\n userVote\n saveCount\n storyCardCount\n isSaved\n tags\n adventuresPlayed\n thirdPerson\n nsfw\n contentRating\n contentRatingLockedAt\n contentRatingLockedMessage\n type\n details\n parentScenario {\n id\n shortId\n title\n __typename\n }\n user {\n isCurrentUser\n isMember\n profile {\n title\n thumbImageUrl\n __typename\n }\n __typename\n }\n options {\n id\n userId\n shortId\n title\n prompt\n parentScenarioId\n deletedAt\n __typename\n }\n gameCodeSharedLibrary\n gameCodeOnInput\n gameCodeOnOutput\n gameCodeOnModelContext\n recentScriptLogs\n lastModelContext\n storyCards {\n id\n ... on StoryCard {\n id\n type\n keys\n value\n title\n useForCharacterCreation\n description\n updatedAt\n deletedAt\n __typename\n }\n __typename\n }\n ... on Searchable {\n id\n contentType\n publicId\n shortId\n title\n description\n image\n tags\n userVote\n voteCount\n published\n unlisted\n publishedAt\n createdAt\n isOwner\n editedAt\n deletedAt\n blockedAt\n isSaved\n saveCount\n commentCount\n userId\n contentRating\n user {\n id\n isMember\n profile {\n id\n title\n thumbImageUrl\n __typename\n }\n __typename\n }\n ... on Adventure {\n actionCount\n userJoined\n playPublicId\n unlisted\n playerCount\n __typename\n }\n ... on Scenario {\n adventuresPlayed\n __typename\n }\n __typename\n }\n __typename\n }\n}'
         }
       },
       adventure: {
@@ -759,6 +805,14 @@ const fromGraphQL = async (type, shortId) => {
           query:
             'mutation UpdateAdventureDetails($input: AdventureDetailsInput) {\n updateAdventureDetails(input: $input) {\n adventure {\n id\n title\n description\n image\n uploadId\n tags\n nsfw\n contentRating\n contentRatingLockedAt\n contentRatingLockedMessage\n allowComments\n editedAt\n __typename\n }\n message\n success\n __typename\n }\n}'
         }
+      },
+      MainMenuViewCreateOptions: {
+        body: {
+          operationName: 'MainMenuViewCreateOptions',
+          variables: shortId,
+          query:
+            'mutation MainMenuViewCreateOptions($title: String, $shortId: String, $count: Int) { createScenarioOptions(title: $title, shortId: $shortId, count: $count) {\n scenarios {\n id\n userId\n shortId\n title\n prompt\n parentScenarioId\n deletedAt\n __typename\n }\n success\n message\n __typename }}'
+        }
       }
     };
     if (/scenario/.test(type)) {
@@ -827,13 +881,18 @@ const add = (s = '', l = 50, template = '-') => {
  * @param {import("../typings/types.d.ts").fromPath} content
  */
 const startDownload = async (fileFormat = 'json', type = 'Export', content = {}) => {
-  const [, contentType, shortId] =
-    /\/(adventure|scenario)\/([\w-]+)\/.+(\/)?/.exec(location.pathname) ?? [];
+  const [, contentType, shortId] = getUrlInfo();
   if (!contentType)
     throw new Error('Navigate to an adventure or scenario first!', { cause: 'startDownload' });
   if (type === 'Import') {
     if (isEmpty(content)) throw new Error('"content" field is empty', { cause: 'startDownload' });
-    const r = content.data.adventure ?? content.data.scenario;
+    const world = (await fromGraphQL(contentType, shortId).catch(err))?.data;
+    const worldData = world.adventure ?? world.scenario;
+    if (worldData.isOwner === false)
+      throw new Error(`You are not the owner of this ${contentType}.`, {
+        cause: worldData.title ?? 'startDownload'
+      });
+    const r = content?.data.adventure ?? content?.data.scenario;
     const fetchRecords = [];
     const update = {
       adventureState: {
@@ -901,15 +960,98 @@ const startDownload = async (fileFormat = 'json', type = 'Export', content = {})
         fromGraphQL('UpdateScenario', update.scenario).catch(err),
         fromGraphQL('UpdateScenarioScripts', update.scripting).catch(err)
       );
+      const createOptions = async (root = {}, $shortId) => {
+        const $options = (root.options ?? [])
+          .filter((o) => o.deletedAt == null)
+          .map((o) => {
+            return { ...o, options: (o.options ?? []).filter((op) => op.deletedAt == null) };
+          });
+        if (!isBlank($options)) {
+          const id = root.id;
+          const p = groupBy($options, ({ parentScenario }) => parentScenario?.id || id);
+          const options = p[id] || [];
+          const count = options.length;
+          await fromGraphQL('MainMenuViewCreateOptions', {
+            shortId: $shortId,
+            count
+          })
+            .then(
+              ({
+                data: {
+                  createScenarioOptions: { scenarios }
+                }
+              }) => {
+                for (let i = 0; i < scenarios.length; i++) {
+                  const opt = scenarios[i];
+                  const s = options[i];
+                  s.shortId = opt.shortId;
+                  s.parentScenarioId = opt.parentScenarioId;
+                  const obj = {
+                    scenario: {
+                      shortId: s.shortId,
+                      title: s.title || root.title,
+                      description: s.description || root.description,
+                      prompt: s.prompt || root.prompt,
+                      memory: s.memory || root.memory,
+                      authorsNote: s.authorsNote || root.authorsNote,
+                      tags: s.tags || r.tags,
+                      contentRating: s.contentRating || root.contentRating,
+                      thirdPerson: s.thirdPerson,
+                      allowComments: s.allowComments || root.allowComments,
+                      image: s.image || root.image,
+                      type: s.type || root.type,
+                      details: s.details || root.details
+                    },
+                    scripting: {
+                      shortId: s.shortId,
+                      gameCode: {
+                        onInput: s.gameCodeOnInput || root.gameCodeOnInput,
+                        onModelContext: s.gameCodeOnModelContext || root.gameCodeOnModelContext,
+                        onOutput: s.gameCodeOnOutput || root.gameCodeOnOutput,
+                        sharedLibrary: s.gameCodeSharedLibrary || root.gameCodeSharedLibrary
+                      }
+                    },
+                    storyCards: {
+                      contentType,
+                      shortId: opt.shortId,
+                      storyCards:
+                        isArr(s.storyCards) &&
+                        s.storyCards.map(
+                          ({ type, keys, value, title, description, useForCharacterCreation }) => {
+                            return {
+                              type,
+                              keys,
+                              value,
+                              title,
+                              description,
+                              useForCharacterCreation
+                            };
+                          }
+                        )
+                    }
+                  };
+                  fetchRecords.push(
+                    fromGraphQL('UpdateScenario', obj.scenario).catch(err),
+                    fromGraphQL('UpdateScenarioScripts', obj.scripting).catch(err)
+                  );
+                  if (isArr(s.storyCards))
+                    fetchRecords.push(fromGraphQL('importStoryCards', obj.storyCards).catch(err));
+                }
+              }
+            )
+            .catch(err);
+        }
+      };
+      await createOptions(r, shortId);
     } else if (contentType === 'adventure') {
-      if (r.details || content.data.adventureState) {
+      if (r.details || content?.data.adventureState) {
         fetchRecords.push(fromGraphQL('UpdateAdventureState', update.adventureState).catch(err));
       }
       fetchRecords.push(fromGraphQL('UpdateAdventurePlot', update.adventurePlot).catch(err));
       fetchRecords.push(fromGraphQL('UpdateAdventureDetails', update.adventureDetails).catch(err));
     }
     if (isArr(r.storyCards)) {
-      fetchRecords.push(fromGraphQL('importStoryCards', update.storyCards));
+      fetchRecords.push(fromGraphQL('importStoryCards', update.storyCards).catch(err));
     }
     const records = await Promise.allSettled(fetchRecords);
     const msgs = ['Page reload required!'];
@@ -929,12 +1071,22 @@ const startDownload = async (fileFormat = 'json', type = 'Export', content = {})
    * @type { import("../typings/types.d.ts").fromPath }
    */
   const obj = await fromGraphQL(contentType, shortId);
-  const root = obj.data.adventure ?? obj.data.scenario;
-  if (obj.data.scenario && isArr(obj.data.scenario.options)) {
+  const root = obj?.data.adventure ?? obj?.data.scenario;
+  if (obj?.data.scenario && isArr(obj?.data.scenario.options)) {
+    const txt = toArray('mujs-elem > span', {}, document).find((elem) =>
+      elem.textContent.includes('Exporting (JSON)...')
+    );
+    const subData = [];
     for (const opt of root.options.filter((o) => o.shortId !== shortId)) {
+      if (txt) txt.textContent = `Exporting: ${opt.title}`;
       const r = await fromGraphQL(contentType, opt.shortId).catch(err);
-      if (r.data) Object.assign(opt, { ...r.data.scenario });
+      if (r.data) {
+        const d = r.data.scenario;
+        delete d.user;
+        subData.push(d);
+      }
     }
+    root.options = subData;
   }
   const arr = [];
   let str;
@@ -1105,7 +1257,7 @@ const inject = (parent, section = 'play', fileFormat = 'json', type = 'Export') 
    * @type { HTMLInputElement }
    */
   let inpJSON;
-  const [, contentType] = /\/(adventure|scenario)\/([\w-]+)\/.+(\/)?/.exec(location.pathname) ?? [];
+  const [, contentType] = getUrlInfo();
   const btn = make('mujs-elem', o[type].class, {
     dataset: {
       fileFormat,
@@ -1127,6 +1279,9 @@ const inject = (parent, section = 'play', fileFormat = 'json', type = 'Export') 
       section
     }
   });
+  const resetText = () => {
+    txt.innerHTML = textContent;
+  };
   ico.importantforaccessibility = 'no';
   ico['aria-hidden'] = true;
   btn.append(ico, txt);
@@ -1135,7 +1290,7 @@ const inject = (parent, section = 'play', fileFormat = 'json', type = 'Export') 
     if (type === 'Export') {
       txt.textContent = `Exporting (${fileFormat.toUpperCase()})...`;
       await startDownload(fileFormat, type).catch(err);
-      txt.textContent = textContent;
+      resetText();
     } else if (type === 'Import' && inpJSON) {
       txt.textContent = `Importing ${contentType}...`;
       inpJSON.click();
@@ -1149,33 +1304,22 @@ const inject = (parent, section = 'play', fileFormat = 'json', type = 'Export') 
       accept: '.json',
       style: 'display: none;'
     });
-    inpJSON.oncancel = function () {
-      txt.textContent = textContent;
-    };
-    inpJSON.onchange = function () {
-      const [file] = this.files;
-      if (file === undefined || file.name === '') {
-        txt.textContent = textContent;
-        return;
-      }
+    ael(inpJSON, 'cancel', resetText);
+    ael(inpJSON, 'change', function () {
+      const file = this.files[0];
+      if (file === undefined || file.name === '') return resetText();
       const fr = new FileReader();
       fr.onload = function () {
-        if (typeof fr.result === 'string') {
-          const content = JSON.parse(fr.result);
-          startDownload(fileFormat, type, content)
-            .catch(err)
-            .finally(() => {
-              txt.textContent = textContent;
-            });
+        if (typeof this.result === 'string') {
+          const content = JSON.parse(this.result);
+          startDownload(fileFormat, type, content).catch(err).finally(resetText);
         } else {
-          txt.textContent = textContent;
+          resetText();
         }
       };
-      fr.onerror = function () {
-        txt.textContent = textContent;
-      };
+      fr.onerror = resetText;
       fr.readAsText(file);
-    };
+    });
     parent.appendChild(inpJSON);
   }
 };
@@ -1208,6 +1352,12 @@ loadDOM((doc) => {
         cause: 'loadDOM'
       });
     }
+    if (!isObj(win.userjs)) {
+      win.userjs = {
+        getToken,
+        fromGraphQL
+      };
+    }
     if (isNull(loadCSS(main_css, 'primary-stylesheet')))
       throw new Error('Failed to initialize script!', { cause: 'loadCSS' });
     const fileFormats = ['json', 'txt', 'md'];
@@ -1225,16 +1375,11 @@ loadDOM((doc) => {
             for (const f of fileFormats) inject(n, 'preview', f);
             inject(n, 'preview', 'json', 'Import');
           }
-          n = qs('span > div.is_Column > div.is_Column > div.is_Row', node);
-          if (node.localName === 'div' && n) {
-            for (const f of fileFormats) inject(n, 'play', f);
-            inject(n, 'play', 'json', 'Import');
-          }
-          n = qs(
-            'div.css-175oi2r > div.is_Column > div.is_Column > div.is_Column > div.is_Row:nth-child(3)',
-            node
+          const p = toArray('p[aria-level="2"]', {}, node).find((elem) =>
+            elem.textContent.includes('story card management')
           );
-          if (n) {
+          if (p) {
+            n = p.parentElement;
             for (const f of fileFormats) inject(n, 'play', f);
             inject(n, 'play', 'json', 'Import');
           }
