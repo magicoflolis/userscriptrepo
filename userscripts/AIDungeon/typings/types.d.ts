@@ -34,6 +34,7 @@ export interface Templates {
   UpdateScenarioScripts: template<'UpdateScenarioScripts'>;
   UpdateAdventureState: template<'updateAdventureState'>;
   UpdateAdventurePlot: template<'UpdateAdventurePlot'>;
+  MainMenuViewCreateOptions: template<'MainMenuViewCreateOptions'>;
   // [key: string]: template<string>;
 }
 export interface aidDataList {
@@ -185,11 +186,16 @@ export interface aidDataList {
         storyCardStoryInformation: string;
       };
       publishedAt: string;
-      deletedAt: null;
-      blockedAt: null;
+      deletedAt: string | null;
+      blockedAt: string | null;
       userId: string;
       __typename: 'Scenario';
-      parentScenario: null;
+      parentScenario: {
+        id: string;
+        shortId: string;
+        title: string;
+        __typename: 'Scenario';
+      } | null;
       image: string;
       options: {
         id: string;
@@ -197,8 +203,14 @@ export interface aidDataList {
         shortId: string;
         title: string;
         prompt: string;
-        parentScenarioId: null;
-        deletedAt: null;
+        parentScenarioId: string | null;
+        parentScenario?: {
+          id: string;
+          shortId: string;
+          title: string;
+          __typename: 'Scenario';
+        } | null;
+        deletedAt: string | null;
         __typename: 'Scenario';
       }[];
       userVote: string;
@@ -651,6 +663,23 @@ export interface aidDataList {
   };
   UpdateAdventurePlot: {
     updateAdventurePlot: object;
+  };
+  MainMenuViewCreateOptions: {
+    createScenarioOptions: {
+      scenarios: {
+        id: string;
+        userId: string;
+        shortId: string;
+        title: string;
+        prompt: string | null;
+        parentScenarioId: string | null;
+        deletedAt: string | null;
+        __typename: 'Scenario';
+      }[];
+      success?: boolean;
+      message?: string;
+      __typename?: 'CreateScenarioOptionsResponse';
+    };
   };
 }
 export declare function fromGraphQL<L extends aidDataList, T extends keyof L>(

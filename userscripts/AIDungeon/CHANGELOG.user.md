@@ -2,7 +2,15 @@
 
 **TODO:**
 
-* Fully support "Multiple Choice" sub-scenarios
+* Export adventures in `.epub`?
+
+## v1.3.0
+
+* During an import, added text of which sub-scenario is currently being imported.
+* Added **full** import support for multiple choice sub-scenarios.
+  * **Reload the page after importing.**
+
+---
 
 ## v1.2.0
 

@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      1.2.0
+// @version      1.3.0
 // @name         Adventure + Scenario Exporter
 // @description  Export any adventure or scenario to a local file.
 // @author       Magic <magicoflolis@tuta.io>
@@ -226,9 +226,11 @@ const isMobile = (() => {
 })();
 const isGM = typeof GM !== 'undefined';
 /**
- * @template I
- * @param { I } items
- * @param { () => ? } keySelector
+ * @template {PropertyKey} K
+ * @template T
+ * @param {Iterable<T>} items
+ * @param {(item: T, index: number) => K} keySelector
+ * @returns {Partial<Record<K, T[]>>}
  */
 const groupBy = function (items, keySelector) {
   if ('groupBy' in Object) {
@@ -254,7 +256,8 @@ const objToStr = (obj) => {
   }
 };
 /**
- * @type { import("../typings/shared.d.ts").isFN }
+ * @param {?} obj
+ * @returns {obj is () => void}
  */
 const isFN = (obj) => /Function/.test(objToStr(obj));
 /**
@@ -334,7 +337,14 @@ const isEmpty = (obj) => isNull(obj) || isBlank(obj);
 const isArr = (obj) => Array.isArray(obj);
 const getUrlInfo = (str = location.pathname) => /(adventure|scenario)\/([^/]+)/.exec(str) ?? [];
 /**
- * @type { import("../typings/shared.d.ts").qs }
+ * Returns the first element that is a descendant of node that matches selectors.
+ *
+ * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Document/querySelector)
+ * @template {HTMLElement} E
+ * @template {string} S
+ * @param {S} selectors
+ * @param {E} root
+ * @returns {E | null}
  */
 const qs = (selectors, root) => {
   try {
@@ -345,7 +355,11 @@ const qs = (selectors, root) => {
   return null;
 };
 /**
- * @type { import("../typings/shared.d.ts").observe }
+ * @template {Node} E
+ * @param {E} element
+ * @param {MutationCallback} listener
+ * @param {MutationObserverInit} options
+ * @returns {MutationObserver}
  */
 const observe = (element, listener, options = { subtree: true, childList: true }) => {
   const observer = new MutationObserver(listener);
@@ -813,6 +827,25 @@ const fromGraphQL = async (type, shortId) => {
           query:
             'mutation MainMenuViewCreateOptions($title: String, $shortId: String, $count: Int) { createScenarioOptions(title: $title, shortId: $shortId, count: $count) {\n scenarios {\n id\n userId\n shortId\n title\n prompt\n parentScenarioId\n deletedAt\n __typename\n }\n success\n message\n __typename }}'
         }
+      },
+      MainMenuViewDeleteScenario: {
+        body: {
+          operationName: 'MainMenuViewDeleteScenario',
+          variables: shortId,
+          query:
+            'mutation MainMenuViewDeleteScenario($shortId: String) { deleteScenario(shortId: $shortId) {  scenario {\n id\n shortId\n title\n parentScenarioId\n deletedAt\n __typename  }  success  message  __typename }}'
+        }
+      },
+      NewMenuCreateScenario: {
+        body: {
+          operationName: 'NewMenuCreateScenario',
+          variables: {
+            // prompt: '', title: ''
+            input: shortId
+          },
+          query:
+            'mutation NewMenuCreateScenario($input: ScenarioInput) {  createScenario(input: $input) {    success    message    scenario {      id      shortId      title      prompt      authorsNote      ...CardSearchable      __typename    }    __typename  }}fragment CardSearchable on Searchable {  publishTable  id  contentType  publicId  shortId  title  description  image  tags  voteCount  published  unlisted  publishedAt  createdAt  isOwner  editedAt  deletedAt  blockedAt  saveCount  commentCount  userId  contentRating  user {    id    isMember    profile {      id      title      thumbImageUrl      __typename    }    __typename  }  ... on Adventure {    actionCount    userJoined    unlisted    playerCount    contentResponses {      userVote      isSaved      isDisliked      __typename    }    __typename  }  ... on Scenario {    adventuresPlayed    contentResponses {      userVote      isSaved      isDisliked      __typename    }    __typename  }  __typename}'
+        }
       }
     };
     if (/scenario/.test(type)) {
@@ -881,6 +914,8 @@ const add = (s = '', l = 50, template = '-') => {
  * @param {import("../typings/types.d.ts").fromPath} content
  */
 const startDownload = async (fileFormat = 'json', type = 'Export', content = {}) => {
+  const txt = qs('mujs-elem > span[data-type="Import"]');
+  const textContent = txt.textContent;
   const [, contentType, shortId] = getUrlInfo();
   if (!contentType)
     throw new Error('Navigate to an adventure or scenario first!', { cause: 'startDownload' });
@@ -960,86 +995,97 @@ const startDownload = async (fileFormat = 'json', type = 'Export', content = {})
         fromGraphQL('UpdateScenario', update.scenario).catch(err),
         fromGraphQL('UpdateScenarioScripts', update.scripting).catch(err)
       );
+      const gotIds = new Set();
+      /**
+       * @template {import("../typings/types.d.ts").aidDataList['scenario']['scenario']} Root
+       * @param {Root} root
+       * @param {string} $shortId
+       */
       const createOptions = async (root = {}, $shortId) => {
-        const $options = (root.options ?? [])
-          .filter((o) => o.deletedAt == null)
-          .map((o) => {
-            return { ...o, options: (o.options ?? []).filter((op) => op.deletedAt == null) };
-          });
-        if (!isBlank($options)) {
-          const id = root.id;
-          const p = groupBy($options, ({ parentScenario }) => parentScenario?.id || id);
-          const options = p[id] || [];
-          const count = options.length;
-          await fromGraphQL('MainMenuViewCreateOptions', {
-            shortId: $shortId,
-            count
-          })
-            .then(
-              ({
-                data: {
-                  createScenarioOptions: { scenarios }
+        if (gotIds.has(root.id)) return;
+        gotIds.add(root.id);
+        txt.textContent = `Importing: ${root.title}`;
+        const Options = root.options.filter((op) => op.deletedAt == null);
+        if (!isBlank(Options) && root.type === 'multipleChoice') {
+          const g = groupBy(Options, (option) => option.parentScenario?.id || root.id);
+          const arr = g[root.id] || [];
+          if (arr.length < 2) return;
+          const createScenarioOptions = (
+            await fromGraphQL('MainMenuViewCreateOptions', {
+              shortId: $shortId,
+              count: arr.length
+            })
+          ).data.createScenarioOptions;
+          /** @type { { id: string; userId: string; shortId: string; title: string; prompt: string | null; parentScenarioId: string | null; deletedAt: string | null; __typename: "Scenario"; }[] } */
+          const scenarios = createScenarioOptions.scenarios;
+          for (let i = 0; i < scenarios.length; i++) {
+            const thisWorld = scenarios[i];
+            const option = arr[i];
+            const obj = {
+              scenario: {
+                shortId: thisWorld.shortId,
+                title: option.title || root.title,
+                description: option.description || root.description,
+                prompt: option.prompt || root.prompt,
+                memory: option.memory || root.memory,
+                authorsNote: option.authorsNote || root.authorsNote,
+                tags: option.tags || r.tags,
+                contentRating: option.contentRating || root.contentRating,
+                thirdPerson: option.thirdPerson,
+                allowComments: option.allowComments || root.allowComments,
+                image: option.image || root.image,
+                type: option.type || root.type,
+                details: option.details || root.details
+              },
+              scripting: {
+                shortId: thisWorld.shortId,
+                gameCode: {
+                  onInput: option.gameCodeOnInput || root.gameCodeOnInput,
+                  onModelContext: option.gameCodeOnModelContext || root.gameCodeOnModelContext,
+                  onOutput: option.gameCodeOnOutput || root.gameCodeOnOutput,
+                  sharedLibrary: option.gameCodeSharedLibrary || root.gameCodeSharedLibrary
                 }
-              }) => {
-                for (let i = 0; i < scenarios.length; i++) {
-                  const opt = scenarios[i];
-                  const s = options[i];
-                  s.shortId = opt.shortId;
-                  s.parentScenarioId = opt.parentScenarioId;
-                  const obj = {
-                    scenario: {
-                      shortId: s.shortId,
-                      title: s.title || root.title,
-                      description: s.description || root.description,
-                      prompt: s.prompt || root.prompt,
-                      memory: s.memory || root.memory,
-                      authorsNote: s.authorsNote || root.authorsNote,
-                      tags: s.tags || r.tags,
-                      contentRating: s.contentRating || root.contentRating,
-                      thirdPerson: s.thirdPerson,
-                      allowComments: s.allowComments || root.allowComments,
-                      image: s.image || root.image,
-                      type: s.type || root.type,
-                      details: s.details || root.details
-                    },
-                    scripting: {
-                      shortId: s.shortId,
-                      gameCode: {
-                        onInput: s.gameCodeOnInput || root.gameCodeOnInput,
-                        onModelContext: s.gameCodeOnModelContext || root.gameCodeOnModelContext,
-                        onOutput: s.gameCodeOnOutput || root.gameCodeOnOutput,
-                        sharedLibrary: s.gameCodeSharedLibrary || root.gameCodeSharedLibrary
-                      }
-                    },
-                    storyCards: {
-                      contentType,
-                      shortId: opt.shortId,
-                      storyCards:
-                        isArr(s.storyCards) &&
-                        s.storyCards.map(
-                          ({ type, keys, value, title, description, useForCharacterCreation }) => {
-                            return {
-                              type,
-                              keys,
-                              value,
-                              title,
-                              description,
-                              useForCharacterCreation
-                            };
-                          }
-                        )
+              },
+              storyCards: {
+                contentType,
+                shortId: thisWorld.shortId,
+                storyCards:
+                  isArr(option.storyCards) &&
+                  option.storyCards.map(
+                    ({ type, keys, value, title, description, useForCharacterCreation }) => {
+                      return {
+                        type,
+                        keys,
+                        value,
+                        title,
+                        description,
+                        useForCharacterCreation
+                      };
                     }
-                  };
-                  fetchRecords.push(
-                    fromGraphQL('UpdateScenario', obj.scenario).catch(err),
-                    fromGraphQL('UpdateScenarioScripts', obj.scripting).catch(err)
-                  );
-                  if (isArr(s.storyCards))
-                    fetchRecords.push(fromGraphQL('importStoryCards', obj.storyCards).catch(err));
-                }
+                  )
               }
-            )
-            .catch(err);
+            };
+            txt.textContent = `Importing: ${option.title}`;
+            await fromGraphQL('UpdateScenario', obj.scenario);
+            fetchRecords.push(fromGraphQL('UpdateScenarioScripts', obj.scripting).catch(err));
+            if (isArr(option.storyCards) && option.storyCards.length > 0) {
+              fetchRecords.push(fromGraphQL('importStoryCards', obj.storyCards).catch(err));
+            }
+            if (option.type === 'multipleChoice') {
+              const subWorlds = g[option.id] || [];
+              if (subWorlds.length > 0) {
+                await createOptions(
+                  {
+                    ...option,
+                    options: [...new Set([...Options, ...subWorlds])].filter(
+                      (op) => op.deletedAt == null
+                    )
+                  },
+                  thisWorld.shortId
+                );
+              }
+            }
+          }
         }
       };
       await createOptions(r, shortId);
@@ -1065,6 +1111,7 @@ const startDownload = async (fileFormat = 'json', type = 'Export', content = {})
       msgs.push(`${resp.message} - ${key}`);
     }
     alert(msgs.join('\n\n'));
+    txt.textContent = textContent;
     return;
   }
   /**
@@ -1268,7 +1315,8 @@ const inject = (parent, section = 'play', fileFormat = 'json', type = 'Export') 
   const txt = make('span', {
     textContent,
     dataset: {
-      section
+      section,
+      type
     }
   });
   const ico = make('p', {
