@@ -1,94 +1,65 @@
+// @ts-check
 import globals from 'globals';
-import pluginJs from '@eslint/js';
-import eslintConfigPrettier from 'eslint-config-prettier';
+import eslint from '@eslint/js';
+import eslintConfigPrettier from 'eslint-config-prettier/flat';
+import tseslint from 'typescript-eslint';
 
-const userJSGlobals = {
-  code: 'readonly',
-  metadata: 'readonly',
-  main_css: 'readonly',
-  languageList: 'readonly',
-  translations: 'readonly',
-  userjs: 'writable',
-  ...globals.es2024,
-  ...globals.browser,
-  ...globals.greasemonkey
-};
-const webextGlobals = {
-  MU: 'writable',
-  sleazyfork_redirect: 'readonly',
-  webext: 'readonly',
-  brws: 'readonly',
-  userjs: 'writable',
-  ...globals.es2024,
-  ...globals.browser,
-  ...globals.webextensions
-};
-const parserOptions = {
-  allowImportExportEverywhere: false,
-  ecmaFeatures: {
-    globalReturn: true,
-    arrowFunctions: true,
-    modules: true
-  }
-};
-const rules = {
-  'keyword-spacing': ['error', { before: true }],
-  'no-var': 'error',
-  'prefer-const': ['error', { destructuring: 'all' }],
-  'prefer-promise-reject-errors': 'error',
-  'prefer-regex-literals': ['error', { disallowRedundantWrapping: true }],
-  quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: false }],
-  'space-before-blocks': ['error', 'always']
-};
-
-export default [
-  pluginJs.configs.recommended,
+export default tseslint.config([
+  eslint.configs.recommended,
+  tseslint.configs.recommended,
   eslintConfigPrettier,
   {
-    files: ['*/src/js/*.js', 'userscripts/*/src/js/*.js'],
+    rules: {
+      'no-var': 'error',
+      'prefer-const': ['error', { destructuring: 'all' }],
+      'prefer-promise-reject-errors': 'error',
+      'prefer-regex-literals': ['error', { disallowRedundantWrapping: true }],
+      quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: false }],
+      'space-before-blocks': ['error', 'always']
+    },
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
-      globals: webextGlobals,
-      parserOptions
-    },
-    rules
+      globals: globals.es2024
+    }
   },
   {
-    files: ['**/main.js'],
+    files: ['userscripts/*/src/main.js'],
     languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-      globals: userJSGlobals,
-      parserOptions
-    },
-    rules
+      sourceType: 'script',
+      globals: {
+        main_css: 'readonly',
+        translations: 'writable',
+        userjs: 'writable',
+        ...globals.browser,
+        ...globals.greasemonkey
+      }
+    }
   },
   {
-    files: ['**/header.js'],
+    files: ['userscripts/*/src/header.js'],
     languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-      globals: userJSGlobals,
-      parserOptions
+      sourceType: 'script',
+      globals: {
+        code: 'readonly',
+        metadata: 'readonly',
+        languageList: 'readonly',
+        translations: 'readonly',
+        ...globals.browser
+      }
     },
     rules: {
-      ...rules,
       quotes: 'off',
-      'no-unused-vars': 'off'
+      'no-unused-vars': 'off',
+      'no-unused-expressions': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-expressions': 'off'
     }
   },
   {
     files: ['tools/*.js', 'utils/**/*.js'],
     languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-      globals: {
-        ...globals.es2024,
-        ...globals.node
-      },
-      parserOptions
-    },
-    rules
+      globals: globals.node
+    }
   }
-];
+]);

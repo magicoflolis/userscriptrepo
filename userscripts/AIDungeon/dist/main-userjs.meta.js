@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      1.3.0
+// @version      1.4.0
 // @name         Adventure + Scenario Exporter
 // @description  Export any adventure or scenario to a local file.
 // @author       Magic <magicoflolis@tuta.io>
@@ -34,6 +34,10 @@
 // @match     https://beta.aidungeon.com/*
 // @match     https://alpha.aidungeon.com/*
 // @match     https://internal.aidungeon.com/*
+// @match     https://api.aidungeon.com/graphql
+// @match     https://api-beta.aidungeon.com/graphql
+// @match     https://api-alpha.aidungeon.com/graphql
+// @match     https://api-internal.aidungeon.com/graphql
 // @noframes
 // @run-at     document-start
 // ==/UserScript==

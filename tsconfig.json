@@ -9,7 +9,7 @@
     "allowSyntheticDefaultImports": true
   },
   "include": [
-    "*/src/typings/*.d.ts"
+    "userscripts/**/*/typings/*.d.ts"
   ],
 	"exclude": ["node_modules"]
 }

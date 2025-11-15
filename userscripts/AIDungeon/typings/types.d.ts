@@ -1,3 +1,56 @@
+declare global {
+  const main_css: string;
+  const translations: {
+    [i18n: string]: {
+      [key: string]: string;
+    };
+  };
+  interface HTMLElementTagNameMap {
+    'main-userjs': HTMLElement;
+    'mu-js': HTMLElement;
+    /**
+     * Made to "look like" a `HTMLAnchorElement`
+     */
+    'mujs-a': HTMLElement;
+    'mujs-addtab': HTMLElement;
+    'mujs-body': HTMLElement;
+    'mujs-column': HTMLElement;
+    'mujs-elem': HTMLElement;
+    'mujs-header': HTMLElement;
+    'mujs-host': HTMLElement;
+    'mujs-main': HTMLElement;
+    'mujs-root': HTMLElement;
+    'mujs-row': HTMLElement;
+    'mujs-section': HTMLElement;
+    'mujs-tabs': HTMLElement;
+    'mujs-tab': HTMLElement;
+    'mujs-toolbar': HTMLElement;
+    'mujs-url': HTMLElement;
+  }
+}
+type test = Record<keyof HTMLAnchorElement, HTMLAnchorElement>;
+type a = HTMLAnchorElement;
+type abc = Record<keyof a, keyof a>;
+type abcd = { [P in keyof a]: a[keyof a] };
+
+export interface StoryCard {
+  id: string;
+  userId: string;
+  contentId: string;
+  contentType: string;
+  type: string;
+  keys: string;
+  value: string;
+  title: string;
+  description: string;
+  useForCharacterCreation: boolean;
+  createdAt: string;
+  deletedAt: string | null;
+  updatedAt: string;
+  __typename: 'StoryCard';
+}
+export type storyCard = Omit<StoryCard, 'userId' | 'contentId' | 'contentType' | 'createdAt'>;
+
 export interface dataStructure<accessToken extends string> {
   headers: {
     authorization: `firebase ${accessToken}`;
@@ -107,18 +160,7 @@ export interface aidDataList {
           };
         };
       }[];
-      storyCards: {
-        id: string;
-        type: string;
-        keys: string;
-        value: string;
-        title: string;
-        useForCharacterCreation: boolean;
-        description: string;
-        updatedAt: string;
-        deletedAt: null;
-        __typename: 'StoryCard';
-      }[];
+      storyCards: storyCard[];
       actionWindow: {
         id: string;
         imageText: null;
@@ -177,13 +219,18 @@ export interface aidDataList {
       contentRatingLockedMessage: null;
       type: string;
       details: {
+        scenarioId: string;
+        type: 'scenario';
+        storyCards: Omit<StoryCard, '__typename' | 'deletedAt'>[];
         instructions: {
           type: null;
           custom: null;
           scenario: null;
         };
+        storySummary: string;
         storyCardInstructions: string;
         storyCardStoryInformation: string;
+        scenarioStateVersion: number;
       };
       publishedAt: string;
       deletedAt: string | null;
@@ -227,18 +274,7 @@ export interface aidDataList {
           __typename: 'Profile';
         };
       };
-      storyCards: {
-        id: string;
-        type: string;
-        keys: string;
-        value: string;
-        title: string;
-        useForCharacterCreation: boolean;
-        description: string;
-        updatedAt: string;
-        deletedAt: null;
-        __typename: 'StoryCard';
-      }[];
+      storyCards: storyCard[];
     };
   };
   aiVersions: {
@@ -576,12 +612,7 @@ export interface aidDataList {
     importStoryCards: {
       success?: boolean;
       message?: string;
-      storyCards?: {
-        keys: string;
-        value: string;
-        type: string;
-        __typename: 'StoryCard';
-      }[];
+      storyCards?: Pick<StoryCard, 'keys' | 'value' | 'type' | '__typename'>[];
       __typename?: 'ImportStoryCardsResponse';
     };
   };
@@ -686,36 +717,20 @@ export declare function fromGraphQL<L extends aidDataList, T extends keyof L>(
   type: T,
   shortId?: string
 ): Promise<{ data: Record<T, L[T]> }>;
-// export declare function fromGraphQL<S extends keyof Templates>(
-//   type: S,
-//   shortId?: string
-// ): Promise<{ data: aidDataList[S] }>;
-export type storyCard = {
-  id: string;
-  type: string;
-  keys: string;
-  value: string;
-  title: string;
-  useForCharacterCreation: boolean;
-  description: string;
-  updatedAt: string;
-  deletedAt: null;
-  __typename: 'StoryCard';
-};
 export type actionWindow = {
   id: string;
-  imageText: null;
+  imageText: string | null;
   text: string;
   type: 'continue' | 'say' | 'do' | 'story' | 'see' | 'repeat';
-  imageUrl: null;
-  adventureId: null;
-  decisionId: null;
-  undoneAt: null;
-  deletedAt: null;
+  imageUrl: string | null;
+  adventureId: string | null;
+  decisionId: string | null;
+  undoneAt: string | null;
+  deletedAt: string | null;
   createdAt: string;
-  logId: null;
-  __typename: 'Action';
+  logId: string | null;
   shareUrl: string;
+  __typename: 'Action';
 };
 export type fromPath = {
   data: {

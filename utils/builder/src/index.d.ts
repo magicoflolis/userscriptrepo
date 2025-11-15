@@ -1,37 +1,40 @@
 import { PathLike } from 'node:fs';
 
+/**
+ * Loads all the structures in the provided directory.
+ *
+ * @param dir - The directory to load the structures from
+ * @param recursive - Whether to recursively load the structures in the directory
+ */
+export declare function loadLanguages<T>(dir: PathLike, recursive?: boolean): Promise<T[]>;
+export declare function build(): Promise<void>;
 export interface UserJS {
   name: string;
   description: string;
   version: string;
-  license: string;
-  bugs: URL;
-  homepage: URL;
-  icon: PathLike;
-  downloadURL: URL;
-  updateURL: URL;
+  license?: string;
+  bugs?: URL;
+  homepage?: URL;
+  icon?: PathLike;
+  downloadURL?: URL;
+  updateURL?: URL;
+  url_source?: URL;
+  url?: URL;
   build: {
     source: {
-      head: PathLike;
-      body: PathLike;
-      extras: {
-        [name: string]: PathLike;
-      };
+      languageList: string;
+      [source: string]: PathLike;
     };
     watch: {
       files: string[];
       dirs: PathLike[];
     };
     paths: {
-      dev: {
-        fileName: string;
-        env: PathLike;
-        dir: PathLike;
-      };
-      public: {
-        fileName: string;
-        env: PathLike;
-        dir: PathLike;
+      fileName: string;
+      dir: PathLike;
+      dev?: {
+        fileName?: string;
+        dir?: PathLike;
       };
     };
   };

@@ -1,9 +1,15 @@
+'use strict';
 import path from 'path';
 import { URL } from 'node:url';
 import fs from 'node:fs';
 import Watchpack from 'watchpack';
 import minimist from 'minimist';
 import { loadLanguages } from '@userjs/i18n';
+import { compile } from 'sass-embedded';
+
+/**
+ * @typedef { import('../typings/index.d.ts').UserJS } CFG
+ */
 
 const replaceTemplate = /\[\[(.*?)\]\]/g;
 const metaStr = '[[metadata]]';
@@ -141,17 +147,6 @@ const addTo = (key, ...values) => {
   dataMap.set(key, values);
   return dataMap.get(key);
 };
-const filterData = [
-  'name',
-  'description',
-  'author',
-  'icon',
-  'version',
-  'url',
-  'homepage',
-  'bugs',
-  'license'
-];
 
 async function build() {
   try {
@@ -160,107 +155,79 @@ async function build() {
       if (argv.JS_ROOT && argv.JS_ENV) {
         return {
           JS_ROOT: argv.JS_ROOT,
-          JS_ENV: argv.JS_ENV
-        }
+          JS_ENV: argv.JS_ENV,
+          JS_i18n: `${argv.JS_ROOT}src/_locales`
+        };
       }
       return process.env;
     };
-    const { JS_ROOT, JS_ENV } = getEnv();
+    const { JS_ENV, JS_i18n } = getEnv();
     const jsonRecords = await Promise.all([
-      fileToJSON('./package.json').then(({ userJS }) => {
-        if (userJS) return userJS;
-        return {};
-      }),
-      fileToJSON('./UserJS.json').then((userJS) => {
-        if (userJS) return userJS;
-        return {};
-      }).catch(() => {
-        return {};
-      })
+      fileToJSON('./UserJS.json')
+        .then((userJS) => {
+          return userJS ?? {};
+        })
+        .catch(() => {
+          return {};
+        })
     ]);
     if (isEmpty(jsonRecords))
       throw new Error('"UserJS.json" not found + no "userJS" key in package.json');
     /**
-     * @type { import('./index.d.ts').UserJS }
+     * @type { CFG }
      */
     const userJS = {};
     for (const r of jsonRecords) Object.assign(userJS, r);
-    const { build } = userJS;
     const isDev = isEmpty(JS_ENV) || JS_ENV === 'development';
-    const _locales = `${JS_ROOT}src/_locales`;
-    const dp = isDev ? 'dev' : 'public';
-    const compileMetadata = () => {
-      const metaData = [];
-      for (const [key, value] of Object.entries(userJS.metadata)) {
-        if (Array.isArray(value)) {
-          for (const v of value) {
-            metaData.push(`// @${key}     ${v}`);
-          }
-        } else if (isObj(value)) {
-          for (const [k, v] of Object.entries(value)) {
-            metaData.push(`// @${key}     ${k} ${v}`);
-          }
-        } else if (typeof value === 'boolean') {
-          if (value === true) {
-            metaData.push(`// @${key}`);
-          }
-        } else {
-          metaData.push(`// @${key}     ${value}`);
-        }
-      }
-      return metaData.join('\n');
-    };
     const buildUserJS = async () => {
       try {
-        const lngList = await loadLanguages(new URL(_locales, import.meta.url));
-        const transformLanguages = () => {
-          const resp = {};
-          for (const obj of lngList) {
-            for (const [k, v] of Object.entries(obj)) {
-              const o = {};
-              for (const [key, value] of Object.entries(v)) {
-                if (key.startsWith('ext')) {
-                  continue;
-                }
-                if (/userjs_(name|description)/i.test(key)) {
-                  continue;
-                }
-                if (isEmpty(value.message)) {
-                  continue;
-                }
-                o[key] = value.message;
-              }
-              resp[k] = o;
-            }
-          }
-          return JSON.stringify(resp, null, ' ');
-        };
+        const i18n = userJS.build.paths.i18n;
+        const i18nList = await loadLanguages(new URL(i18n.dir ?? JS_i18n, import.meta.url));
         const compileLanguage = (type = 'userjs_name') => {
           const resp = [];
-          for (const obj of lngList) {
-            for (const [k, v] of Object.entries(obj)) {
-              if (v[type]) {
-                if (isEmpty(v[type].message)) {
-                  continue;
-                }
-                if (k.startsWith('en')) {
-                  continue;
-                }
-                const t = type.toLowerCase().replace('userjs_', '');
-                if (type === 'userjs_name') {
-                  resp.push(
-                    `// @${t}:${k.replace('_', '-')}      ${isDev ? '[Dev] ' : ''}${v[type].message}`
-                  );
-                } else {
-                  resp.push(`// @${t}:${k.replace('_', '-')}      ${v[type].message}`);
-                }
-              }
+          for (const [key, obj] of i18nList.entries()) {
+            const value = obj[type];
+            if (!value || isEmpty(value) || key.startsWith(i18n.default)) {
+              continue;
+            }
+            const t = type.toLowerCase().replace('userjs_', '');
+            if (type === 'userjs_name') {
+              resp.push(
+                `// @${t}:${key.replace('_', '-')}      ${isDev ? '[Dev] ' : ''}${value}`
+              );
+            } else {
+              resp.push(`// @${t}:${key.replace('_', '-')}      ${value}`);
             }
           }
           return resp;
         };
-        const getData = () => {
+        const compileData = () => {
+          if (isDev && !isEmpty(dataMap)) {
+            addTo('version', `// @version      ${+new Date()}`);
+            return `// ==UserScript==\n${[...dataMap.values()].flat().join('\n')}\n// ==/UserScript==`;
+          }
           for (const [k, v] of Object.entries(userJS)) {
+            if (k === 'metadata') {
+              const metaData = [];
+              for (const [key, value] of Object.entries(v)) {
+                if (Array.isArray(value)) {
+                  for (const v of value) {
+                    metaData.push(`// @${key}     ${v}`);
+                  }
+                } else if (isObj(value)) {
+                  for (const [k, v] of Object.entries(value)) {
+                    metaData.push(`// @${key}     ${k} ${v}`);
+                  }
+                } else if (typeof value === 'boolean') {
+                  if (value === true) {
+                    metaData.push(`// @${key}`);
+                  }
+                } else {
+                  metaData.push(`// @${key}     ${value}`);
+                }
+              }
+              addTo('metaData', metaData.join('\n'));
+            }
             if (typeof v !== 'string') {
               continue;
             }
@@ -290,6 +257,8 @@ async function build() {
               addTo(k, `// @downloadURL  ${v}`);
             } else if (k === 'updateURL') {
               addTo(k, `// @updateURL    ${v}`);
+            } else if (k === 'url_source') {
+              addTo(k, `// @url_source    ${v}`);
             } else if (k === 'url') {
               addTo(k, `// @downloadURL  ${v}`, `// @updateURL    ${v}`);
             } else if (k === 'version') {
@@ -304,54 +273,80 @@ async function build() {
               addTo(k, v);
             }
           }
-          // for (const [k, v] of Object.entries(jsonRecords[0] ?? {})) {
-          //   if (typeof v !== 'string') {
-          //     continue;
-          //   }
-          //   if (!filterData.includes(k)) {
-          //     continue;
-          //   }
-          //   if (dataMap.has(k)) {
-          //     continue;
-          //   }
-          //   if (k === 'license') {
-          //     addTo(k, `// @${k}      ${v}`);
-          //   } else if (k === 'author') {
-          //     addTo(k, `// @${k}       ${v}`);
-          //   }
-          // }
-          if (userJS.metadata) {
-            addTo('metaData', compileMetadata());
+          return `// ==UserScript==\n${[...dataMap.values()].flat().join('\n')}\n// ==/UserScript==`;
+        };
+        const cfg = {
+          nano: {
+            languageList: {},
+            metadata: compileData()
+          },
+          path: {
+            fileName: 'main-userjs',
+            dir: './dist'
+          },
+          file: '',
+          meta: '',
+          metaPath: ''
+        };
+        for (const [k, v] of Object.entries(userJS.build.source)) {
+          if (/\.s[ac]ss$/i.test(v)) {
+            cfg.nano[k] = compile(v, {
+              sourceMap: false,
+              style: 'expanded'
+            }).css;
+            continue;
           }
-          return [...dataMap.values()].flat().join('\n');
-        };
-        const userJSHeader = `// ==UserScript==\n${getData()}\n// ==/UserScript==`;
-        const headerFile = await canAccess(build.source.head);
-        const mainFile = await canAccess(build.source.body);
-        const nanoCFG = {
-          metadata: userJSHeader,
-          languageList: transformLanguages(),
-          code: mainFile
-        };
-        if (build.source.extras) {
-          for (const [k, v] of Object.entries(build.source.extras)) {
-            const extraFile = await canAccess(v);
-            if (typeof extraFile === 'string') {
-              nanoCFG[k] = extraFile;
-            }
+          const f = await canAccess(v);
+          if (typeof f !== 'string') continue;
+          if (k === 'metadata') {
+            cfg.meta = f;
+          } else {
+            cfg.nano[k] = f;
           }
         }
-        const outFile = `${build.paths[dp].dir}/${build.paths[dp].fileName}.user.js`;
-        await writeUserJS(outFile, nano(headerFile, nanoCFG));
-        log('UserJS Build:', {
-          path: outFile,
+        if (!isEmpty(i18nList)) {
+          for (const [k, obj] of i18nList.entries()) {
+            const o = {};
+            for (const [key, value] of Object.entries(obj)) {
+              if (isEmpty(value)) {
+                continue;
+              }
+              if (/^ext[A-Z_]|^userjs_(name|description)/.test(key)) {
+                continue;
+              }
+              o[key] = value;
+            }
+            cfg.nano.languageList[k] = o;
+          }
+        }
+        for (const [k, v] of Object.entries(userJS.build.paths)) {
+          if (isEmpty(v)) continue;
+          if (isDev && /dev/i.test(k)) {
+            for (const [key, value] of Object.entries(v)) {
+              cfg.path[key] = value;
+            }
+          } else {
+            cfg.path[k] = v;
+          }
+        }
+        cfg.file = `${cfg.path.dir}/${cfg.path.fileName}.user.js`;
+        cfg.metaPath = `${cfg.path.dir}/${cfg.path.fileName}.meta.js`;
+        cfg.nano.languageList = JSON.stringify(cfg.nano.languageList, null, ' ');
+
+        await writeUserJS(cfg.file, nano(cfg.meta, cfg.nano));
+        log('UserJS File:', {
+          path: cfg.file,
           time: toTime()
         });
         if (!isDev) {
-          const outMeta = `${build.paths[dp].dir}/${build.paths[dp].fileName}.meta.js`;
-          await writeUserJS(outMeta, nano(metaStr, { metadata: userJSHeader }));
+          await writeUserJS(
+            cfg.metaPath,
+            nano(metaStr, {
+              metadata: cfg.nano.metadata
+            })
+          );
           log('UserJS Metadata:', {
-            path: outMeta,
+            path: cfg.metaPath,
             time: toTime()
           });
         }
@@ -359,13 +354,16 @@ async function build() {
         err(ex);
       }
     };
-    //#region Start Process
     log(`Node ENV: ${JS_ENV}`);
-
+    await buildUserJS();
     if (isDev) {
       const wp = new Watchpack();
       let changed = new Set();
-      wp.watch(build.watch.files, build.watch.dirs);
+      if (isEmpty(userJS.build.watch.files)) {
+        wp.watch(userJS.build.watch.dirs);
+      } else {
+        wp.watch(userJS.build.watch.files, userJS.build.watch.dirs);
+      }
       wp.on('change', (changedFile, mtime) => {
         if (mtime === null) {
           changed.delete(changedFile);
@@ -387,16 +385,13 @@ async function build() {
 
         await buildUserJS();
       });
-      return;
+    } else {
+      process.exit(0);
     }
-    await buildUserJS();
-
-    process.exit(0);
-    //#endregion
   } catch (ex) {
     err(ex);
   }
-};
+}
 
 export { build };
 export default build;

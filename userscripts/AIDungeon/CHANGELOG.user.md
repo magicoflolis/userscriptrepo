@@ -4,6 +4,17 @@
 
 * Export adventures in `.epub`?
 
+## v1.4.0
+
+* Optimized GraphQL queries to return less data
+* Replaced Markdown export with an HTML export
+* Updated `getToken()`
+  * If no firebase token is found within `indexedDB`, fetch one from `identitytoolkit.googleapis.com`
+* Added support for Yoga GraphiQL tool on `api.aidungeon.com/graphql` and all other API destinations.
+  * On page load, automatically injects firebase token into `Headers`
+
+---
+
 ## v1.3.0
 
 * During an import, added text of which sub-scenario is currently being imported.
